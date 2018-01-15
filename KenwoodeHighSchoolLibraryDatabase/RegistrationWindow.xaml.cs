@@ -31,24 +31,26 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin";
             c.Open();
 
-            //command = new OleDbCommand();
-            //command.Connection = c;
+            command = new OleDbCommand();
+            command.Connection = c;
             //command.CommandText = "CREATE TABLE accounts([firstName] TEXT, [lastName] TEXT, " +
             //    "[userID] TEXT, [userType] TEXT)";
             //command.ExecuteNonQuery();
+            c.Close();
         }
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
+            c.Open();
             string fName = this.textBoxFirstNameRegister.Text;
-            string lName = this.textBoxFirstNameRegister.Text;
+            string lName = this.textBoxSurnameRegister.Text;
             string uID = this.textBoxUserIDRegister.Text;
             string uType = comboBoxUserTypeRegister.SelectedValue.ToString().Substring(37);
 
             command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType]) " +
                 "VALUES ('" + fName +"', '" + lName + "', '" + uID + "', '" + uType + "')";
             command.ExecuteNonQuery();
-
+            c.Close();
         }
     }
 }

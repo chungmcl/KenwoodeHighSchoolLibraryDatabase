@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.OleDb;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -29,6 +30,21 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             RegistrationWindow w = new RegistrationWindow();
             w.Show();
+        }
+
+        private void TstBtnDeleteFromAccounts_Click(object sender, RoutedEventArgs e)
+        {
+            OleDbConnection c = new OleDbConnection();
+            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin";
+            c.Open();
+
+            OleDbCommand command = new OleDbCommand();
+            command.Connection = c;
+
+            command.CommandText = "DELETE * FROM accounts";
+            command.ExecuteNonQuery();
+            c.Close();
         }
     }
 }
