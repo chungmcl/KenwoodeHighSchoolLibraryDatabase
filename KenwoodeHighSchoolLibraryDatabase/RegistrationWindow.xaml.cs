@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.OleDb;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -19,13 +20,34 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class RegistrationWindow : Window
     {
+        OleDbConnection c;
+        OleDbCommand command;
         public RegistrationWindow()
         {
             InitializeComponent();
+
+            c = new OleDbConnection();
+            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin";
+            c.Open();
+
+            //command = new OleDbCommand();
+            //command.Connection = c;
+            //command.CommandText = "CREATE TABLE accounts([firstName] TEXT, [lastName] TEXT, " +
+            //    "[userID] TEXT, [userType] TEXT)";
+            //command.ExecuteNonQuery();
         }
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
+            string fName = this.textBoxFirstNameRegister.Text;
+            string lName = this.textBoxFirstNameRegister.Text;
+            string uID = this.textBoxUserIDRegister.Text;
+            string uType = comboBoxUserTypeRegister.SelectedValue.ToString().Substring(37);
+
+            command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType]) " +
+                "VALUES ('" + fName +"', '" + lName + "', '" + uID + "', '" + uType + "')";
+            command.ExecuteNonQuery();
 
         }
     }
