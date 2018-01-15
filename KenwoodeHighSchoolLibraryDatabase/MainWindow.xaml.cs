@@ -24,5 +24,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             InitializeComponent();
         }
+
+        private void BtnToRegistrationWindow_Click(object sender, RoutedEventArgs e)
+        {
+            RegistrationWindow w = new RegistrationWindow();
+            w.Show();
+        }
     }
 }
