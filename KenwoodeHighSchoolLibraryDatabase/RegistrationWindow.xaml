@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="RegistrationWindow" Height="300" Width="300">
+    Title="RegistrationWindow" Height="300" Width="300" MinWidth="300" MinHeight="300" MaxWidth="300" MaxHeight="300">
     <Grid>
         <Grid x:Name="gridRegistration" Margin="10,10,0,10.4" HorizontalAlignment="Left" Width="274">
             <Grid.ColumnDefinitions>
