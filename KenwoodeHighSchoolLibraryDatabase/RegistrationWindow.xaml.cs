@@ -46,9 +46,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string lName = this.textBoxSurnameRegister.Text;
             string uID = this.textBoxUserIDRegister.Text;
             string uType = comboBoxUserTypeRegister.SelectedValue.ToString().Substring(37);
+            int bookLimit = Int32.Parse(textBoxBookLimit.Text);
+            int dateLimit = Int32.Parse(textBoxDateLimit.Text);
 
-            command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType]) " +
-                "VALUES ('" + fName +"', '" + lName + "', '" + uID + "', '" + uType + "')";
+
+            command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [bookLimit], [dateLimit]) " +
+                "VALUES ('" + fName + "', '" + lName + "', '" + uID + "', '" + uType + "', " + bookLimit + ", " + dateLimit + ")";
             command.ExecuteNonQuery();
             c.Close();
         }
