@@ -5,10 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="500" Width="800" ResizeMode="NoResize">
     <Grid>
-        <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="190,115,0,0" Click="BtnToRegistrationWindow_Click" IsDefault="True"/>
-        <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click"/>
+        <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="10,10,0,0" Click="BtnToRegistrationWindow_Click" IsDefault="True"/>
+        <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="358,291,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click"/>
+        <DataGrid x:Name="dataGridAccounts" HorizontalAlignment="Left" Height="203" Margin="10,29,0,0" VerticalAlignment="Top" Width="453">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="First Name" Width="75"/>
+                <DataGridTextColumn Header="Surname" Width="75"/>
+                <DataGridTextColumn Header="User ID" Width="75"/>
+                <DataGridTextColumn Header="User Type" Width="75"/>
+                <DataGridTextColumn Header="Book Limit" Width="75"/>
+                <DataGridTextColumn Header="Date Limit" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 </Window>
