@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.OleDb;
+using System.Data;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -21,23 +22,33 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class MainWindow : Window
     {
+        OleDbConnection c;
         public MainWindow()
         {
             InitializeComponent();
+
+            c = new OleDbConnection();
+            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin";
+
+            //OleDbDataAdapter adapter = new OleDbDataAdapter();
+            //DataTable dTable = new DataTable();
+            //adapter.Fill(dTable);
+            //this.dataGridAccounts.DataSource = dTable;
         }
 
         private void BtnToRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
             RegistrationWindow w = new RegistrationWindow();
             w.Show();
+
+            dataGridAccounts.Items.Add("hehexD");
+
         }
 
         private void TstBtnDeleteFromAccounts_Click(object sender, RoutedEventArgs e)
         {
-            OleDbConnection c = new OleDbConnection();
-            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin";
-            c.Open();
+            
 
             OleDbCommand command = new OleDbCommand();
             command.Connection = c;
