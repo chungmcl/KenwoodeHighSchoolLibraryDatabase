@@ -45,7 +45,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string fName = this.textBoxFirstNameRegister.Text;
             string lName = this.textBoxSurnameRegister.Text;
             string uID = this.textBoxUserIDRegister.Text;
-            string uType = comboBoxUserTypeRegister.SelectedValue.ToString().Substring(37);
+            string uType = this.comboBoxUserTypeRegister.SelectedValue.ToString().Substring(37);
             int bookLimit = Int32.Parse(textBoxBookLimit.Text);
             int dateLimit = Int32.Parse(textBoxDateLimit.Text);
 
@@ -54,6 +54,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 "VALUES ('" + fName + "', '" + lName + "', '" + uID + "', '" + uType + "', " + bookLimit + ", " + dateLimit + ")";
             command.ExecuteNonQuery();
             c.Close();
+
+            labelDisplayMessage.Content = $"Successfully Registered Student {fName} {lName}";
+            this.textBoxFirstNameRegister.Clear();
+            this.textBoxSurnameRegister.Clear();
+            this.textBoxUserIDRegister.Clear();
+            this.textBoxBookLimit.Clear();
+            this.textBoxDateLimit.Clear();
         }
     }
 }

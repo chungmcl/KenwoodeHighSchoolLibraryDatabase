@@ -31,6 +31,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
                 "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin";
             OleDbDataReader reader = null;
+
             c.Open();
             OleDbCommand command = new OleDbCommand();
             command.Connection = c;
@@ -38,7 +39,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.CommandType = System.Data.CommandType.Text;
 
             reader = command.ExecuteReader();
-            while(reader.Read())
+            LoadDataGrid(reader);
+            c.Close();
+        }
+
+        private void LoadDataGrid(OleDbDataReader reader)
+        {
+            while (reader.Read())
             {
                 User newUser = new User();
                 newUser.firstName = reader["firstName"].ToString();
@@ -49,7 +56,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newUser.dateLimit = reader["dateLimit"].ToString();
                 dataGridAccounts.Items.Add(newUser);
             }
-            c.Close();
         }
 
         private void BtnToRegistrationWindow_Click(object sender, RoutedEventArgs e)

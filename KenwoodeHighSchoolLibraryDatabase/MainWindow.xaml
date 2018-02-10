@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800" ResizeMode="NoResize">
     <Grid>
-        <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="10,10,0,0" Click="BtnToRegistrationWindow_Click" IsDefault="True"/>
-        <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="358,291,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click"/>
-        <DataGrid x:Name="dataGridAccounts" HorizontalAlignment="Left" Height="203" Margin="10,29,0,0" VerticalAlignment="Top" Width="448">
+        <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="182,10,0,0" Click="BtnToRegistrationWindow_Click" IsDefault="True"/>
+        <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click"/>
+        <DataGrid x:Name="dataGridAccounts" HorizontalAlignment="Left" Height="203" Margin="10,29,0,0" VerticalAlignment="Top" Width="452">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="First Name" Binding="{Binding firstName}" Width="75"/>
                 <DataGridTextColumn Header="Surname" Binding="{Binding lastName}" Width="75"/>
