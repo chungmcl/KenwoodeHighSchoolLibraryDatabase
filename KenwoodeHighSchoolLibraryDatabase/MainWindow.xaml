@@ -9,16 +9,15 @@
     <Grid>
         <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="10,10,0,0" Click="BtnToRegistrationWindow_Click" IsDefault="True"/>
         <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="358,291,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click"/>
-        <DataGrid x:Name="dataGridAccounts" HorizontalAlignment="Left" Height="203" Margin="10,29,0,0" VerticalAlignment="Top" Width="453">
+        <DataGrid x:Name="dataGridAccounts" HorizontalAlignment="Left" Height="203" Margin="10,29,0,0" VerticalAlignment="Top" Width="448">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name" Width="75"/>
-                <DataGridTextColumn Header="Surname" Width="75"/>
-                <DataGridTextColumn Header="User ID" Width="75"/>
-                <DataGridTextColumn Header="User Type" Width="75"/>
-                <DataGridTextColumn Header="Book Limit" Width="75"/>
-                <DataGridTextColumn Header="Date Limit" Width="*"/>
+                <DataGridTextColumn Header="First Name" Binding="{Binding firstName}" Width="75"/>
+                <DataGridTextColumn Header="Surname" Binding="{Binding lastName}" Width="75"/>
+                <DataGridTextColumn Header="User ID" Binding="{Binding userID}" Width="75"/>
+                <DataGridTextColumn Header="User Type" Binding="{Binding userType}" Width="75"/>
+                <DataGridTextColumn Header="Book Limit" Binding="{Binding bookLimit}" Width="75"/>
+                <DataGridTextColumn Header="Date Limit" Binding="{Binding dateLimit}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
-
     </Grid>
 </Window>
