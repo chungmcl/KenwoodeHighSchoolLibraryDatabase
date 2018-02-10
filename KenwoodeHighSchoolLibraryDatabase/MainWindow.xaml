@@ -9,14 +9,14 @@
     <Grid>
         <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="182,10,0,0" Click="BtnToRegistrationWindow_Click" IsDefault="True"/>
         <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click"/>
-        <DataGrid x:Name="dataGridAccounts" HorizontalAlignment="Left" Height="216" Margin="10,29,0,0" VerticalAlignment="Top" Width="450">
+        <DataGrid x:Name="dataGridAccounts" HorizontalAlignment="Left" Height="216" Margin="10,29,0,0" VerticalAlignment="Top" Width="450" MouseDoubleClick="dataGridAccounts_DoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name" Binding="{Binding firstName}" Width="75"/>
-                <DataGridTextColumn Header="Surname" Binding="{Binding lastName}" Width="75"/>
-                <DataGridTextColumn Header="User ID" Binding="{Binding userID}" Width="75"/>
-                <DataGridTextColumn Header="User Type" Binding="{Binding userType}" Width="75"/>
-                <DataGridTextColumn Header="Book Limit" Binding="{Binding bookLimit}" Width="75"/>
-                <DataGridTextColumn Header="Date Limit" Binding="{Binding dateLimit}" Width="*"/>
+                <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="75"/>
+                <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding lastName, Mode=OneWay}" Width="75"/>
+                <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="75"/>
+                <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="75"/>
+                <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding bookLimit, Mode=OneWay}" Width="75"/>
+                <DataGridTextColumn Header="Date Limit" IsReadOnly="True" Binding="{Binding dateLimit, Mode=OneWay}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

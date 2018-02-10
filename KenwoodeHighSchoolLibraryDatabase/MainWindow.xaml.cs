@@ -66,8 +66,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void TstBtnDeleteFromAccounts_Click(object sender, RoutedEventArgs e)
         {
-            
-
             OleDbCommand command = new OleDbCommand();
             command.Connection = c;
 
@@ -75,6 +73,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.CommandText = "DELETE * FROM accounts";
             command.ExecuteNonQuery();
             c.Close();
+        }
+
+        private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            User selectedUser = (User)this.dataGridAccounts.SelectedItem;
         }
     }
 
