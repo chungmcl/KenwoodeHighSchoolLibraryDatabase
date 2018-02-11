@@ -102,6 +102,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <summary>
         /// Checks if paramater "userID" is in the "userIDs" list and returns location of "userID"
         /// if "userID" is found in the "userIDs" list
+        /// (MS Access does not offer creation of UNIQUE columns)
         /// </summary>
         /// <param name="userID">The userID to check for</param>
         /// <returns>Returns the location in "userIDs" list where the searched for userID is
