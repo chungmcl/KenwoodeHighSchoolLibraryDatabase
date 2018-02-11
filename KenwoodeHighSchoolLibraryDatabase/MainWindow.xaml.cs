@@ -23,6 +23,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
     public partial class MainWindow : Window
     {
         OleDbConnection c;
+        OleDbDataReader reader;
+        OleDbCommand command;
         public MainWindow()
         {
             InitializeComponent();
@@ -30,21 +32,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
             c = new OleDbConnection();
             c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
                 "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin";
-            OleDbDataReader reader = null;
-
-            c.Open();
-            OleDbCommand command = new OleDbCommand();
+            command = new OleDbCommand();
             command.Connection = c;
-            command.CommandText = "SELECT * FROM accounts";
-            command.CommandType = System.Data.CommandType.Text;
-
-            reader = command.ExecuteReader();
-            LoadDataGrid(reader);
-            c.Close();
+            reader = null;
+            LoadDataGrid();
         }
 
-        private void LoadDataGrid(OleDbDataReader reader)
+        private void LoadDataGrid()
         {
+            c.Open();
+            command.CommandText = "SELECT * FROM accounts";
+            command.CommandType = System.Data.CommandType.Text;
+            reader = command.ExecuteReader();
             while (reader.Read())
             {
                 User newUser = new User();
@@ -56,6 +55,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newUser.dateLimit = reader["dateLimit"].ToString();
                 dataGridAccounts.Items.Add(newUser);
             }
+            reader.Close();
+            c.Close();
         }
 
         private void BtnToRegistrationWindow_Click(object sender, RoutedEventArgs e)
@@ -66,9 +67,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void TstBtnDeleteFromAccounts_Click(object sender, RoutedEventArgs e)
         {
-            OleDbCommand command = new OleDbCommand();
-            command.Connection = c;
-
             c.Open();
             command.CommandText = "DELETE * FROM accounts";
             command.ExecuteNonQuery();

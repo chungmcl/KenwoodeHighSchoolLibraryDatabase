@@ -24,9 +24,9 @@
             <Button x:Name="buttonRegister" Content="Register User" Click="buttonRegister_Click" Margin="85,221,81.4,0" RenderTransformOrigin="-0.997,0.417" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
             <Label x:Name="labelRegister" Content="Register New User" Margin="72,0,56.4,148" HorizontalAlignment="Center" Width="110" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
             <StackPanel x:Name="stackPanelLabelsRegistration" HorizontalAlignment="Center" Height="186" Margin="26,30,18.8,0" Width="100" VerticalAlignment="Top">
-                <Label x:Name="labelFirstNameRegister" Content="Enter First Name&#xA;" Margin="0,0,2,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Center"/>
-                <Label x:Name="labelSurnameRegister" Content="Enter Surname" HorizontalAlignment="Center" Margin="0,0,12,0" VerticalAlignment="Top" RenderTransformOrigin="0.474,0.18" Height="30"/>
-                <Label x:Name="labelUserIDRegister" Content="Enter User ID" HorizontalAlignment="Center" Margin="0,0,12,0" VerticalAlignment="Top" RenderTransformOrigin="0.474,0.18" Width="88" Height="28"/>
+                <Label x:Name="labelFirstNameRegister" Content="First Name&#xA;" Margin="0,0,10,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Center" Width="90"/>
+                <Label x:Name="labelSurnameRegister" Content="Surname" HorizontalAlignment="Center" Margin="0,0,12,0" VerticalAlignment="Top" RenderTransformOrigin="0.474,0.18" Height="30" Width="88"/>
+                <Label x:Name="labelUserIDRegister" Content="School ID" HorizontalAlignment="Center" Margin="0,0,12,0" VerticalAlignment="Top" RenderTransformOrigin="0.474,0.18" Width="88" Height="28"/>
                 <Label x:Name="labelUserTypeRegister" Content="User Type" HorizontalAlignment="Center" Margin="0,0,12,0" VerticalAlignment="Top" Width="88" RenderTransformOrigin="0.582,0.461" Height="27"/>
                 <Label x:Name="labelBookLimit" Content="Book # Limit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Height="25"/>
                 <Label x:Name="labelDateLimit" Content="Date Limit" VerticalAlignment="Top" HorizontalAlignment="Left" Width="88" Height="24"/>
