@@ -80,7 +80,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (checkUserID == -1)
             {
                 command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [bookLimit], [dateLimit]) " +
-                "VALUES ('" + fName + "', '" + lName + "', '" + uID + "', '" + uType + "', " + bookLimit + ", " + dateLimit + ")";
+                $"VALUES ('{fName}', '{lName}', '{uID} ', '{uType}', {bookLimit}, {dateLimit})";
                 command.ExecuteNonQuery();
                 labelDisplayMessage.Content = $"Successfully Registered Student {fName} {lName}";
             }
