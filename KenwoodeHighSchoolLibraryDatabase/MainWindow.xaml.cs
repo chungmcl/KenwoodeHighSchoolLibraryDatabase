@@ -35,13 +35,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command = new OleDbCommand();
             command.Connection = c;
             reader = null;
-            LoadDataGrid();
+            LoadDataGrid("SELECT * FROM accounts");
         }
 
-        private void LoadDataGrid()
+        private void LoadDataGrid(string sqlText)
         {
             c.Open();
-            command.CommandText = "SELECT * FROM accounts";
+            command.CommandText = sqlText;
             command.CommandType = System.Data.CommandType.Text;
             reader = command.ExecuteReader();
             while (reader.Read())
@@ -76,6 +76,54 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             User selectedUser = (User)this.dataGridAccounts.SelectedItem;
+        }
+
+        private void comboBoxAccountsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string setTextBoxTo = comboBoxAccountsSearchByOptions.SelectedValue.ToString().Substring(37);
+            if (setTextBoxTo.Count() > 0)
+            {
+                textBoxAccountsSearchBy.Text = $"Enter a {setTextBoxTo}...";
+                LoadDataGrid("SELECT * FROM accounts");
+            }
+        }
+
+        private void textBoxAccountsSearchBy_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string currentText = textBoxAccountsSearchBy.Text;
+            if (currentText == "")
+            {
+                dataGridAccounts.Items.Clear();
+                LoadDataGrid("SELECT * FROM accounts");
+            }
+            else
+            {
+                int searchType = comboBoxAccountsSearchByOptions.SelectedIndex;
+                string queryColumn = "";
+                switch (searchType)
+                {
+                    case 0:
+                        queryColumn = "firstName";
+                        break;
+                    case 1:
+                        queryColumn = "lastName";
+                        break;
+                    case 2:
+                        queryColumn = "userID";
+                        break;
+                }
+
+                if (queryColumn != "")
+                {
+                    dataGridAccounts.Items.Clear();
+                    LoadDataGrid($"SELECT * FROM accounts WHERE [{queryColumn}] = '{currentText}'");
+                }
+            }
+        }
+
+        private void textBoxAccountsSearchBy_GotFocus(object sender, RoutedEventArgs e)
+        {
+            textBoxAccountsSearchBy.Text = "";
         }
     }
 
