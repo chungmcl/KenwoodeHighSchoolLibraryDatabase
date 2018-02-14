@@ -5,19 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" ResizeMode="NoResize">
-    <Grid>
-        <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="182,10,0,0" Click="BtnToRegistrationWindow_Click" IsDefault="True"/>
-        <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click"/>
-        <DataGrid x:Name="dataGridAccounts" HorizontalAlignment="Left" Height="216" Margin="10,29,0,0" VerticalAlignment="Top" Width="450" MouseDoubleClick="dataGridAccounts_DoubleClick">
+        Title="MainWindow" Height="700" Width="1000" ResizeMode="NoResize">
+    <Grid Background="#FFF19E9E" Margin="0,0,-6.4,1">
+        <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="165,296,0,0" Click="BtnToRegistrationWindow_Click" IsDefault="True" Background="#FFD33E3E" FontFamily="Sylfaen"/>
+        <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="10,296,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
+        <DataGrid x:Name="dataGridAccounts" 
+                  HorizontalAlignment="Left" Height="220" 
+                  Margin="10,71,0,0" 
+                  VerticalAlignment="Top" 
+                  Width="450" MouseDoubleClick="dataGridAccounts_DoubleClick" 
+                  Background="White" FontFamily="Sylfaen">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="75"/>
+                <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="*"/>
                 <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding lastName, Mode=OneWay}" Width="75"/>
                 <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="75"/>
                 <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="75"/>
                 <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding bookLimit, Mode=OneWay}" Width="75"/>
                 <DataGridTextColumn Header="Date Limit" IsReadOnly="True" Binding="{Binding dateLimit, Mode=OneWay}" Width="*"/>
             </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid x:Name="dataGridBooks" 
+                  HorizontalAlignment="Left" Height="220" 
+                  Margin="10,384,0,0" 
+                  VerticalAlignment="Top" 
+                  Width="450" 
+                  Background="White" FontFamily="Sylfaen">
         </DataGrid>
     </Grid>
 </Window>
