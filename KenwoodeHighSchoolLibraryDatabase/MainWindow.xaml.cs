@@ -38,7 +38,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             LoadDataGrid("SELECT * FROM accounts");
         }
 
-        private void LoadDataGrid(string sqlText)
+        public void LoadDataGrid(string sqlText)
         {
             c.Open();
             command.CommandText = sqlText;
@@ -124,6 +124,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void textBoxAccountsSearchBy_GotFocus(object sender, RoutedEventArgs e)
         {
             textBoxAccountsSearchBy.Text = "";
+        }
+
+        private void Window_GotFocus(object sender, RoutedEventArgs e)
+        {
+            dataGridAccounts.Items.Clear();
+            LoadDataGrid("SELECT * FROM accounts");
+            // doesn't quite work...
         }
     }
 

@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1000" ResizeMode="NoResize">
+        Title="MainWindow" Height="700" Width="1000" ResizeMode="NoResize"
+        GotFocus="Window_GotFocus">
     <Grid Background="#FFF19E9E" Margin="0,0,-6.4,1">
         <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="164,371,0,0" Click="BtnToRegistrationWindow_Click" IsDefault="True" Background="#FFD33E3E" FontFamily="Sylfaen"/>
         <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="9,371,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>

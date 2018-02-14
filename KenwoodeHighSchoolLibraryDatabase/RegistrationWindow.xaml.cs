@@ -118,5 +118,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             return -1;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            
+        }
     }
 }
