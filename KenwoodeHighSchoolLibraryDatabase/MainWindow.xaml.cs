@@ -25,6 +25,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         OleDbConnection c;
         OleDbDataReader reader;
         OleDbCommand command;
+        RegistrationWindow w;
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +41,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         public void LoadDataGrid(string sqlText)
         {
+            dataGridAccounts.Items.Clear();
             c.Open();
             command.CommandText = sqlText;
             command.CommandType = System.Data.CommandType.Text;
@@ -61,8 +63,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void BtnToRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
-            RegistrationWindow w = new RegistrationWindow();
-            w.Show();
+            w = new RegistrationWindow();
+            w.Owner = this;
+            bool? receive = w.ShowDialog();
+            if (receive == true)
+            {
+                LoadDataGrid("SELECT * FROM accounts");
+            }
         }
 
         private void TstBtnDeleteFromAccounts_Click(object sender, RoutedEventArgs e)
@@ -71,6 +78,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.CommandText = "DELETE * FROM accounts";
             command.ExecuteNonQuery();
             c.Close();
+            LoadDataGrid("SELECT * FROM accounts");
         }
 
         private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -93,7 +101,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string currentText = textBoxAccountsSearchBy.Text;
             if (currentText == "")
             {
-                dataGridAccounts.Items.Clear();
                 LoadDataGrid("SELECT * FROM accounts");
             }
             else
@@ -115,7 +122,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 if (queryColumn != "")
                 {
-                    dataGridAccounts.Items.Clear();
                     LoadDataGrid($"SELECT * FROM accounts WHERE [{queryColumn}] = '{currentText}'");
                 }
             }
@@ -124,13 +130,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void textBoxAccountsSearchBy_GotFocus(object sender, RoutedEventArgs e)
         {
             textBoxAccountsSearchBy.Text = "";
-        }
-
-        private void Window_GotFocus(object sender, RoutedEventArgs e)
-        {
-            dataGridAccounts.Items.Clear();
-            LoadDataGrid("SELECT * FROM accounts");
-            // doesn't quite work...
         }
     }
 

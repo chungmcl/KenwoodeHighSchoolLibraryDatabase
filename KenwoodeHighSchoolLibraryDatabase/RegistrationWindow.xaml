@@ -32,7 +32,6 @@
                 <Label x:Name="labelBookLimit" Content="Book # Limit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Height="25"/>
                 <Label x:Name="labelDateLimit" Content="Date Limit" VerticalAlignment="Top" HorizontalAlignment="Left" Width="88" Height="24"/>
             </StackPanel>
-            <Label x:Name="labelDisplayMessage" Grid.ColumnSpan="2" Content="" HorizontalAlignment="Left" Margin="0,195,-0.4,0" VerticalAlignment="Top" Width="274"/>
         </Grid>
     </Grid>
 </Window>

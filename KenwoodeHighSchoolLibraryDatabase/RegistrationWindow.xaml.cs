@@ -82,21 +82,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [bookLimit], [dateLimit]) " +
                 $"VALUES ('{fName}', '{lName}', '{uID} ', '{uType}', {bookLimit}, {dateLimit})";
                 command.ExecuteNonQuery();
-                labelDisplayMessage.Content = $"Successfully Registered Student {fName} {lName}";
             }
             else
             {
                 MessageBox.Show($"Another student ({userIDs[checkUserID][1]} {userIDs[checkUserID][2]}) already " +
                     $"holds this Student/Teacher ID ({userIDs[checkUserID][0]}). Did you enter the wrong ID?");
             }
-            
+            this.DialogResult = true;
             c.Close();
-            
-            this.textBoxFirstNameRegister.Clear();
-            this.textBoxSurnameRegister.Clear();
-            this.textBoxUserIDRegister.Clear();
-            this.textBoxBookLimit.Clear();
-            this.textBoxDateLimit.Clear();
         }
 
         /// <summary>
@@ -121,7 +114,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            
+            //this.MainWindow.LoadDataGrid("SELECT * FROM accounts");
         }
     }
 }
