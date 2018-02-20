@@ -89,7 +89,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void BtnToRegistrationWindow_Click(object sender, RoutedEventArgs e)
+        private void BtnToUserRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
             w = new RegistrationWindow();
             w.Owner = this;
@@ -158,6 +158,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void textBoxAccountsSearchBy_GotFocus(object sender, RoutedEventArgs e)
         {
             textBoxAccountsSearchBy.Text = "";
+        }
+
+        private void BtnToBookRegistrationWindow_Click(object sender, RoutedEventArgs e)
+        {
+            BookRegistrationWindow x = new BookRegistrationWindow();
+            x.Show();
         }
     }
 

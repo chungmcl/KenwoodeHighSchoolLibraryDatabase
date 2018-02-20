@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1000" ResizeMode="CanMinimize">
+        Title="Kenwoode HS Library Database" Height="700" Width="1000" ResizeMode="CanMinimize">
     <Grid Background="White" Margin="0,0,-6.4,1">
-        <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="164,371,0,0" Click="BtnToRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
-        <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="9,371,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
+        <Button x:Name="BtnToUserRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="164,347,0,0" Click="BtnToUserRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
+        <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="9,347,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
         <DataGrid x:Name="dataGridAccounts" 
-                  HorizontalAlignment="Left" Height="220" Margin="9,145,0,0" VerticalAlignment="Top" Width="800" 
+                  HorizontalAlignment="Left" Height="220" Margin="9,121,0,0" VerticalAlignment="Top" Width="800" 
                   MouseDoubleClick="dataGridAccounts_DoubleClick"
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
@@ -25,7 +25,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid x:Name="dataGridBooks" 
-                  HorizontalAlignment="Left" Height="220" Margin="10,396,0,0" VerticalAlignment="Top" Width="800" 
+                  HorizontalAlignment="Left" Height="220" Margin="10,409,0,0" VerticalAlignment="Top" Width="800" 
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Book ID" IsReadOnly="True" Binding="{Binding bookID, Mode=OneWay}" Width="90"/>
@@ -37,13 +37,14 @@
                 <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding currentlyCheckedOutBy, Mode=OneWay}" Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
-        <ComboBox x:Name="comboBoxAccountsSearchByOptions" HorizontalAlignment="Left" Margin="120,119,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxAccountsSearchByOptions_SelectionChanged">
+        <ComboBox x:Name="comboBoxAccountsSearchByOptions" HorizontalAlignment="Left" Margin="120,95,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxAccountsSearchByOptions_SelectionChanged">
             <ListBoxItem Content="First Name"/>
             <ListBoxItem Content="Surname"/>
             <ListBoxItem Content="User ID"/>
         </ComboBox>
-        <Label x:Name="labelSearchUser" Content="Search for user by: " HorizontalAlignment="Left" Margin="10,116,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
-        <TextBox x:Name="textBoxAccountsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" TextChanged="textBoxAccountsSearchBy_TextChanged" GotFocus="textBoxAccountsSearchBy_GotFocus"/>
-        <Image Margin="291,9,268,555.4" Source="logo.png" Stretch="Fill"/>
+        <Label x:Name="labelSearchUser" Content="Search for user by: " HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
+        <TextBox x:Name="textBoxAccountsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" TextChanged="textBoxAccountsSearchBy_TextChanged" GotFocus="textBoxAccountsSearchBy_GotFocus"/>
+        <Image Margin="313,10,312,581.4" Source="logo.png" Stretch="Fill"/>
+        <Button x:Name="BtnToBookRegistrationWindow" Content="Button" HorizontalAlignment="Left" Margin="10,634,0,0" VerticalAlignment="Top" Width="75" Click="BtnToBookRegistrationWindow_Click"/>
     </Grid>
 </Window>
