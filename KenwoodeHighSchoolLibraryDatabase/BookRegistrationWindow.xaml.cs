@@ -22,6 +22,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public BookRegistrationWindow()
         {
             InitializeComponent();
+            string test = ConvertToISBNThirteen("0743273567");
         }
 
         private string ConvertToISBNThirteen(string isbnTen)
@@ -45,7 +46,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             totalSum = evenSum + oddSum;
             // checkSum = (10 - (x1 + 3x2 + x3 + 3x4 + ... + x11 + 3x12) mod 10)
             int checkSum = 10 - (totalSum % 10);
-            isbnThirteen = isbnThirteen + checkSum;
+            isbnThirteen = isbnThirteen.Substring(0, 12) + checkSum;
             return isbnThirteen;
         }
     }
