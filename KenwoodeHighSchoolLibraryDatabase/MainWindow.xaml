@@ -10,24 +10,32 @@
         <Button x:Name="BtnToRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="164,371,0,0" Click="BtnToRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
         <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="9,371,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
         <DataGrid x:Name="dataGridAccounts" 
-                  HorizontalAlignment="Left" Height="220" Margin="9,145,0,0" VerticalAlignment="Top" Width="450" 
+                  HorizontalAlignment="Left" Height="220" Margin="9,145,0,0" VerticalAlignment="Top" Width="800" 
                   MouseDoubleClick="dataGridAccounts_DoubleClick"
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding lastName, Mode=OneWay}" Width="75"/>
-                <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="75"/>
-                <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="75"/>
-                <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding bookLimit, Mode=OneWay}" Width="75"/>
-                <DataGridTextColumn Header="Date Limit" IsReadOnly="True" Binding="{Binding dateLimit, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="190"/>
+                <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding lastName, Mode=OneWay}" Width="190"/>
+                <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="70"/>
+                <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="70"/>
+                <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding bookLimit, Mode=OneWay}" Width="70"/>
+                <DataGridTextColumn Header="Date Limit" IsReadOnly="True" Binding="{Binding dateLimit, Mode=OneWay}" Width="70"/>
+                <DataGridTextColumn Header="Checked Out" IsReadOnly="True" Binding="{Binding checkedOut, Mode=OneWay}" Width="75"/>
+                <DataGridTextColumn Header="Overdue" IsReadOnly="True" Binding="{Binding overdueBooks, Mode=OneWay}" Width="75"/>
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid x:Name="dataGridBooks" 
-                  HorizontalAlignment="Left" Height="220" 
-                  Margin="10,396,0,0" 
-                  VerticalAlignment="Top" 
-                  Width="450" 
-                  Background="White" FontFamily="Sylfaen">
+                  HorizontalAlignment="Left" Height="220" Margin="10,396,0,0" VerticalAlignment="Top" Width="800" 
+                  FontFamily="Sylfaen">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Book ID" IsReadOnly="True" Binding="{Binding bookID, Mode=OneWay}" Width="90"/>
+                <DataGridTextColumn Header="D. Decimal" IsReadOnly="True" Binding="{Binding deweyDecimal, Mode=OneWay}" Width="70"/>
+                <DataGridTextColumn Header="Format" IsReadOnly="True" Binding="{Binding format, Mode=OneWay}" Width="70"/>
+                <DataGridTextColumn Header="Genre" IsReadOnly="True" Binding="{Binding genre, Mode=OneWay}" Width="100"/>
+                <DataGridTextColumn Header="Title" IsReadOnly="True" Binding="{Binding title, Mode=OneWay}" Width="170"/>
+                <DataGridTextColumn Header="Author" IsReadOnly="True" Binding="{Binding author, Mode=OneWay}" Width="100"/>
+                <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding currentlyCheckedOutBy, Mode=OneWay}" Width="100"/>
+            </DataGrid.Columns>
         </DataGrid>
         <ComboBox x:Name="comboBoxAccountsSearchByOptions" HorizontalAlignment="Left" Margin="120,119,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxAccountsSearchByOptions_SelectionChanged">
             <ListBoxItem Content="First Name"/>
