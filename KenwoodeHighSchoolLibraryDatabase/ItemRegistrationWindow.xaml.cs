@@ -65,8 +65,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
-            string isbnTen = textBoxISBNTen.Text;
-            textBoxISBNThirteen.Text = ConvertToISBNThirteen(isbnTen);
+            textBoxISBNThirteen.Text = ConvertToISBNThirteen(textBoxISBNTen.Text);
         }
     }
 }

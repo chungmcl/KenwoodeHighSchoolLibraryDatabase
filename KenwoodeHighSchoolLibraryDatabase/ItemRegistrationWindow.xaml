@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="ItemRegistrationWindow" Height="717.133" Width="927.595">
+        Title="ItemRegistrationWindow" Height="722.733" Width="732.395">
     <Grid Margin="0,0,0.2,0.2">
-        <Label Content="Register Book" HorizontalAlignment="Left" Margin="320,10,0,0" VerticalAlignment="Top" Height="29" Width="122"/>
-        <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="480" Margin="45,44,0,0" VerticalAlignment="Top" Width="659">
+        <Label Content="Register Item" HorizontalAlignment="Left" Margin="313,10,0,0" VerticalAlignment="Top" Height="29" Width="122"/>
+        <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="626" Margin="45,44,-1.6,0" VerticalAlignment="Top" Width="682">
             <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="459" Margin="10,10,0,0" VerticalAlignment="Top" Width="101">
                 <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelGenre" Content="Genre" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
@@ -24,7 +24,7 @@
                 <Label x:Name="labelEdition" Content="Edition" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelDescription" Content="Description" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
             </StackPanel>
-            <StackPanel x:Name="stackPanelItemRegistrationInput" HorizontalAlignment="Left" Height="459" Margin="126,0,0,0" VerticalAlignment="Top" Width="500">
+            <StackPanel x:Name="stackPanelItemRegistrationInput" HorizontalAlignment="Left" Height="572" Margin="126,0,0,0" VerticalAlignment="Top" Width="501">
                 <TextBox x:Name="textBoxTitle" Height="35" TextWrapping="Wrap" Margin="0,0,74.2,0" HorizontalAlignment="Left" Width="380"/>
                 <ComboBox x:Name="comboBoxGenre" Height="35" Width="380" HorizontalAlignment="Left"/>
                 <ComboBox x:Name="comboBoxFormat" Height="35" Width="380" HorizontalAlignment="Left">
@@ -35,14 +35,18 @@
                 <TextBox x:Name="textBoxAuthorMName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                 <TextBox x:Name="textBoxAuthorLName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                 <TextBox x:Name="textBoxDeweyDecimal" TextWrapping="Wrap" Margin="0,0,-1,0" Height="35" Width="380" HorizontalAlignment="Left"/>
-                <TextBox x:Name="textBoxISBNTen" HorizontalAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,0.2" Height="35" Width="380"/>
+                <StackPanel HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="500" Orientation="Horizontal">
+                    <TextBox x:Name="textBoxISBNTen" HorizontalAlignment="Left" TextWrapping="Wrap" Width="380" Height="35" VerticalAlignment="Top"/>
+                    <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="120" Click="buttonConvertToISBN13_Click" RenderTransformOrigin="0.922,7.39" Height="35" VerticalAlignment="Top"/>
+                </StackPanel>
                 <TextBox x:Name="textBoxISBNThirteen" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxPublisher" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxPublicationYear" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxEdition" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
+                <TextBox x:Name="textBoxDescription" HorizontalAlignment="Left" Height="149" TextWrapping="Wrap" VerticalAlignment="Top" Width="380"/>
             </StackPanel>
+            <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="270,581,0,0" VerticalAlignment="Top" Width="96"/>
 
         </Grid>
-        <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="120" Margin="0,289,96.6,362" Click="buttonConvertToISBN13_Click"/>
     </Grid>
 </Window>
