@@ -18,13 +18,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// <summary>
     /// Interaction logic for RegistrationWindow.xaml
     /// </summary>
-    public partial class RegistrationWindow : Window
+    public partial class UserRegistrationWindow : Window
     {
         OleDbConnection c;
         OleDbCommand command;
         OleDbDataReader reader;
         List<string[]> userIDs;
-        public RegistrationWindow()
+        public UserRegistrationWindow()
         {
             InitializeComponent();
 

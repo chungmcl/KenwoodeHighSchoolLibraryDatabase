@@ -54,13 +54,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BookRegistrationWindow.xaml.cs">
-      <DependentUpon>BookRegistrationWindow.xaml</DependentUpon>
+    <Compile Include="ItemRegistrationWindow.xaml.cs">
+      <DependentUpon>ItemRegistrationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserRegistrationWindow.xaml.cs">
       <DependentUpon>UserRegistrationWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="BookRegistrationWindow.xaml">
+    <Page Include="ItemRegistrationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

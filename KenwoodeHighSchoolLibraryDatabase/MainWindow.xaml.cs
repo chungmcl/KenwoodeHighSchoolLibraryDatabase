@@ -25,7 +25,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
         OleDbConnection c;
         OleDbDataReader reader;
         OleDbCommand command;
-        RegistrationWindow w;
         public MainWindow()
         {
             InitializeComponent();
@@ -52,7 +51,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             else
             {
-                LoadBooksDataGrid(reader);
+                LoadItemsDataGrid(reader);
             }
             reader.Close();
             c.Close();
@@ -73,25 +72,25 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void LoadBooksDataGrid(OleDbDataReader reader)
+        private void LoadItemsDataGrid(OleDbDataReader reader)
         {
             while (reader.Read())
             {
-                Book newBook = new Book();
-                newBook.bookID = reader["bookID"].ToString();
-                newBook.deweyDecimal = reader["deweyDecimal"].ToString();
-                newBook.title = reader["title"].ToString();
-                newBook.authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
+                Item newItem = new Item();
+                newItem.itemID = reader["itemID"].ToString();
+                newItem.deweyDecimal = reader["deweyDecimal"].ToString();
+                newItem.title = reader["title"].ToString();
+                newItem.authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
                     $"{reader["authorMiddleName"].ToString()}";
-                newBook.genre = reader["genre"].ToString();
-                newBook.currentlyCheckedOutBy = reader["currentlyCheckedOutBy"].ToString();
-                dataGridBooks.Items.Add(newBook);
+                newItem.genre = reader["genre"].ToString();
+                newItem.currentlyCheckedOutBy = reader["currentlyCheckedOutBy"].ToString();
+                dataGridItems.Items.Add(newItem);
             }
         }
 
         private void BtnToUserRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
-            w = new RegistrationWindow();
+            UserRegistrationWindow w = new UserRegistrationWindow();
             w.Owner = this;
             bool? receive = w.ShowDialog();
             if (receive == true)
@@ -162,7 +161,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void BtnToBookRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
-            BookRegistrationWindow x = new BookRegistrationWindow();
+            ItemRegistrationWindow x = new ItemRegistrationWindow();
             x.Show();
         }
     }
@@ -179,11 +178,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public string overdue { get; set; }
     }
 
-    public struct Book
+    public struct Item
     {
-        public string bookID { get; set; }
+        public string itemID { get; set; }
         public string deweyDecimal { get; set; }
-        //public string ISBN { get; set; }
+        //public string ISBN10 { get; set; }
+        //public string ISBN13 { get; set; }
+        //public string ISXX { get; set; }
         //public string format { get; set; }
         public string title { get; set; }
         public string authorName { get; set; }

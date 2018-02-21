@@ -18,17 +18,17 @@
                 <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding lastName, Mode=OneWay}" Width="190"/>
                 <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="70"/>
                 <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="70"/>
-                <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding bookLimit, Mode=OneWay}" Width="70"/>
+                <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding itemLimit, Mode=OneWay}" Width="70"/>
                 <DataGridTextColumn Header="Date Limit" IsReadOnly="True" Binding="{Binding dateLimit, Mode=OneWay}" Width="70"/>
                 <DataGridTextColumn Header="Checked Out" IsReadOnly="True" Binding="{Binding checkedOut, Mode=OneWay}" Width="75"/>
-                <DataGridTextColumn Header="Overdue" IsReadOnly="True" Binding="{Binding overdueBooks, Mode=OneWay}" Width="75"/>
+                <DataGridTextColumn Header="Overdue" IsReadOnly="True" Binding="{Binding overdueItems, Mode=OneWay}" Width="75"/>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid x:Name="dataGridBooks" 
+        <DataGrid x:Name="dataGridItems" 
                   HorizontalAlignment="Left" Height="220" Margin="10,409,0,0" VerticalAlignment="Top" Width="800" 
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Book ID" IsReadOnly="True" Binding="{Binding bookID, Mode=OneWay}" Width="90"/>
+                <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="90"/>
                 <DataGridTextColumn Header="D. Decimal" IsReadOnly="True" Binding="{Binding deweyDecimal, Mode=OneWay}" Width="70"/>
                 <DataGridTextColumn Header="Format" IsReadOnly="True" Binding="{Binding format, Mode=OneWay}" Width="70"/>
                 <DataGridTextColumn Header="Genre" IsReadOnly="True" Binding="{Binding genre, Mode=OneWay}" Width="100"/>

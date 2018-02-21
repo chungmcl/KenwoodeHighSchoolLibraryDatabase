@@ -1,26 +1,31 @@
-﻿<Window x:Class="KenwoodeHighSchoolLibraryDatabase.BookRegistrationWindow"
+﻿<Window x:Class="KenwoodeHighSchoolLibraryDatabase.ItemRegistrationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="BookRegistrationWindow" Height="581.933" Width="736.4">
+        Title="ItemRegistrationWindow" Height="581.933" Width="736.4">
     <Grid Margin="0,0,0.2,0.2">
         <Label Content="Register Book" HorizontalAlignment="Left" Margin="320,10,0,0" VerticalAlignment="Top" Height="29" Width="122"/>
         <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="479" Margin="45,44,0,0" VerticalAlignment="Top" Width="626">
-            <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="385" Margin="10,10,0,0" VerticalAlignment="Top" Width="101">
+            <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="459" Margin="10,10,0,0" VerticalAlignment="Top" Width="101">
                 <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelGenre" Content="Genre" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
+                <Label x:Name="labelFormat" Content="Format" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelAuthorFirstName" Content="Author F. Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelAuthorMiddleName" Content="Author M. Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelAuthorSurname" Content="Author Surname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
                 <Label x:Name="labelDeweyDecimal" Content="Dewey Decimal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
-                <Label x:Name="labelISBN" Content="ISBN" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
+                <Label x:Name="labelISBN10" Content="ISBN 10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
+                <Label x:Name="labelISBN13" Content="ISBN 13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
                 <Label x:Name="labelPublisher" Content="Publisher" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelPublicationYear" Content="Publication Year" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelEdition" Content="Edition" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelDescription" Content="Description" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="459" Margin="116,10,0,0" VerticalAlignment="Top" Width="500">
+                <TextBox x:Name="textBoxTitle" Height="35" TextWrapping="Wrap"/>
             </StackPanel>
         </Grid>
 
