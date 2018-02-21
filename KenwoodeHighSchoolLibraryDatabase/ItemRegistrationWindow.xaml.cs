@@ -62,5 +62,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             isbnThirteen = isbnThirteen.Substring(0, 12) + checkSum;
             return isbnThirteen;
         }
+
+        private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
+        {
+            string isbnTen = textBoxISBNTen.Text;
+            textBoxISBNThirteen.Text = ConvertToISBNThirteen(isbnTen);
+        }
     }
 }
