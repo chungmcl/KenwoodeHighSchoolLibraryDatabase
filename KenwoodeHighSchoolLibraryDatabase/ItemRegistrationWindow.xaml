@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="ItemRegistrationWindow" Height="722.733" Width="732.395">
+        Title="ItemRegistrationWindow" Height="805.933" Width="1261.795">
     <Grid Margin="0,0,0.2,0.2">
         <Label Content="Register Item" HorizontalAlignment="Left" Margin="313,10,0,0" VerticalAlignment="Top" Height="29" Width="122"/>
         <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="626" Margin="45,44,-1.6,0" VerticalAlignment="Top" Width="682">
@@ -26,7 +26,22 @@
             </StackPanel>
             <StackPanel x:Name="stackPanelItemRegistrationInput" HorizontalAlignment="Left" Height="572" Margin="126,0,0,0" VerticalAlignment="Top" Width="501">
                 <TextBox x:Name="textBoxTitle" Height="35" TextWrapping="Wrap" Margin="0,0,74.2,0" HorizontalAlignment="Left" Width="380"/>
-                <ComboBox x:Name="comboBoxGenre" Height="35" Width="380" HorizontalAlignment="Left"/>
+                <StackPanel x:Name="stackPanelGenre" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="381" Orientation="Horizontal">
+                    <ComboBox x:Name="comboBoxGenreHundreds" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top">
+                        <ListBoxItem Content="Computer Science, Information &amp; General works"/>
+                        <ListBoxItem Content="Philosophy &amp; Psychology"/>
+                        <ListBoxItem Content="Religion"/>
+                        <ListBoxItem Content="Social Sciences"/>
+                        <ListBoxItem Content="Language"/>
+                        <ListBoxItem Content="Science"/>
+                        <ListBoxItem Content="Technology"/>
+                        <ListBoxItem Content="Arts and Recreation"/>
+                        <ListBoxItem Content="Literature and Rhetoric"/>
+                        <ListBoxItem Content="History &amp; Geography"/>
+                    </ComboBox>
+                    <ComboBox x:Name="comboBoxGenreTens" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="comboBoxGenreOnes" Width="126" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
+                </StackPanel>
                 <ComboBox x:Name="comboBoxFormat" Height="35" Width="380" HorizontalAlignment="Left">
                     <ListBoxItem Content="Book"/>
                     <ListBoxItem Content="Other"/>
@@ -37,7 +52,7 @@
                 <TextBox x:Name="textBoxDeweyDecimal" TextWrapping="Wrap" Margin="0,0,-1,0" Height="35" Width="380" HorizontalAlignment="Left"/>
                 <StackPanel HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="500" Orientation="Horizontal">
                     <TextBox x:Name="textBoxISBNTen" HorizontalAlignment="Left" TextWrapping="Wrap" Width="380" Height="35" VerticalAlignment="Top"/>
-                    <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="120" Click="buttonConvertToISBN13_Click" RenderTransformOrigin="0.922,7.39" Height="35" VerticalAlignment="Top"/>
+                    <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="120" Click="buttonConvertToISBN13_Click" Height="35" VerticalAlignment="Top"/>
                 </StackPanel>
                 <TextBox x:Name="textBoxISBNThirteen" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxPublisher" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>

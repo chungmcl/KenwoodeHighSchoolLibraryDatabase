@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.OleDb;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -19,9 +20,22 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class ItemRegistrationWindow : Window
     {
+        OleDbConnection c;
+        OleDbDataReader reader;
+        OleDbCommand command;
+        List<string> selectedColumnValues;
         public ItemRegistrationWindow()
         {
             InitializeComponent();
+
+            c = new OleDbConnection();
+            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin";
+            command = new OleDbCommand();
+            command.Connection = c;
+            reader = null;
+
+            selectedColumnValues = new List<String>();
         }
 
         /// <summary>
@@ -66,6 +80,20 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
             textBoxISBNThirteen.Text = ConvertToISBNThirteen(textBoxISBNTen.Text);
+        }
+
+        private void LoadGenreDeweyDecimal()
+        {
+            string column = comboBoxGenreHundreds.Text;
+            c.Open();
+            command.CommandText = $"SELECT {column} FROM deweyDecimals";
+            reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                selectedColumnValues.Add(reader.ToString());
+            }
+
+            //comboBoxGenreTens.Items.Add();
         }
     }
 }
