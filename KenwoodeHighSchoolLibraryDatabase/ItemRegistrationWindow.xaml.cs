@@ -130,5 +130,36 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string deweyDecimal = (hundreds + tens + ones).ToString();
             textBoxDeweyDecimal.Text = deweyDecimal;
         }
+
+        private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
+        {
+            string itemID = "1234"; // write code to generate unique itemID!
+            //string title = textBoxTitle.Text;
+            //string genreClassOne = comboBoxGenreHundreds.SelectedValue.ToString().Substring(37); // substring because loaded as ListBoxItem
+            //string genreClassTwo = comboBoxGenreTens.SelectedValue.ToString();
+            //string genreClassThree = comboBoxGenreOnes.SelectedValue.ToString();
+            //string format = comboBoxFormat.SelectedValue.ToString().Substring(37); // substring because loaded as ListBoxItem
+            //string authorFirstName = textBoxAuthorFName.Text;
+            //string authorMiddleName = textBoxAuthorMName.Text;
+            //string authorLastName = textBoxAuthorLName.Text;
+            //string deweyDecimal = textBoxDeweyDecimal.Text;
+            //string isbnTen = textBoxISBNTen.Text;
+            //string isbnThirteen = textBoxISBNThirteen.Text;
+            //string publisher = textBoxPublisher.Text;
+            //string publicationYear = textBoxPublicationYear.Text;
+            //string edition = textBoxEdition.Text;
+            //string description = textBoxDescription.Text;
+            c.Open();
+            command.CommandText = "INSERT INTO items ([itemID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
+                "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISBN13], [publisher], " +
+                "[publicationYear], [edition], [description]) " +
+                $"VALUES ('{itemID}', '{textBoxTitle.Text}', '{comboBoxGenreHundreds.SelectedValue.ToString().Substring(37)}', " +
+                $"'{comboBoxGenreTens.SelectedValue.ToString()}', '{comboBoxGenreOnes.SelectedValue.ToString()}', '{comboBoxFormat.SelectedValue.ToString().Substring(37)}', " +
+                $"'{textBoxAuthorFName.Text}', '{textBoxAuthorMName.Text}', '{textBoxAuthorLName.Text}', " +
+                $"'{textBoxDeweyDecimal.Text}', '{textBoxISBNTen.Text}', '{textBoxISBNThirteen.Text}', " +
+                $"'{textBoxPublisher.Text}', '{textBoxPublicationYear.Text}', '{textBoxEdition.Text}', '{textBoxDescription.Text}')";
+            command.ExecuteNonQuery();
+            c.Close();
+        }
     }
 }
