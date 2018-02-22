@@ -24,11 +24,11 @@
                 <Label x:Name="labelEdition" Content="Edition" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelDescription" Content="Description" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
             </StackPanel>
-            <StackPanel x:Name="stackPanelItemRegistrationInput" HorizontalAlignment="Left" Height="572" Margin="126,0,0,0" VerticalAlignment="Top" Width="501">
+            <StackPanel x:Name="stackPanelItemRegistrationInput" HorizontalAlignment="Left" Height="572" Margin="126,0,0,0" VerticalAlignment="Top" Width="545">
                 <TextBox x:Name="textBoxTitle" Height="35" TextWrapping="Wrap" Margin="0,0,74.2,0" HorizontalAlignment="Left" Width="380"/>
                 <StackPanel x:Name="stackPanelGenre" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="381" Orientation="Horizontal">
-                    <ComboBox x:Name="comboBoxGenreHundreds" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top">
-                        <ListBoxItem Content="Computer Science, Information &amp; General works"/>
+                    <ComboBox x:Name="comboBoxGenreHundreds" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreHundreds_SelectionChanged">
+                        <ListBoxItem Content="Computer Science Information and General Works"/>
                         <ListBoxItem Content="Philosophy &amp; Psychology"/>
                         <ListBoxItem Content="Religion"/>
                         <ListBoxItem Content="Social Sciences"/>
@@ -38,8 +38,9 @@
                         <ListBoxItem Content="Arts and Recreation"/>
                         <ListBoxItem Content="Literature and Rhetoric"/>
                         <ListBoxItem Content="History &amp; Geography"/>
+                        <ListBoxItem Content="Fiction"/>
                     </ComboBox>
-                    <ComboBox x:Name="comboBoxGenreTens" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="comboBoxGenreTens" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreTens_SelectionChanged"/>
                     <ComboBox x:Name="comboBoxGenreOnes" Width="126" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
                 </StackPanel>
                 <ComboBox x:Name="comboBoxFormat" Height="35" Width="380" HorizontalAlignment="Left">
@@ -49,10 +50,13 @@
                 <TextBox x:Name="textBoxAuthorFName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                 <TextBox x:Name="textBoxAuthorMName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                 <TextBox x:Name="textBoxAuthorLName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
-                <TextBox x:Name="textBoxDeweyDecimal" TextWrapping="Wrap" Margin="0,0,-1,0" Height="35" Width="380" HorizontalAlignment="Left"/>
-                <StackPanel HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="500" Orientation="Horizontal">
+                <StackPanel HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="545" Orientation="Horizontal">
+                    <TextBox x:Name="textBoxDeweyDecimal" TextWrapping="Wrap" Width="380" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
+                    <Button x:Name="buttonGenerateDeweyDecimal" Content="Calculate Dewey Decimal #" Width="165" Height="35" VerticalAlignment="Top" Click="buttonGenerateDeweyDecimal_Click"/>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="545" Orientation="Horizontal">
                     <TextBox x:Name="textBoxISBNTen" HorizontalAlignment="Left" TextWrapping="Wrap" Width="380" Height="35" VerticalAlignment="Top"/>
-                    <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="120" Click="buttonConvertToISBN13_Click" Height="35" VerticalAlignment="Top"/>
+                    <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="165" Click="buttonConvertToISBN13_Click" Height="35" VerticalAlignment="Top"/>
                 </StackPanel>
                 <TextBox x:Name="textBoxISBNThirteen" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxPublisher" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>

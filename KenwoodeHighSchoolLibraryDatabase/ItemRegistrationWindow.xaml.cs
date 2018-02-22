@@ -82,18 +82,53 @@ namespace KenwoodeHighSchoolLibraryDatabase
             textBoxISBNThirteen.Text = ConvertToISBNThirteen(textBoxISBNTen.Text);
         }
 
-        private void LoadGenreDeweyDecimal()
+        private void comboBoxGenreHundreds_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string column = comboBoxGenreHundreds.Text;
+            comboBoxGenreTens.Items.Clear();
+            selectedColumnValues.Clear();
+            int column = comboBoxGenreHundreds.SelectedIndex;
             c.Open();
-            command.CommandText = $"SELECT {column} FROM deweyDecimals";
+            command.CommandType = System.Data.CommandType.Text;
+            command.CommandText = $"SELECT [{column}] FROM deweyDecimal";
             reader = command.ExecuteReader();
+            int count = 0;
+            selectedColumnValues.Add("[General]");
             while (reader.Read())
             {
-                selectedColumnValues.Add(reader.ToString());
+                string toAdd = reader[$"{column}"].ToString();
+                selectedColumnValues.Add(toAdd);
+                if ((count % 10) == 0)
+                {
+                    comboBoxGenreTens.Items.Add(selectedColumnValues[count]);
+                }
+                count = count + 1;
             }
+            c.Close();
+        }
 
-            //comboBoxGenreTens.Items.Add();
+        private void comboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            comboBoxGenreOnes.Items.Clear();
+            if (comboBoxGenreTens.SelectedValue != null)
+            {
+                comboBoxGenreOnes.Items.Clear();
+                comboBoxGenreOnes.Items.Add("[General]");
+                int sectionStart = (comboBoxGenreTens.SelectedIndex * 10) + 1;
+                for (int i = sectionStart; i <= sectionStart + 8; i++)
+                {
+                    string toAdd = selectedColumnValues[i];
+                    comboBoxGenreOnes.Items.Add(toAdd);
+                }
+            }
+        }
+
+        private void buttonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
+        {
+            int hundreds = comboBoxGenreHundreds.SelectedIndex * 100;
+            int tens = comboBoxGenreTens.SelectedIndex * 10;
+            int ones = comboBoxGenreOnes.SelectedIndex;
+            string deweyDecimal = (hundreds + tens + ones).ToString();
+            textBoxDeweyDecimal.Text = deweyDecimal;
         }
     }
 }
