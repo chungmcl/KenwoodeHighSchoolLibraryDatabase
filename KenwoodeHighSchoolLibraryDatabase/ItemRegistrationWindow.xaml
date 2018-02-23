@@ -8,7 +8,7 @@
         Title="ItemRegistrationWindow" Height="805.933" Width="1261.795">
     <Grid Margin="0,0,0.2,0.2">
         <Label Content="Register Item" HorizontalAlignment="Left" Margin="313,10,0,0" VerticalAlignment="Top" Height="29" Width="122"/>
-        <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="626" Margin="45,44,-1.6,0" VerticalAlignment="Top" Width="682">
+        <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="682" Margin="45,44,0,0" VerticalAlignment="Top" Width="682">
             <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="459" Margin="10,10,0,0" VerticalAlignment="Top" Width="101">
                 <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelGenre" Content="Genre" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
@@ -64,7 +64,8 @@
                 <TextBox x:Name="textBoxEdition" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxDescription" HorizontalAlignment="Left" Height="149" TextWrapping="Wrap" VerticalAlignment="Top" Width="380"/>
             </StackPanel>
-            <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="270,581,0,0" VerticalAlignment="Top" Width="96" Click="buttonRegisterItem_Click"/>
+            <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="271,653,0,0" VerticalAlignment="Top" Width="96" Click="buttonRegisterItem_Click"/>
+            <Label x:Name="labelItemID" Content="User ID = " HorizontalAlignment="Left" Margin="271,601,0,0" VerticalAlignment="Top"/>
 
         </Grid>
     </Grid>

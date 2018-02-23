@@ -104,6 +104,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 count = count + 1;
             }
             c.Close();
+            reader.Close();
         }
 
         private void comboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -133,22 +134,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
         {
-            string itemID = "1234"; // write code to generate unique itemID!
-            //string title = textBoxTitle.Text;
-            //string genreClassOne = comboBoxGenreHundreds.SelectedValue.ToString().Substring(37); // substring because loaded as ListBoxItem
-            //string genreClassTwo = comboBoxGenreTens.SelectedValue.ToString();
-            //string genreClassThree = comboBoxGenreOnes.SelectedValue.ToString();
-            //string format = comboBoxFormat.SelectedValue.ToString().Substring(37); // substring because loaded as ListBoxItem
-            //string authorFirstName = textBoxAuthorFName.Text;
-            //string authorMiddleName = textBoxAuthorMName.Text;
-            //string authorLastName = textBoxAuthorLName.Text;
-            //string deweyDecimal = textBoxDeweyDecimal.Text;
-            //string isbnTen = textBoxISBNTen.Text;
-            //string isbnThirteen = textBoxISBNThirteen.Text;
-            //string publisher = textBoxPublisher.Text;
-            //string publicationYear = textBoxPublicationYear.Text;
-            //string edition = textBoxEdition.Text;
-            //string description = textBoxDescription.Text;
+            // IMPLEMENT CODE TO READJUST ITEMID WHEN AN ITEM IS REMOVED OR EDITED
+            // REMOVED IDS SHOULD BE FILLED IN THE NEXT TIME A BOOK OF THE SAME ISBN IS REGISTERED
+            // (Being implemented in CheckItemIDS)
+            string itemID = textBoxISBNThirteen.Text + $"-{CheckItemIDs(textBoxISBNThirteen.Text)}";
             c.Open();
             command.CommandText = "INSERT INTO items ([itemID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
                 "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISBN13], [publisher], " +
@@ -160,6 +149,38 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 $"'{textBoxPublisher.Text}', '{textBoxPublicationYear.Text}', '{textBoxEdition.Text}', '{textBoxDescription.Text}')";
             command.ExecuteNonQuery();
             c.Close();
+        }
+
+        private int CheckItemIDs(string isbnThirteen)
+        {
+            // Need to sort the database by ID in ascending order for it to work - SQL not working right now
+            isbnThirteen = textBoxISBNThirteen.Text;
+            c.Open();
+            command.CommandText = "SELECT * FROM items ORDER BY itemID";
+            command.ExecuteNonQuery();
+            command.CommandType = System.Data.CommandType.Text;
+            command.CommandText = $"SELECT [itemID] FROM items WHERE itemID LIKE '%{isbnThirteen}-%'";
+            reader = command.ExecuteReader();
+            reader.Read();
+            string test = reader[0].ToString();
+            int previous = int.Parse(reader[0].ToString().Substring(14));
+            int suffix = 1;
+            while (reader.Read())
+            {
+                int current = int.Parse(reader[0].ToString().Substring(14));
+                if (current == previous + 1)
+                {
+                    suffix = current + 1;
+                    previous = current;
+                }
+                else
+                {
+                    suffix = previous + 1;
+                    break;
+                }
+            }
+            c.Close();
+            return suffix;
         }
     }
 }
