@@ -77,7 +77,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             return isbnThirteen;
         }
 
-        // Strictly accepts ONLY letters and numbers within English alphabet (upper or lowercase)
+        // Strictly trims all chracters except for numerical values
         private string AgressiveTrim(string check)
         {
             List<char> newStringCharList = new List<char>();
@@ -85,8 +85,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             for (int i = 0; i <= length - 1; i++)
             {
                 char current = check[i];
-                if (!(current >= 32 && current <= 47) || !(current >= 58 && current <= 64)
-                    || !(current >= 91 && current <= 96) || current >= 123)
+                if (current >= 48 && current <= 57)
                 {
                     newStringCharList.Add(current);
                 }
@@ -98,22 +97,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
             string isbnTen = textBoxISBNTen.Text.Trim();
-            if (isbnTen.ToArray().Count() == 10)
+            isbnTen = AgressiveTrim(isbnTen);
+            if (isbnTen != "" && isbnTen.ToArray().Count() == 10)
             {
-                isbnTen = AgressiveTrim(isbnTen);
-                if (isbnTen.All(char.IsDigit) && isbnTen != "")
-                {
 
-                    textBoxISBNThirteen.Text = ConvertToISBNThirteen(textBoxISBNTen.Text);
-                }
-                else
-                {
-                    MessageBox.Show("ISBN10 must be 10 digits and contain numeric values only.");
-                }
+                textBoxISXX.Text = ConvertToISBNThirteen(isbnTen);
             }
             else
             {
-                MessageBox.Show("ISBN10 numbers must be 10 characters long");
+                MessageBox.Show("ISBN10 must be ten DIGITS long.");
             }
         }
 
@@ -179,28 +171,63 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
         {
-            int copyID = GenerateCopyID(textBoxISBNThirteen.Text);
-            string itemID = textBoxISBNThirteen.Text + $"-{copyID}";
-            c.Open();
-            command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
-                "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISBN13], [publisher], " +
-                "[publicationYear], [edition], [description]) " +
-                $"VALUES ('{itemID}', {copyID}, '{textBoxTitle.Text}', '{comboBoxGenreHundreds.SelectedValue.ToString().Substring(37)}', " +
-                $"'{comboBoxGenreTens.SelectedValue.ToString()}', '{comboBoxGenreOnes.SelectedValue.ToString()}', '{comboBoxFormat.SelectedValue.ToString().Substring(37)}', " +
-                $"'{textBoxAuthorFName.Text}', '{textBoxAuthorMName.Text}', '{textBoxAuthorLName.Text}', " +
-                $"'{textBoxDeweyDecimal.Text}', '{textBoxISBNTen.Text}', '{textBoxISBNThirteen.Text}', " +
-                $"'{textBoxPublisher.Text}', '{textBoxPublicationYear.Text}', '{textBoxEdition.Text}', '{textBoxDescription.Text}')";
-            command.ExecuteNonQuery();
-            c.Close();
-            this.DialogResult = true;
+            string message = CheckRequiredItemsFilledOut();
+            string isxx = textBoxISXX.Text;
+            if (message == "")
+            {
+                int copyID = GenerateCopyID(textBoxISXX.Text);
+                string itemID = textBoxISXX.Text + $"-{copyID}";
+                c.Open();
+                command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
+                    "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISXX], [publisher], " +
+                    "[publicationYear], [edition], [description]) " +
+                    $"VALUES ('{itemID}', {copyID}, '{textBoxTitle.Text}', '{comboBoxGenreHundreds.SelectedValue.ToString().Substring(37)}', " +
+                    $"'{comboBoxGenreTens.SelectedValue.ToString()}', '{comboBoxGenreOnes.SelectedValue.ToString()}', '{comboBoxFormat.SelectedValue.ToString().Substring(37)}', " +
+                    $"'{textBoxAuthorFName.Text}', '{textBoxAuthorMName.Text}', '{textBoxAuthorLName.Text}', " +
+                    $"'{textBoxDeweyDecimal.Text}', '{textBoxISBNTen.Text}', '{textBoxISXX.Text}', " +
+                    $"'{textBoxPublisher.Text}', '{textBoxPublicationYear.Text}', '{textBoxEdition.Text}', '{textBoxDescription.Text}')";
+                command.ExecuteNonQuery();
+                c.Close();
+                this.DialogResult = true;
+            }
+            else
+            {
+                MessageBox.Show(message);
+            }
         }
 
-        private int GenerateCopyID(string isbnThirteen)
+        private string CheckRequiredItemsFilledOut()
         {
-            isbnThirteen = textBoxISBNThirteen.Text;
+            if (comboBoxGenreHundreds.SelectedIndex == -1 || comboBoxGenreTens.SelectedIndex == -1
+                || comboBoxGenreOnes.SelectedIndex == -1)
+            {
+                return "A genre is required. " +
+                    "Genre boxes must be filled out. Please select values for all three Genre boxes.";
+            }
+            if (comboBoxFormat.SelectedIndex == -1)
+            {
+                return "A format is required. " +
+                    "Format box must be filled out. PLease select values for the Format box.";
+            }
+            if (textBoxISXX.Text == "")
+            {
+                return "An ISBN13 number is required. Please enter a value for an ISBN13 number " +
+                    "or generate one from an ISBN10 number.";
+            }
+            if (textBoxDeweyDecimal.Text == "")
+            {
+                return "A Dewey Decimal number is required. Please enter a value for a Dewey Decimal number " +
+                    "or generate one from the genre or author.";
+            }
+            return "";
+        }
+
+        private int GenerateCopyID(string isxx)
+        {
+            isxx = textBoxISXX.Text;
             c.Open();
             command.CommandType = System.Data.CommandType.Text;
-            command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE itemID LIKE '%{isbnThirteen}-%' ORDER BY [copyID]";
+            command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE itemID LIKE '%{isxx}-%' ORDER BY [copyID]";
             reader = command.ExecuteReader();
             int previous;
             int copyID = 1;
@@ -231,6 +258,25 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             c.Close();
             return copyID; // Also suffix of ItemID
+        }
+
+        private void comboBoxFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboBoxFormat.SelectedIndex == 1)
+            {
+                labelISXX.Content = "ISXX";
+                labelISBNTen.IsEnabled = false;
+                textBoxISBNTen.IsEnabled = false;
+                textBoxISBNTen.Clear();
+                buttonConvertToISBN13.IsEnabled = false;
+            }
+            else
+            {
+                labelISXX.Content = "ISBN 13";
+                labelISBNTen.IsEnabled = true;
+                textBoxISBNTen.IsEnabled = true;
+                buttonConvertToISBN13.IsEnabled = true;
+            }
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="Kenwoode HS Library Database" Height="683.4" Width="1219.3" ResizeMode="CanMinimize">
+        Title="Kenwoode HS Library Database" Height="774.6" Width="1237.7" ResizeMode="CanMinimize">
     <Grid x:Name="GridMain" Background="White" Margin="0,0,-6.4,1">
         <Button x:Name="BtnToUserRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="164,347,0,0" Click="BtnToUserRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
         <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="9,347,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
@@ -26,7 +26,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid x:Name="dataGridItems" 
-                  HorizontalAlignment="Left" Height="220" Margin="10,372,0,0" VerticalAlignment="Top" Width="880" 
+                  HorizontalAlignment="Left" Height="220" Margin="10,434,0,0" VerticalAlignment="Top" Width="880" 
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="120"/>
@@ -34,7 +34,7 @@
                 <DataGridTextColumn Header="Format" IsReadOnly="True" Binding="{Binding format, Mode=OneWay}" Width="70"/>
                 <DataGridTextColumn Header="Genre" IsReadOnly="True" Binding="{Binding genre, Mode=OneWay}" Width="150"/>
                 <DataGridTextColumn Header="Title" IsReadOnly="True" Binding="{Binding title, Mode=OneWay}" Width="200"/>
-                <DataGridTextColumn Header="Author" IsReadOnly="True" Binding="{Binding author, Mode=OneWay}" Width="135"/>
+                <DataGridTextColumn Header="Author" IsReadOnly="True" Binding="{Binding authorName, Mode=OneWay}" Width="135"/>
                 <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding currentlyCheckedOutBy, Mode=OneWay}" Width="135"/>
             </DataGrid.Columns>
         </DataGrid>
@@ -45,7 +45,17 @@
         </ComboBox>
         <Label x:Name="labelSearchUser" Content="Search for user by: " HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
         <TextBox x:Name="textBoxAccountsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" TextChanged="textBoxAccountsSearchBy_TextChanged" GotFocus="textBoxAccountsSearchBy_GotFocus"/>
-        <Image Margin="406,10,376.2,559.6" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="437"/>
-        <Button x:Name="BtnToBookRegistrationWindow" Content="Button" HorizontalAlignment="Left" Margin="10,609,0,0" VerticalAlignment="Top" Width="74" Click="BtnToBookRegistrationWindow_Click" Height="25"/>
+        <Image Margin="436,10,348.6,636.8" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="453"/>
+        <Button x:Name="BtnToBookRegistrationWindow" Content="Register New Item" HorizontalAlignment="Left" Margin="10,659,0,0" VerticalAlignment="Top" Width="106" Click="BtnToBookRegistrationWindow_Click" Height="25"/>
+        <TextBox x:Name="textBoxItemsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" GotFocus="textBoxItemsSearchBy_GotFocus" TextChanged="textBoxItemsSearchBy_TextChanged"/>
+        <Label x:Name="labelSearchItems" Content="Search for item by: " HorizontalAlignment="Left" Margin="10,403,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
+        <ComboBox x:Name="comboBoxItemsSearchByOptions" HorizontalAlignment="Left" Margin="119,406,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxItemsSearchByOptions_SelectionChanged">
+            <ListBoxItem Content="Dewey Decimal"/>
+            <ListBoxItem Content="Book/Item ID"/>
+            <ListBoxItem Content="Title"/>
+            <ListBoxItem Content="Author Name"/>
+            <ListBoxItem Content="Genre"/>
+            <ListBoxItem Content="Lent To"/>
+        </ComboBox>
     </Grid>
 </Window>

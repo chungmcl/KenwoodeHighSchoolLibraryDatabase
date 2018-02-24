@@ -9,7 +9,7 @@
     <Grid Margin="0,0,0.2,0.2">
         <Label Content="Register Item" HorizontalAlignment="Left" Margin="313,10,0,0" VerticalAlignment="Top" Height="29" Width="122"/>
         <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="682" Margin="45,44,0,0" VerticalAlignment="Top" Width="682">
-            <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="459" Margin="10,10,0,0" VerticalAlignment="Top" Width="101">
+            <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="459" Margin="10,0,0,0" VerticalAlignment="Top" Width="101">
                 <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelGenre" Content="Genre" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelFormat" Content="Format" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
@@ -17,8 +17,8 @@
                 <Label x:Name="labelAuthorMiddleName" Content="Author M. Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelAuthorSurname" Content="Author Surname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
                 <Label x:Name="labelDeweyDecimal" Content="Dewey Decimal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
-                <Label x:Name="labelISBN10" Content="ISBN 10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
-                <Label x:Name="labelISBN13" Content="ISBN 13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
+                <Label x:Name="labelISBNTen" Content="ISBN 10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
+                <Label x:Name="labelISXX" Content="ISBN 13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
                 <Label x:Name="labelPublisher" Content="Publisher" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelPublicationYear" Content="Publication Year" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelEdition" Content="Edition" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
@@ -43,7 +43,7 @@
                     <ComboBox x:Name="comboBoxGenreTens" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreTens_SelectionChanged"/>
                     <ComboBox x:Name="comboBoxGenreOnes" Width="126" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
                 </StackPanel>
-                <ComboBox x:Name="comboBoxFormat" Height="35" Width="380" HorizontalAlignment="Left">
+                <ComboBox x:Name="comboBoxFormat" Height="35" Width="380" HorizontalAlignment="Left" SelectionChanged="comboBoxFormat_SelectionChanged">
                     <ListBoxItem Content="Book"/>
                     <ListBoxItem Content="Other"/>
                 </ComboBox>
@@ -52,20 +52,19 @@
                 <TextBox x:Name="textBoxAuthorLName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                 <StackPanel HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="545" Orientation="Horizontal">
                     <TextBox x:Name="textBoxDeweyDecimal" TextWrapping="Wrap" Width="380" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
-                    <Button x:Name="buttonGenerateDeweyDecimal" Content="Calculate Dewey Decimal #" Width="165" Height="35" VerticalAlignment="Top" Click="buttonGenerateDeweyDecimal_Click"/>
+                    <Button x:Name="buttonGenerateDeweyDecimal" Content="Calculate Dewey Decimal #&#xD;&#xA;(Partial)" Width="165" Height="35" VerticalAlignment="Top" Click="buttonGenerateDeweyDecimal_Click"/>
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="545" Orientation="Horizontal">
                     <TextBox x:Name="textBoxISBNTen" HorizontalAlignment="Left" TextWrapping="Wrap" Width="380" Height="35" VerticalAlignment="Top"/>
                     <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="165" Click="buttonConvertToISBN13_Click" Height="35" VerticalAlignment="Top"/>
                 </StackPanel>
-                <TextBox x:Name="textBoxISBNThirteen" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
+                <TextBox x:Name="textBoxISXX" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxPublisher" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxPublicationYear" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxEdition" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxDescription" HorizontalAlignment="Left" Height="149" TextWrapping="Wrap" VerticalAlignment="Top" Width="380"/>
             </StackPanel>
-            <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="271,653,0,0" VerticalAlignment="Top" Width="96" Click="buttonRegisterItem_Click"/>
-            <Label x:Name="labelItemID" Content="User ID = " HorizontalAlignment="Left" Margin="271,601,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="269,591,0,0" VerticalAlignment="Top" Width="96" Click="buttonRegisterItem_Click"/>
 
         </Grid>
     </Grid>

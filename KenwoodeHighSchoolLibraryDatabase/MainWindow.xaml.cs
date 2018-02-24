@@ -36,9 +36,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.Connection = c;
             reader = null;
             LoadDataGrid("SELECT * FROM accounts", true);
-            LoadDataGrid("SELECT [itemID], [copyID], [ISBN13], [deweyDecimal], [format], [genreClassOne], [title], " +
+            LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
                     "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                    "FROM [items] ORDER BY [authorLastName], [ISBN13], [copyID]", false);
+                    "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
 
         private void LoadDataGrid(string sqlText, bool loadAccounts)
@@ -85,8 +85,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newItem.format = reader["format"].ToString();
                 newItem.genre = reader["genreClassOne"].ToString();
                 newItem.title = reader["title"].ToString();
-                newItem.authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
+                string authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
                     $"{reader["authorMiddleName"].ToString()}";
+                newItem.authorName = authorName;
                 newItem.currentlyCheckedOutBy = reader["currentlyCheckedOutBy"].ToString();
                 dataGridItems.Items.Add(newItem);
             }
@@ -113,6 +114,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 textBoxAccountsSearchBy.Text = $"Enter a {setTextBoxTo}...";
                 LoadDataGrid("SELECT * FROM accounts", true);
+            }
+        }
+
+        private void comboBoxItemsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string setTextBoxTo = comboBoxItemsSearchByOptions.SelectedValue.ToString().Substring(37);
+            if (setTextBoxTo.Count() > 0)
+            {
+                textBoxItemsSearchBy.Text = $"Enter a {setTextBoxTo}...";
+                LoadDataGrid("SELECT * FROM items", false);
             }
         }
 
@@ -147,9 +158,55 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+
+        private void textBoxItemsSearchBy_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string currentText = textBoxItemsSearchBy.Text;
+            if (currentText == "")
+            {
+                LoadDataGrid("SELECT * FROM items", false);
+            }
+            else
+            {
+                int searchType = comboBoxItemsSearchByOptions.SelectedIndex;
+                string queryColumn = "";
+                switch (searchType)
+                {
+                    case 0:
+                        queryColumn = "deweyDecimal";
+                        break;
+                    case 1:
+                        queryColumn = "itemID";
+                        break;
+                    case 2:
+                        queryColumn = "title";
+                        break;
+                    case 3:
+                        queryColumn = "authorLastName"; // need to include full name
+                        break;
+                    case 4:
+                        queryColumn = "genre";
+                        break;
+                    case 5:
+                        queryColumn = "currentlyCheckedOutBy";
+                        break;
+                }
+
+                if (queryColumn != "")
+                {
+                    LoadDataGrid($"SELECT * FROM items WHERE [{queryColumn}] = '{currentText}'", false);
+                }
+            }
+        }
+
         private void textBoxAccountsSearchBy_GotFocus(object sender, RoutedEventArgs e)
         {
             textBoxAccountsSearchBy.Text = "";
+        }
+
+        private void textBoxItemsSearchBy_GotFocus(object sender, RoutedEventArgs e)
+        {
+            textBoxItemsSearchBy.Text = "";
         }
 
         private void BtnToBookRegistrationWindow_Click(object sender, RoutedEventArgs e)
@@ -159,9 +216,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             bool? receive = x.ShowDialog();
             if (receive == true)
             {
-                LoadDataGrid("SELECT [itemID], [copyID], [ISBN13], [deweyDecimal], [format], [genreClassOne], [title], " +
+                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
                     "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                    "FROM [items] ORDER BY [ISBN13], [copyID]", false);
+                    "FROM [items] ORDER BY [ISXX], [copyID]", false);
             }
         }
 
@@ -193,18 +250,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
     {
         public string itemID { get; set; }
         public string deweyDecimal { get; set; }
-        //public string ISBN10 { get; set; }
-        //public string ISBN13 { get; set; }
-        //public string ISXX { get; set; }
-        //public string format { get; set; }
         public string title { get; set; }
         public string authorName { get; set; }
         public string genre  { get; set; }
         public string format { get; set; }
-        //public string publisher { get; set; }
-        //public string publicationYear { get; set; }
-        //public string edition { get; set; }
         public string currentlyCheckedOutBy { get; set; }
-        //public string previousCheckedOutBy { get; set; }
     }
 }
