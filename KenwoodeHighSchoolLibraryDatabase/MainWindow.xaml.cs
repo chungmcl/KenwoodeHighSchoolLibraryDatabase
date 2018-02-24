@@ -38,7 +38,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             LoadDataGrid("SELECT * FROM accounts", true);
             LoadDataGrid("SELECT [itemID], [copyID], [ISBN13], [deweyDecimal], [format], [genreClassOne], [title], " +
                     "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                    "FROM [items] ORDER BY [ISBN13], [copyID]", false);
+                    "FROM [items] ORDER BY [authorLastName], [ISBN13], [copyID]", false);
         }
 
         private void LoadDataGrid(string sqlText, bool loadAccounts)
