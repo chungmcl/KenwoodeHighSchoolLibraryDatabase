@@ -77,9 +77,44 @@ namespace KenwoodeHighSchoolLibraryDatabase
             return isbnThirteen;
         }
 
+        // Strictly accepts ONLY letters and numbers within English alphabet (upper or lowercase)
+        private string AgressiveTrim(string check)
+        {
+            List<char> newStringCharList = new List<char>();
+            int length = check.ToArray().Count();
+            for (int i = 0; i <= length - 1; i++)
+            {
+                char current = check[i];
+                if (!(current >= 32 && current <= 47) || !(current >= 58 && current <= 64)
+                    || !(current >= 91 && current <= 96) || current >= 123)
+                {
+                    newStringCharList.Add(current);
+                }
+            }
+            string newString = new string(newStringCharList.ToArray());
+            return newString;
+        }
+
         private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
-            textBoxISBNThirteen.Text = ConvertToISBNThirteen(textBoxISBNTen.Text);
+            string isbnTen = textBoxISBNTen.Text.Trim();
+            if (isbnTen.ToArray().Count() == 10)
+            {
+                isbnTen = AgressiveTrim(isbnTen);
+                if (isbnTen.All(char.IsDigit) && isbnTen != "")
+                {
+
+                    textBoxISBNThirteen.Text = ConvertToISBNThirteen(textBoxISBNTen.Text);
+                }
+                else
+                {
+                    MessageBox.Show("ISBN10 must be 10 digits and contain numeric values only.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("ISBN10 numbers must be 10 characters long");
+            }
         }
 
         private void comboBoxGenreHundreds_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -125,11 +160,21 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
         {
-            int hundreds = comboBoxGenreHundreds.SelectedIndex * 100;
-            int tens = comboBoxGenreTens.SelectedIndex * 10;
-            int ones = comboBoxGenreOnes.SelectedIndex;
-            string deweyDecimal = (hundreds + tens + ones).ToString();
-            textBoxDeweyDecimal.Text = deweyDecimal;
+            if ((comboBoxGenreHundreds.SelectedIndex != -1) && (comboBoxGenreTens.SelectedIndex != -1)
+                && (comboBoxGenreOnes.SelectedIndex != -1))
+            {
+                int hundreds = comboBoxGenreHundreds.SelectedIndex * 100;
+                int tens = comboBoxGenreTens.SelectedIndex * 10;
+                int ones = comboBoxGenreOnes.SelectedIndex;
+                string deweyDecimal = (hundreds + tens + ones).ToString();
+                textBoxDeweyDecimal.Text = deweyDecimal;
+            }
+            else
+            {
+                MessageBox.Show("All genre input boxes or author last/first name must be filled out to " +
+                    "generate a Dewey Decimal.");
+            }
+            
         }
 
         private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
