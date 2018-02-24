@@ -88,8 +88,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 MessageBox.Show($"Another student ({userIDs[checkUserID][1]} {userIDs[checkUserID][2]}) already " +
                     $"holds this Student/Teacher ID ({userIDs[checkUserID][0]}). Did you enter the wrong ID?");
             }
+            c.Close(); // close first
             this.DialogResult = true;
-            c.Close();
         }
 
         /// <summary>

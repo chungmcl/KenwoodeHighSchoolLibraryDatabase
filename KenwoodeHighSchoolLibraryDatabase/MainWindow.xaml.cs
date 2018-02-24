@@ -36,6 +36,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.Connection = c;
             reader = null;
             LoadDataGrid("SELECT * FROM accounts", true);
+            LoadDataGrid("SELECT [itemID], [copyID], [ISBN13], [deweyDecimal], [format], [genreClassOne], [title], " +
+                    "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                    "FROM [items] ORDER BY [ISBN13], [copyID]", false);
         }
 
         private void LoadDataGrid(string sqlText, bool loadAccounts)
@@ -79,23 +82,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 Item newItem = new Item();
                 newItem.itemID = reader["itemID"].ToString();
                 newItem.deweyDecimal = reader["deweyDecimal"].ToString();
+                newItem.format = reader["format"].ToString();
+                newItem.genre = reader["genreClassOne"].ToString();
                 newItem.title = reader["title"].ToString();
                 newItem.authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
                     $"{reader["authorMiddleName"].ToString()}";
-                newItem.genre = reader["genre"].ToString();
                 newItem.currentlyCheckedOutBy = reader["currentlyCheckedOutBy"].ToString();
                 dataGridItems.Items.Add(newItem);
-            }
-        }
-
-        private void BtnToUserRegistrationWindow_Click(object sender, RoutedEventArgs e)
-        {
-            UserRegistrationWindow w = new UserRegistrationWindow();
-            w.Owner = this;
-            bool? receive = w.ShowDialog();
-            if (receive == true)
-            {
-                LoadDataGrid("SELECT * FROM accounts", true);
             }
         }
 
@@ -162,7 +155,25 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void BtnToBookRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
             ItemRegistrationWindow x = new ItemRegistrationWindow();
-            x.Show();
+            x.Owner = this;
+            bool? receive = x.ShowDialog();
+            if (receive == true)
+            {
+                LoadDataGrid("SELECT [itemID], [copyID], [ISBN13], [deweyDecimal], [format], [genreClassOne], [title], " +
+                    "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                    "FROM [items] ORDER BY [ISBN13], [copyID]", false);
+            }
+        }
+
+        private void BtnToUserRegistrationWindow_Click(object sender, RoutedEventArgs e)
+        {
+            UserRegistrationWindow w = new UserRegistrationWindow();
+            w.Owner = this;
+            bool? receive = w.ShowDialog();
+            if (receive == true)
+            {
+                LoadDataGrid("SELECT * FROM accounts", true);
+            }
         }
     }
 
@@ -189,6 +200,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public string title { get; set; }
         public string authorName { get; set; }
         public string genre  { get; set; }
+        public string format { get; set; }
         //public string publisher { get; set; }
         //public string publicationYear { get; set; }
         //public string edition { get; set; }

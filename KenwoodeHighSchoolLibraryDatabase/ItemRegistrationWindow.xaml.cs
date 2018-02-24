@@ -147,6 +147,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 $"'{textBoxPublisher.Text}', '{textBoxPublicationYear.Text}', '{textBoxEdition.Text}', '{textBoxDescription.Text}')";
             command.ExecuteNonQuery();
             c.Close();
+            this.DialogResult = true;
         }
 
         private int GenerateCopyID(string isbnThirteen)
