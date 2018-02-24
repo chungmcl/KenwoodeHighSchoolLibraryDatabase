@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="ItemRegistrationWindow" Height="805.933" Width="1261.795">
+        Title="ItemRegistrationWindow" Height="789.133" Width="772.995">
     <Grid Margin="0,0,0.2,0.2">
         <Label Content="Register Item" HorizontalAlignment="Left" Margin="313,10,0,0" VerticalAlignment="Top" Height="29" Width="122"/>
         <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="682" Margin="45,44,0,0" VerticalAlignment="Top" Width="682">

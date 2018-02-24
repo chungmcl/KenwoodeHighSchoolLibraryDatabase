@@ -134,15 +134,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
         {
-            // IMPLEMENT CODE TO READJUST ITEMID WHEN AN ITEM IS REMOVED OR EDITED
-            // REMOVED IDS SHOULD BE FILLED IN THE NEXT TIME A BOOK OF THE SAME ISBN IS REGISTERED
-            // (Being implemented in CheckItemIDS)
-            string itemID = textBoxISBNThirteen.Text + $"-{CheckItemIDs(textBoxISBNThirteen.Text)}";
+            int copyID = GenerateCopyID(textBoxISBNThirteen.Text);
+            string itemID = textBoxISBNThirteen.Text + $"-{copyID}";
             c.Open();
-            command.CommandText = "INSERT INTO items ([itemID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
+            command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
                 "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISBN13], [publisher], " +
                 "[publicationYear], [edition], [description]) " +
-                $"VALUES ('{itemID}', '{textBoxTitle.Text}', '{comboBoxGenreHundreds.SelectedValue.ToString().Substring(37)}', " +
+                $"VALUES ('{itemID}', {copyID}, '{textBoxTitle.Text}', '{comboBoxGenreHundreds.SelectedValue.ToString().Substring(37)}', " +
                 $"'{comboBoxGenreTens.SelectedValue.ToString()}', '{comboBoxGenreOnes.SelectedValue.ToString()}', '{comboBoxFormat.SelectedValue.ToString().Substring(37)}', " +
                 $"'{textBoxAuthorFName.Text}', '{textBoxAuthorMName.Text}', '{textBoxAuthorLName.Text}', " +
                 $"'{textBoxDeweyDecimal.Text}', '{textBoxISBNTen.Text}', '{textBoxISBNThirteen.Text}', " +
@@ -151,36 +149,42 @@ namespace KenwoodeHighSchoolLibraryDatabase
             c.Close();
         }
 
-        private int CheckItemIDs(string isbnThirteen)
+        private int GenerateCopyID(string isbnThirteen)
         {
-            // Need to sort the database by ID in ascending order for it to work - SQL not working right now
             isbnThirteen = textBoxISBNThirteen.Text;
             c.Open();
-            command.CommandText = "SELECT * FROM items ORDER BY itemID";
-            command.ExecuteNonQuery();
             command.CommandType = System.Data.CommandType.Text;
-            command.CommandText = $"SELECT [itemID] FROM items WHERE itemID LIKE '%{isbnThirteen}-%'";
+            command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE itemID LIKE '%{isbnThirteen}-%' ORDER BY [copyID]";
             reader = command.ExecuteReader();
-            reader.Read();
-            string test = reader[0].ToString();
-            int previous = int.Parse(reader[0].ToString().Substring(14));
-            int suffix = 1;
-            while (reader.Read())
+            int previous;
+            int copyID = 1;
+            try
             {
-                int current = int.Parse(reader[0].ToString().Substring(14));
+                reader.Read();
+                previous = int.Parse(reader[1].ToString());
+            }
+            catch (InvalidOperationException) // If no IDs contain specified ISBN13 (isbnThirteen)
+            {
+                c.Close();
+                return 1;
+            }
+            
+            while (reader.Read()) // loop through ItemIDs and fill in gaps in suffixes if needed
+            {
+                int current = int.Parse(reader[1].ToString());
                 if (current == previous + 1)
                 {
-                    suffix = current + 1;
+                    copyID = current + 1;
                     previous = current;
                 }
                 else
                 {
-                    suffix = previous + 1;
+                    copyID = previous + 1;
                     break;
                 }
             }
             c.Close();
-            return suffix;
+            return copyID; // Also suffix of ItemID
         }
     }
 }
