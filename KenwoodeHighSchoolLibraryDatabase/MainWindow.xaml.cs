@@ -43,17 +43,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void LoadDataGrid(string sqlText, bool loadAccounts)
         {
-            dataGridAccounts.Items.Clear();
             c.Open();
             command.CommandText = sqlText;
             command.CommandType = System.Data.CommandType.Text;
             reader = command.ExecuteReader();
             if (loadAccounts)
             {
+                dataGridAccounts.Items.Clear();
                 LoadAccountsDataGrid(reader);
             }
             else
             {
+                dataGridItems.Items.Clear();
                 LoadItemsDataGrid(reader);
             }
             reader.Close();
@@ -69,7 +70,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newUser.lastName = reader["lastName"].ToString();
                 newUser.userID = reader["userID"].ToString();
                 newUser.userType = reader["userType"].ToString();
-                newUser.bookLimit = reader["bookLimit"].ToString();
+                newUser.itemLimit = reader["bookLimit"].ToString();
                 newUser.dateLimit = reader["dateLimit"].ToString();
                 dataGridAccounts.Items.Add(newUser);
             }
@@ -122,7 +123,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string setTextBoxTo = comboBoxItemsSearchByOptions.SelectedValue.ToString().Substring(37);
             if (setTextBoxTo.Count() > 0)
             {
-                textBoxItemsSearchBy.Text = $"Enter a {setTextBoxTo}...";
+                textBoxItemsSearchBy.Text = $"Enter a(n) {setTextBoxTo}...";
+                LoadDataGrid("SELECT * FROM items", false);
+            }
+            if (setTextBoxTo == "Lent To")
+            {
+                textBoxItemsSearchBy.Text = $"Enter who {setTextBoxTo}...";
                 LoadDataGrid("SELECT * FROM items", false);
             }
         }
@@ -185,7 +191,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         queryColumn = "authorLastName"; // need to include full name
                         break;
                     case 4:
-                        queryColumn = "genre";
+                        queryColumn = "genreClassOne";
                         break;
                     case 5:
                         queryColumn = "currentlyCheckedOutBy";
@@ -240,7 +246,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public string lastName { get; set; }
         public string userID { get; set; }
         public string userType { get; set; }
-        public string bookLimit { get; set; }
+        public string itemLimit { get; set; }
         public string dateLimit { get; set; }
         public string checkedOut { get; set; }
         public string overdue { get; set; }
