@@ -20,14 +20,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class ItemRegistrationWindow : Window
     {
-        OleDbConnection c;
-        OleDbDataReader reader;
-        OleDbCommand command;
-        List<string> selectedColumnValues;
+        private OleDbConnection c;
+        private OleDbDataReader reader;
+        private OleDbCommand command;
+        private List<string> selectedColumnValues;
         public ItemRegistrationWindow()
         {
             InitializeComponent();
-
             c = new OleDbConnection();
             c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
                 "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
@@ -35,29 +34,38 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.Connection = c;
             reader = null;
 
+            textBoxPreviousCheckedOutBy.IsEnabled = false;
+            textBoxCurrentlyCheckedOutBy.IsEnabled = false;
+            labelPreviousCheckedOutBy.IsEnabled = false;
+            labelCurrentlyCheckedOutBy.IsEnabled = false;
+            buttonCheckout.IsEnabled = false;
+
             selectedColumnValues = new List<String>();
+
+            labelWindowTitle.Content = "Register Item";
         }
 
-        string itemID;
-        string deweyDecimal;
-        string title;
-        string authorLastName;
-        string authorMiddleName;
-        string authorFirstName;
-        string genreClassOne;
-        string genreClassTwo;
-        string genreClassThree;
-        string format;
-        string currentlyCheckedOutBy;
-        string isxx;
-        string isbnTen;
-        string publisher;
-        string publicationYear;
-        string edition;
-        string description;
-        string previousCheckedOutBy;
+        private string itemID;
+        private string deweyDecimal;
+        private string title;
+        private string authorLastName;
+        private string authorMiddleName;
+        private string authorFirstName;
+        private string genreClassOne;
+        private string genreClassTwo;
+        private string genreClassThree;
+        private string format;
+        private string currentlyCheckedOutBy;
+        private string isxx;
+        private string isbnTen;
+        private string publisher;
+        private string publicationYear;
+        private string edition;
+        private string description;
+        private string previousCheckedOutBy;
         public ItemRegistrationWindow(Item item)
         {
+            InitializeComponent();
             c = new OleDbConnection();
             c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
                 "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
@@ -65,15 +73,26 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.Connection = c;
             reader = null;
             itemID = item.itemID;
+            // Add a label listing itemID
             isxx = itemID.Substring(0, 13);
+            textBoxISXX.Text = isxx;
             deweyDecimal = item.deweyDecimal;
+            textBoxDeweyDecimal.Text = deweyDecimal;
             title = item.title;
+            textBoxTitle.Text = title;
             // author name cannot be determined by passed item
             genreClassOne = item.genre;
+            comboBoxGenreHundreds.SelectedValue = genreClassOne; // does this work?
             format = item.format;
+            comboBoxFormat.SelectedValue = format; // does this work?
             currentlyCheckedOutBy = item.currentlyCheckedOutBy;
+            textBoxCurrentlyCheckedOutBy.Text = currentlyCheckedOutBy;
+            //textBoxPreviousCheckedOutBy.IsEnabled = true;
+            //textBoxCurrentlyCheckedOutBy.IsEnabled = true;
+            //labelPreviousCheckedOutBy.IsEnabled = true;
+            //labelCurrentlyCheckedOutBy.IsEnabled = true;
+            labelWindowTitle.Content = "View, Modify, or Checkout Item";
             LoadRemainingFields();
-            InitializeComponent();
         }
 
         private void LoadRemainingFields()
@@ -87,16 +106,27 @@ namespace KenwoodeHighSchoolLibraryDatabase
             reader = command.ExecuteReader();
             reader.Read();
             isbnTen = reader["ISBN10"].ToString();
+            textBoxISBNTen.Text = isbnTen;
             authorLastName = reader["authorLastName"].ToString();
+            textBoxAuthorLName.Text = authorLastName;
             authorMiddleName = reader["authorMiddleName"].ToString();
+            textBoxAuthorMName.Text = authorMiddleName;
             authorFirstName = reader["authorFirstName"].ToString();
+            textBoxAuthorFName.Text = authorFirstName;
             genreClassTwo = reader["genreClassTwo"].ToString();
+            comboBoxGenreTens.SelectedValue = genreClassTwo; // does this work?
             genreClassThree = reader["genreClassThree"].ToString();
+            comboBoxGenreOnes.SelectedItem = genreClassThree; // does this work?
             publisher = reader["publisher"].ToString();
+            textBoxPublisher.Text = publisher;
             publicationYear = reader["publicationYear"].ToString();
+            textBoxPublicationYear.Text = publicationYear;
             edition = reader["edition"].ToString();
+            textBoxEdition.Text = edition;
             description = reader["description"].ToString();
+            textBoxDescription.Text = description;
             previousCheckedOutBy = reader["previousCheckedOutBy"].ToString();
+            textBoxPreviousCheckedOutBy.Text = previousCheckedOutBy;
             reader.Close();
             c.Close();
         }
@@ -175,27 +205,37 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void comboBoxGenreHundreds_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            comboBoxGenreTens.Items.Clear();
-            selectedColumnValues.Clear();
-            int column = comboBoxGenreHundreds.SelectedIndex;
-            c.Open();
-            command.CommandType = System.Data.CommandType.Text;
-            command.CommandText = $"SELECT [{column}] FROM deweyDecimal";
-            reader = command.ExecuteReader();
-            int count = 0;
-            selectedColumnValues.Add("[General]");
-            while (reader.Read())
+            if (comboBoxGenreHundreds.SelectedIndex < 10)
             {
-                string toAdd = reader[$"{column}"].ToString();
-                selectedColumnValues.Add(toAdd);
-                if ((count % 10) == 0)
+                comboBoxGenreTens.IsEnabled = true;
+                comboBoxGenreOnes.IsEnabled = true;
+                comboBoxGenreTens.Items.Clear();
+                selectedColumnValues.Clear();
+                int column = comboBoxGenreHundreds.SelectedIndex;
+                c.Open();
+                command.CommandType = System.Data.CommandType.Text;
+                command.CommandText = $"SELECT [{column}] FROM deweyDecimal";
+                reader = command.ExecuteReader();
+                int count = 0;
+                selectedColumnValues.Add("[General]");
+                while (reader.Read())
                 {
-                    comboBoxGenreTens.Items.Add(selectedColumnValues[count]);
+                    string toAdd = reader[$"{column}"].ToString();
+                    selectedColumnValues.Add(toAdd);
+                    if ((count % 10) == 0)
+                    {
+                        comboBoxGenreTens.Items.Add(selectedColumnValues[count]);
+                    }
+                    count = count + 1;
                 }
-                count = count + 1;
+                c.Close();
+                reader.Close();
             }
-            c.Close();
-            reader.Close();
+            else
+            {
+                comboBoxGenreTens.IsEnabled = false;
+                comboBoxGenreOnes.IsEnabled = false;
+            }
         }
 
         private void comboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -216,21 +256,35 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
         {
-            if ((comboBoxGenreHundreds.SelectedIndex != -1) && (comboBoxGenreTens.SelectedIndex != -1)
-                && (comboBoxGenreOnes.SelectedIndex != -1))
+            if (comboBoxGenreHundreds.SelectedIndex == 10)
             {
-                int hundreds = comboBoxGenreHundreds.SelectedIndex * 100;
-                int tens = comboBoxGenreTens.SelectedIndex * 10;
-                int ones = comboBoxGenreOnes.SelectedIndex;
-                string deweyDecimal = (hundreds + tens + ones).ToString();
-                textBoxDeweyDecimal.Text = deweyDecimal;
+                if (textBoxAuthorFName.Text.Length > 1 && textBoxAuthorLName.Text.Length > 1)
+                {
+                    textBoxDeweyDecimal.Text = $"{textBoxAuthorFName.Text.Substring(0, 1)} {textBoxAuthorLName.Text.Substring(0, 4)}";
+                }
+                else
+                {
+                    MessageBox.Show("Author first and last name boxes must be filled out to generate a Dewey Decimal");
+                }
+                
             }
             else
             {
-                MessageBox.Show("All genre input boxes or author last/first name must be filled out to " +
-                    "generate a Dewey Decimal.");
+                if ((comboBoxGenreHundreds.SelectedIndex != -1) && (comboBoxGenreTens.SelectedIndex != -1)
+                && (comboBoxGenreOnes.SelectedIndex != -1))
+                {
+                    int hundreds = comboBoxGenreHundreds.SelectedIndex * 100;
+                    int tens = comboBoxGenreTens.SelectedIndex * 10;
+                    int ones = comboBoxGenreOnes.SelectedIndex;
+                    string deweyDecimal = (hundreds + tens + ones).ToString();
+                    textBoxDeweyDecimal.Text = deweyDecimal;
+                }
+                else
+                {
+                    MessageBox.Show("All genre input boxes must be filled out to " +
+                        "generate a Dewey Decimal.");
+                }
             }
-            
         }
 
         private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
@@ -344,6 +398,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion Register
 
+        private void buttonCheckout_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
     }
 }

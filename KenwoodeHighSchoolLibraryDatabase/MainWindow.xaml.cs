@@ -88,7 +88,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newItem.title = reader["title"].ToString();
                 string authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
                     $"{reader["authorMiddleName"].ToString()}";
-                newItem.authorName = authorName;
+                if (authorName.Length > 1) // not working?
+                {
+
+                    newItem.authorName = authorName;
+                }
+                else
+                {
+                    newItem.authorName = "";
+                }
                 newItem.currentlyCheckedOutBy = reader["currentlyCheckedOutBy"].ToString();
                 dataGridItems.Items.Add(newItem);
             }
