@@ -30,7 +30,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
             c = new OleDbConnection();
             c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin";
+                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
             command = new OleDbCommand();
             command.Connection = c;
             reader = null;
