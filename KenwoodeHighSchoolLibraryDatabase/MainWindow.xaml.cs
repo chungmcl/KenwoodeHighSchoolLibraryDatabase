@@ -27,6 +27,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
         OleDbCommand command;
         User selectedUser;
         Item selectedItem;
+        bool userSelected;
+        bool itemSelected;
         public MainWindow()
         {
             InitializeComponent();
@@ -120,12 +122,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
             selectedUser = (User)this.dataGridAccounts.SelectedItem;
             labelSelectedUser.Content = $"({selectedUser.userID}) " +
                 $"{selectedUser.lastName}, {selectedUser.firstName}";
+            this.userSelected = true;
         }
 
         private void dataGridItems_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             selectedItem = (Item)this.dataGridItems.SelectedItem;
             labelSelectedItemTitle.Content = selectedItem.title;
+            this.itemSelected = true;
         }
 
         #region DataGrid Queries
@@ -265,16 +269,28 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void BtnToCheckout_Click(object sender, RoutedEventArgs e)
         {
-            DateTime dueDate = (DateTime.Today.AddDays(double.Parse(selectedUser.dateLimit)).AddHours(23.9999));
-            if (MessageBox.Show(
-                $"Confirm Checkout -\n" +
-                $"Check out item: {selectedItem.title}\n" +
-                $"To user: ({selectedUser.userID}) {selectedUser.lastName}, {selectedUser.firstName}\n" +
-                $"For {selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
-                , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (userSelected && itemSelected)
             {
-
+                DateTime dueDate = (DateTime.Today.AddDays(double.Parse(selectedUser.dateLimit)).AddHours(23.9999));
+                if (MessageBox.Show(
+                    $"Confirm Checkout -\n" +
+                    $"Check out item: {selectedItem.title}\n" +
+                    $"To user: ({selectedUser.userID}) {selectedUser.lastName}, {selectedUser.firstName}\n" +
+                    $"For {selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
+                    , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    c.Open();
+                    command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = {selectedUser.userID} WHERE " +
+                        $"[itemID] = {selectedItem.itemID}";
+                    command.ExecuteNonQuery();
+                    int checkedOut = (int.Parse(selectedUser.checkedOut));
+                    command.CommandText = $"UPDATE accounts SET [numberOfCheckedoutItems] = {checkedOut++} WHERE " +
+                        $"[userID] = {selectedUser.userID}";
+                    command.ExecuteNonQuery();
+                    // not done!
+                }
             }
+            
         }
     }
 
