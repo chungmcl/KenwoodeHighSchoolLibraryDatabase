@@ -27,7 +27,7 @@
         </DataGrid>
         <DataGrid x:Name="dataGridItems" 
                   HorizontalAlignment="Left" Height="220" Margin="10,434,0,0" VerticalAlignment="Top" Width="880" 
-                  FontFamily="Sylfaen" MouseDoubleClick="dataGridItems_MouseDoubleClick">
+                  FontFamily="Sylfaen">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="120"/>
                 <DataGridTextColumn Header="D. Decimal" IsReadOnly="True" Binding="{Binding deweyDecimal, Mode=OneWay}" Width="70"/>
