@@ -266,10 +266,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void BtnToCheckout_Click(object sender, RoutedEventArgs e)
         {
             DateTime dueDate = (DateTime.Today.AddDays(double.Parse(selectedUser.dateLimit)).AddHours(23.9999));
-            MessageBox.Show(
+            if (MessageBox.Show(
+                $"Confirm Checkout -\n" +
                 $"Check out item: {selectedItem.title}\n" +
                 $"To user: ({selectedUser.userID}) {selectedUser.lastName}, {selectedUser.firstName}\n" +
-                $"For {selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}");
+                $"For {selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
+                , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+
+            }
         }
     }
 

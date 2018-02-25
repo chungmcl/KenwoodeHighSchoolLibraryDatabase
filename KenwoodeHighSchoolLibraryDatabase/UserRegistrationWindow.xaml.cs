@@ -24,6 +24,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         OleDbCommand command;
         OleDbDataReader reader;
         List<string[]> userIDs;
+        string fName;
+        string lName;
+        string uID;
+        string uType;
+        int bookLimit;
+        int dateLimit;
         public UserRegistrationWindow()
         {
             InitializeComponent();
@@ -65,31 +71,77 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
             LoadUserIDs();
-            c.Open();
-            string fName = this.textBoxFirstNameRegister.Text;
-            string lName = this.textBoxSurnameRegister.Text;
-            string uID = this.textBoxUserIDRegister.Text;
-            string uType = this.comboBoxUserTypeRegister.SelectedValue.ToString().Substring(37);
-            int bookLimit = Int32.Parse(textBoxBookLimit.Text);
-            int dateLimit = Int32.Parse(textBoxDateLimit.Text);
-
-            // Save the location of the userID in the "userIDs" list
-            // so that we can display information about the account holding this userID
-            // if ContainsUserID could not find an account holding this userID, it would have returned -1
-            int checkUserID = ContainsUserID(uID);
-            if (checkUserID == -1)
+            string errorMessage = CheckRequiredValues();
+            if (errorMessage == "")
             {
-                command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [bookLimit], [dateLimit]) " +
-                $"VALUES ('{fName}', '{lName}', '{uID} ', '{uType}', {bookLimit}, {dateLimit})";
-                command.ExecuteNonQuery();
+                c.Open();
+                this.fName = this.textBoxFirstNameRegister.Text.Trim();
+                this.lName = this.textBoxSurnameRegister.Text.Trim();
+                this.uID = this.textBoxUserIDRegister.Text.Trim();
+                this.uType = this.comboBoxUserTypeRegister.SelectedValue.ToString().Substring(37);
+                // book limit and date limit already set in CheckRequiredValues through int.TryParse (out)
+
+                // Save the location of the userID in the "userIDs" list
+                // so that we can display information about the account holding this userID
+                // if ContainsUserID could not find an account holding this userID, it would have returned -1
+                int checkUserID = ContainsUserID(uID);
+                if (checkUserID == -1)
+                {
+                    command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [bookLimit], [dateLimit]) " +
+                    $"VALUES ('{fName}', '{lName}', '{uID} ', '{uType}', {bookLimit}, {dateLimit})";
+                    command.ExecuteNonQuery();
+                }
+                else
+                {
+                    MessageBox.Show($"Another student ({userIDs[checkUserID][1]} {userIDs[checkUserID][2]}) already " +
+                        $"holds this Student/Teacher ID ({userIDs[checkUserID][0]}). Did you enter the wrong ID?");
+                }
+                c.Close(); // close first
+                this.DialogResult = true;
             }
             else
             {
-                MessageBox.Show($"Another student ({userIDs[checkUserID][1]} {userIDs[checkUserID][2]}) already " +
-                    $"holds this Student/Teacher ID ({userIDs[checkUserID][0]}). Did you enter the wrong ID?");
+                MessageBox.Show(errorMessage);
             }
-            c.Close(); // close first
-            this.DialogResult = true;
+
+        }
+
+        public string CheckRequiredValues()
+        {
+            if (textBoxFirstNameRegister.Text == "")
+            {
+                return "A first name is required.";
+            }
+            if (textBoxSurnameRegister.Text == "")
+            {
+                return "A surname is required.";
+            }
+            if (textBoxUserIDRegister.Text == "")
+            {
+                return "A User ID is required. (School/Employee ID)";
+            }
+            if (comboBoxUserTypeRegister.SelectedIndex == -1)
+            {
+                return "A usertype must be selected.";
+            }
+            if (textBoxBookLimit.Text == "")
+            {
+                return "A book limit is required in integer format.";
+            }
+            if (textBoxDateLimit.Text == "")
+            {
+                return "A date limit is required in integer format.\n" +
+                    "(Number of days a user can checkout a book.)";
+            }
+            if (!(int.TryParse(textBoxBookLimit.Text.Trim(), out this.bookLimit)))
+            {
+                return "User Book Limit must be in integer format.";
+            }
+            if (!(int.TryParse(textBoxBookLimit.Text.Trim(), out this.dateLimit)))
+            {
+                return "User Date Limit must be in integer format.";
+            }
+            return "";
         }
 
         /// <summary>

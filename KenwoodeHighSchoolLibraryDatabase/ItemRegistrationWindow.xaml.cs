@@ -321,11 +321,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private string CheckRequiredItemsFilledOut()
         {
-            if (comboBoxFormat.SelectedIndex == -1)
-            {
-                return "A format is required. " +
-                    "Format box must be filled out. PLease select values for the Format box.";
-            }
+
             if (comboBoxGenreHundreds.SelectedIndex != 1)
             {
                 if (comboBoxGenreHundreds.SelectedIndex <= 9 && (comboBoxGenreTens.SelectedIndex == -1
@@ -334,6 +330,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     return "A full genre is required. " +
                         "Genre boxes must be filled out. Please select values for all three Genre boxes.";
                 }
+            }
+            if (comboBoxFormat.SelectedIndex == -1)
+            {
+                return "A format is required. " +
+                    "Format box must be filled out. Please select values for the Format box.";
             }
             if (textBoxISXX.Text == "")
             {
