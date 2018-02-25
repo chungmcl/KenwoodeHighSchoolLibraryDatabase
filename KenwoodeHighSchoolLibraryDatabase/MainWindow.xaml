@@ -27,6 +27,7 @@
         </DataGrid>
         <DataGrid x:Name="dataGridItems" 
                   HorizontalAlignment="Left" Height="220" Margin="10,434,0,0" VerticalAlignment="Top" Width="880" 
+                   MouseDoubleClick="dataGridItems_DoubleClick"
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="120"/>
@@ -57,5 +58,9 @@
             <ListBoxItem Content="Genre"/>
             <ListBoxItem Content="Lent To"/>
         </ComboBox>
+        <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" HorizontalAlignment="Left" Margin="895,434,0,0" VerticalAlignment="Top" Width="150" Click="BtnToCheckout_Click" Height="25"/>
+        <Label x:Name="labelSelectedItemTitle" Content="(Select an Item)" HorizontalAlignment="Left" Margin="895,464,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="895,525,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelToSelectedUser" Content="To Selected User..." HorizontalAlignment="Left" Margin="895,495,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
     </Grid>
 </Window>

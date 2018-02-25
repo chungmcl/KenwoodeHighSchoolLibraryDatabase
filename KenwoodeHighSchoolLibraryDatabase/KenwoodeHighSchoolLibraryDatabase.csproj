@@ -54,19 +54,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CheckoutWindow.xaml.cs">
-      <DependentUpon>CheckoutWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ItemRegistrationWindow.xaml.cs">
       <DependentUpon>ItemRegistrationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserRegistrationWindow.xaml.cs">
       <DependentUpon>UserRegistrationWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="CheckoutWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="ItemRegistrationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -25,6 +25,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
         OleDbConnection c;
         OleDbDataReader reader;
         OleDbCommand command;
+        User selectedUser;
+        Item selectedItem;
         public MainWindow()
         {
             InitializeComponent();
@@ -41,6 +43,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
 
+        #region LoadDataGrids
         private void LoadDataGrid(string sqlText, bool loadAccounts)
         {
             c.Open();
@@ -101,6 +104,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 dataGridItems.Items.Add(newItem);
             }
         }
+        #endregion
 
         private void TstBtnDeleteFromAccounts_Click(object sender, RoutedEventArgs e)
         {
@@ -113,9 +117,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            User selectedUser = (User)this.dataGridAccounts.SelectedItem;
+            selectedUser = (User)this.dataGridAccounts.SelectedItem;
+            labelSelectedUser.Content = $"({selectedUser.userID}) " +
+                $"{selectedUser.lastName}, {selectedUser.firstName}";
         }
 
+        private void dataGridItems_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            selectedItem = (Item)this.dataGridItems.SelectedItem;
+            labelSelectedItemTitle.Content = selectedItem.title;
+        }
+
+        #region DataGrid Queries
         private void comboBoxAccountsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string setTextBoxTo = comboBoxAccountsSearchByOptions.SelectedValue.ToString().Substring(37);
@@ -222,7 +235,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             textBoxItemsSearchBy.Text = "";
         }
+        #endregion
 
+        #region Window Openers
         private void BtnToBookRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
             ItemRegistrationWindow x = new ItemRegistrationWindow();
@@ -245,6 +260,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 LoadDataGrid("SELECT * FROM accounts", true);
             }
+        }
+        #endregion
+
+        private void BtnToCheckout_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime dueDate = (DateTime.Today.AddDays(double.Parse(selectedUser.dateLimit)).AddHours(23.9999));
+            MessageBox.Show(
+                $"Check out item: {selectedItem.title}\n" +
+                $"To user: ({selectedUser.userID}) {selectedUser.lastName}, {selectedUser.firstName}\n" +
+                $"For {selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}");
         }
     }
 

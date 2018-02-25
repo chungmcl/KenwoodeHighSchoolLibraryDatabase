@@ -234,7 +234,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             else
             {
                 comboBoxGenreTens.IsEnabled = false;
+                comboBoxGenreTens.SelectedValue = "[General]";
                 comboBoxGenreOnes.IsEnabled = false;
+                comboBoxGenreOnes.SelectedValue = "[General]";
             }
         }
 
@@ -258,15 +260,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (comboBoxGenreHundreds.SelectedIndex == 10)
             {
-                if (textBoxAuthorFName.Text.Length > 1 && textBoxAuthorLName.Text.Length > 1)
+                if (textBoxAuthorFName.Text.Length > 0 && textBoxAuthorLName.Text.Length >= 4)
                 {
                     textBoxDeweyDecimal.Text = $"{textBoxAuthorFName.Text.Substring(0, 1)} {textBoxAuthorLName.Text.Substring(0, 4)}";
                 }
-                else
+                else if (textBoxAuthorFName.Text == "" || textBoxAuthorLName.Text == "")
                 {
                     MessageBox.Show("Author first and last name boxes must be filled out to generate a Dewey Decimal");
                 }
-                
+                else if (textBoxAuthorLName.Text.Length < 4)
+                {
+                    MessageBox.Show("Fiction Dewey Decimal cannot be generated. Please enter manually.");
+                }
             }
             else
             {
@@ -316,16 +321,19 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private string CheckRequiredItemsFilledOut()
         {
-            if (comboBoxGenreHundreds.SelectedIndex == -1 || comboBoxGenreTens.SelectedIndex == -1
-                || comboBoxGenreOnes.SelectedIndex == -1)
-            {
-                return "A genre is required. " +
-                    "Genre boxes must be filled out. Please select values for all three Genre boxes.";
-            }
             if (comboBoxFormat.SelectedIndex == -1)
             {
                 return "A format is required. " +
                     "Format box must be filled out. PLease select values for the Format box.";
+            }
+            if (comboBoxGenreHundreds.SelectedIndex != 1)
+            {
+                if (comboBoxGenreHundreds.SelectedIndex <= 9 && (comboBoxGenreTens.SelectedIndex == -1
+                || comboBoxGenreOnes.SelectedIndex == -1))
+                {
+                    return "A full genre is required. " +
+                        "Genre boxes must be filled out. Please select values for all three Genre boxes.";
+                }
             }
             if (textBoxISXX.Text == "")
             {
