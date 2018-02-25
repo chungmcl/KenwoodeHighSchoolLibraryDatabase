@@ -238,14 +238,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 LoadDataGrid("SELECT * FROM accounts", true);
             }
         }
-
-
-
-        private void dataGridItems_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            Item selected = (Item)this.dataGridItems.SelectedItem;
-            ItemViewAndCheckoutWindow w = new ItemViewAndCheckoutWindow(selected);
-        }
     }
 
     public struct User
