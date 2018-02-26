@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ItemRegistrationWindow" Height="823.133" Width="738.195" ResizeMode="CanMinimize">
     <Grid Margin="0,0,0.2,0.2">
-        <Label x:Name="labelWindowTitle" Margin="271,10,287.4,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width ="207" Height="30"/>
+        <Label x:Name="labelWindowTitle" Margin="271,10,287.4,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width ="207" Height="30" FontWeight="Bold"/>
         <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="739" Margin="45,44,0,0" VerticalAlignment="Top" Width="677">
             <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="700" Margin="10,0,0,0" VerticalAlignment="Top" Width="101">
                 <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
@@ -31,8 +31,8 @@
                 <TextBox x:Name="textBoxTitle" Height="35" TextWrapping="Wrap" Margin="0,0,74.2,0" HorizontalAlignment="Left" Width="380" SpellCheck.IsEnabled="True"/>
                 <StackPanel x:Name="stackPanelGenre" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="381" Orientation="Horizontal">
                     <ComboBox x:Name="comboBoxGenreHundreds" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreHundreds_SelectionChanged"/>
-                    <ComboBox x:Name="comboBoxGenreTens" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreTens_SelectionChanged"/>
-                    <ComboBox x:Name="comboBoxGenreOnes" Width="126" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="comboBoxGenreTens" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreTens_SelectionChanged" IsEnabled="False"/>
+                    <ComboBox x:Name="comboBoxGenreOnes" Width="126" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" IsEnabled="False"/>
                 </StackPanel>
                 <ComboBox x:Name="comboBoxFormat" Height="35" Width="380" HorizontalAlignment="Left" SelectionChanged="comboBoxFormat_SelectionChanged">
                 </ComboBox>
@@ -57,7 +57,7 @@
                     <Button x:Name="buttonCheckout" HorizontalAlignment="Right" Content="Uncheckout Item From User" Width="165" Click="buttonCheckout_Click" Height="35" VerticalAlignment="Top" Margin="0,0,393.4,0"/>
                 </StackPanel>
                 <TextBox x:Name="textBoxPreviousCheckedOutBy" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" IsEnabled="False"/>
-                <DatePicker x:Name="datePickerDueDate" HorizontalAlignment="Left" Width="381"/>
+                <DatePicker x:Name="datePickerDueDate" HorizontalAlignment="Left" Width="381" SelectedDateChanged="datePickerDueDate_SelectedDateChanged" IsEnabled="False"/>
             </StackPanel>
             <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="261,700,0,0" VerticalAlignment="Top" Width="189" Click="buttonRegisterItem_Click" RenderTransformOrigin="0.717,2.865"/>
             <Label x:Name="labelItemID" HorizontalAlignment="Left" Margin="282,777,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.359,0.234"/>

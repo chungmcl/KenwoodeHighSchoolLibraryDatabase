@@ -335,7 +335,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (itemSelected)
             {
                 ItemRegistrationWindow w = new ItemRegistrationWindow(selectedItem);
-                w.ShowDialog();
+                w.Owner = this;
+                bool? receive = w.ShowDialog();
+                if (receive == true)
+                {
+                    LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                        "FROM [items] ORDER BY [ISXX], [copyID]", false);
+                    Item check = (Item)dataGridItems.Items[0];
+                    this.selectedItem = (Item)dataGridItems.Items[0];
+                    labelSelectedItemTitle.Content = selectedItem.title;
+                }
             }
             else
             {

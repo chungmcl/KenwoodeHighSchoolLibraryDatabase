@@ -24,6 +24,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private OleDbDataReader reader;
         private OleDbCommand command;
         private List<string> selectedColumnValues;
+        private bool toRegister;
         public ItemRegistrationWindow()
         {
             InitializeComponent();
@@ -40,12 +41,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.labelCurrentlyCheckedOutBy.IsEnabled = false;
             this.buttonCheckout.IsEnabled = false;
             this.labelDueDate.IsEnabled = false;
+            this.datePickerDueDate.IsEnabled = false;
 
             InitializeComboBoxes();
 
             this.selectedColumnValues = new List<String>();
 
             this.labelWindowTitle.Content = "Register Item";
+
+            toRegister = true;
         }
 
         
@@ -62,6 +66,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private string description;
         private string publicationYear;
         private string previousCheckedOutBy;
+        private DateTime dueDate;
         public ItemRegistrationWindow(Item toEdit)
         {
             InitializeComponent();
@@ -85,6 +90,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.labelWindowTitle.Content = "View, Modify, or Checkout Item";
             this.buttonRegisterItem.Content = "Save Changes - Edit Item";
             this.LoadRemainingFields();
+            if (toEditItem.currentlyCheckedOutBy != "")
+            {
+                this.datePickerDueDate.IsEnabled = true;
+            }
+
+            toRegister = false;
         }
 
         private void LoadRemainingFields()
@@ -92,7 +103,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.c.Open();
             this.command.CommandText = "SELECT [authorLastName], [authorMiddleName], [authorFirstName], [ISBN10], [ISXX], " +
                 "[genreClassTwo], [genreClassThree], [publisher], [publicationYear], [edition], [description], " +
-                "[previousCheckedOutBy] " +
+                "[previousCheckedOutBy], [dueDate]" +
                 $"FROM items WHERE [itemID] = '{this.toEditItem.itemID}'";
             this.command.CommandType = System.Data.CommandType.Text;
             this.reader = this.command.ExecuteReader();
@@ -122,6 +133,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.textBoxDescription.Text = this.description;
             this.previousCheckedOutBy = this.reader["previousCheckedOutBy"].ToString();
             this.textBoxPreviousCheckedOutBy.Text = this.previousCheckedOutBy;
+            string dueDateString = this.reader["dueDate"].ToString();
+            if (dueDateString.Length > 0)
+            {
+
+                this.dueDate = Convert.ToDateTime(this.reader["dueDate"].ToString());
+                this.datePickerDueDate.SelectedDate = dueDate;
+            }
             this.reader.Close();
             this.c.Close();
         }
@@ -221,7 +239,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (this.comboBoxGenreHundreds.SelectedIndex < 10)
             {
                 this.comboBoxGenreTens.IsEnabled = true;
-                this.comboBoxGenreOnes.IsEnabled = true;
+                this.comboBoxGenreOnes.IsEnabled = false;
                 this.comboBoxGenreTens.Items.Clear();
                 this.selectedColumnValues.Clear();
                 int column = this.comboBoxGenreHundreds.SelectedIndex;
@@ -244,7 +262,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.c.Close();
                 this.reader.Close();
             }
-            else
+            else // If user selects fiction
             {
                 this.comboBoxGenreTens.IsEnabled = false;
                 this.comboBoxGenreTens.SelectedValue = "[General]";
@@ -255,8 +273,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void comboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            this.comboBoxGenreOnes.IsEnabled = true;
             this.comboBoxGenreOnes.Items.Clear();
-            if (this.comboBoxGenreTens.SelectedValue != null)
+            if (this.comboBoxGenreTens.SelectedItem != null) 
             {
                 this.comboBoxGenreOnes.Items.Clear();
                 this.comboBoxGenreOnes.Items.Add("[General]");
@@ -395,7 +414,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
         {
-            if (this.toEditItem.itemID == "")
+            if (toRegister)
             {
                 string message = CheckRequiredItemsFilledOut();
                 string isxx = this.textBoxISXX.Text;
@@ -423,12 +442,20 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             else
             {
-                if (MessageBox.Show("Save Changes?", "Edits Detected", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Save Changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    UpdateItemTable();
-                    MessageBox.Show("Item data updated.");
-                    this.c.Close();
-                    this.DialogResult = true;
+                    string errorMessage = CheckRequiredItemsFilledOut();
+                    if (errorMessage.Length == 0)
+                    {
+                        UpdateItemTable();
+                        MessageBox.Show("Item data updated.");
+                        this.c.Close();
+                        this.DialogResult = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show(errorMessage);
+                    }
                 }
             }
 
@@ -436,7 +463,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonCheckout_Click(object sender, RoutedEventArgs e)
         {
-
+            // Delete holder of book - throw error/messagebox if no one is holding
         }
 
         private void UpdateItemTable()
@@ -445,58 +472,77 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 UpdateColumn("title", this.textBoxTitle.Text);
             }
+
             if (this.textBoxAuthorFName.Text != this.authorFirstName)
             {
                 UpdateColumn("authorFirstName", this.textBoxAuthorFName.Text);
             }
+
             if (this.textBoxAuthorMName.Text != this.authorMiddleName)
             {
                 UpdateColumn("authorMiddleName", this.textBoxAuthorMName.Text);
             }
+
             if (this.textBoxAuthorLName.Text != this.authorLastName)
             {
                 UpdateColumn("authorLastName", this.textBoxAuthorLName.Text);
             }
+
             if (this.textBoxISBNTen.Text != this.isbnTen)
             {
                 UpdateColumn("ISBN10", this.textBoxISBNTen.Text);
             }
+
             if (this.textBoxDeweyDecimal.Text != this.toEditItem.deweyDecimal)
             {
-                UpdateColumn("deweyDecimal", this.textBoxISXX.Text);
+                UpdateColumn("deweyDecimal", this.textBoxDeweyDecimal.Text);
             }
+
             if (this.textBoxPublisher.Text != this.publisher)
             {
                 UpdateColumn("publisher", this.textBoxPublisher.Text);
             }
+
             if (this.textBoxPublicationYear.Text != this.publicationYear)
             {
                 UpdateColumn("publicationYear", this.textBoxPublicationYear.Text);
             }
+
             if (this.textBoxEdition.Text != this.edition)
             {
                 UpdateColumn("edition", this.textBoxEdition.Text);
             }
+
             if (this.textBoxDescription.Text != this.description)
             {
                 UpdateColumn("description", this.textBoxDescription.Text);
             }
+
             if (this.comboBoxGenreHundreds.SelectedValue.ToString() != this.toEditItem.genre)
             {
                 UpdateColumn("genreClassOne", this.comboBoxGenreHundreds.SelectedValue.ToString());
             }
+
             if (this.comboBoxGenreTens.SelectedValue.ToString() != this.genreClassTwo)
             {
                 UpdateColumn("genreClassTwo", this.comboBoxGenreTens.SelectedValue.ToString());
             }
+
             if (this.comboBoxGenreOnes.SelectedValue.ToString() != this.toEditItem.genre)
             {
                 UpdateColumn("genreClassThree", this.comboBoxGenreOnes.SelectedValue.ToString());
             }
+
             if (this.comboBoxFormat.SelectedValue.ToString() != this.toEditItem.format)
             {
                 UpdateColumn("format", this.comboBoxFormat.SelectedValue.ToString());
             }
+
+            if (this.datePickerDueDate.SelectedDate != this.dueDate)
+            {
+                UpdateColumn("dueDate", this.datePickerDueDate.SelectedDate.ToString());
+            }
+
             if (this.textBoxISXX.Text != this.isxx)
             {
                 UpdateColumn("ISXX", this.textBoxISXX.Text);
@@ -508,12 +554,22 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void UpdateColumn(string column, string newValue)
+        private bool UpdateColumn(string column, string newValue)
         {
             this.c.Open();
-            this.command.CommandText = $"UPDATE items SET [{column}] = {newValue} WHERE itemID = '{this.toEditItem.itemID}'";
+            this.command.CommandText = $"UPDATE items SET [{column}] = '{newValue}' WHERE itemID = '{this.toEditItem.itemID}'";
             this.command.ExecuteNonQuery();
             this.c.Close();
+            return true;
+        }
+
+        private void datePickerDueDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.datePickerDueDate.SelectedDate < DateTime.Today)
+            {
+                MessageBox.Show("You cannot reset the due date to be before today.");
+                this.datePickerDueDate.SelectedDate = dueDate;
+            }
         }
     }
 }
