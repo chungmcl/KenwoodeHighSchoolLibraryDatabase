@@ -125,7 +125,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             try
             {
                 selectedUser = (User)this.dataGridAccounts.SelectedItem;
-                labelSelectedUser.Content = $"({selectedUser.userID}) " +
+                labelCheckoutSelectedUser.Content = $"({selectedUser.userID}) " +
                     $"{selectedUser.firstName} {selectedUser.lastName}";
                 this.userSelected = true;
             }
@@ -140,7 +140,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             try
             {
                 selectedItem = (Item)this.dataGridItems.SelectedItem;
-                labelSelectedItemTitle.Content = $"{selectedItem.title} ({selectedItem.itemID})";
+                labelCheckoutSelectedItemTitle.Content = $"{selectedItem.title} ({selectedItem.itemID})";
                 this.itemSelected = true;
             }
             catch
@@ -361,7 +361,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     LoadDataGrid("SELECT * FROM accounts", true);
                     Item check = (Item)dataGridItems.Items[0];
                     this.selectedItem = (Item)dataGridItems.Items[0];
-                    labelSelectedItemTitle.Content = selectedItem.title;
+                    labelCheckoutSelectedItemTitle.Content = selectedItem.title;
                 }
             }
             else

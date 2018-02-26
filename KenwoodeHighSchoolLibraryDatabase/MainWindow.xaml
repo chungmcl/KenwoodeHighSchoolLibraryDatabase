@@ -59,8 +59,8 @@
             <ListBoxItem Content="Lent To"/>
         </ComboBox>
         <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" HorizontalAlignment="Left" Margin="895,434,0,0" VerticalAlignment="Top" Width="150" Click="BtnToCheckout_Click" Height="25"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
-        <Label x:Name="labelSelectedItemTitle" Content="(Select an Item)" HorizontalAlignment="Left" Margin="895,464,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="labelSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="895,525,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelCheckoutSelectedItemTitle" Content="(Select an Item)" HorizontalAlignment="Left" Margin="895,464,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelCheckoutSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="895,525,0,0" VerticalAlignment="Top"/>
         <Label x:Name="labelToSelectedUser" Content="To Selected User..." HorizontalAlignment="Left" Margin="895,495,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
         <Button x:Name="buttonEditItem" Content="Edit Selected Item" HorizontalAlignment="Left" Margin="121,659,0,0" VerticalAlignment="Top" Width="101" Height="25" Click="buttonEditItem_Click"/>
     </Grid>
