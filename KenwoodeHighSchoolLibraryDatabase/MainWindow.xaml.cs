@@ -126,7 +126,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 selectedUser = (User)this.dataGridAccounts.SelectedItem;
                 labelSelectedUser.Content = $"({selectedUser.userID}) " +
-                    $"{selectedUser.lastName}, {selectedUser.firstName}";
+                    $"{selectedUser.firstName} {selectedUser.lastName}";
                 this.userSelected = true;
             }
             catch
@@ -140,7 +140,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             try
             {
                 selectedItem = (Item)this.dataGridItems.SelectedItem;
-                labelSelectedItemTitle.Content = selectedItem.title;
+                labelSelectedItemTitle.Content = $"{selectedItem.title} ({selectedItem.itemID})";
                 this.itemSelected = true;
             }
             catch
@@ -290,16 +290,32 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 if (selectedItem.currentlyCheckedOutBy != selectedUser.userID)
                 {
-                    DateTime dueDate = (DateTime.Today.AddDays(double.Parse(selectedUser.dateLimit)).AddHours(23.9999));
-                    if (MessageBox.Show(
-                        $"Confirm Checkout -\n" +
-                        $"Check out item: {selectedItem.title}\n" +
-                        $"To user: ({selectedUser.userID}) {selectedUser.lastName}, {selectedUser.firstName}\n" +
-                        $"For {selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
-                        , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    if (selectedItem.currentlyCheckedOutBy == "")
                     {
-                        CheckoutDatabaseUpdate(dueDate);
+                        if (int.Parse(selectedUser.checkedOut) < int.Parse(selectedUser.itemLimit))
+                        {
+                            DateTime dueDate = (DateTime.Today.AddDays(double.Parse(selectedUser.dateLimit)).AddHours(23.9999));
+                            if (MessageBox.Show(
+                                $"Confirm Checkout -\n" +
+                                $"Check out item: {selectedItem.title}\n" +
+                                $"To user: ({selectedUser.userID}) {selectedUser.lastName}, {selectedUser.firstName}\n" +
+                                $"For {selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
+                                , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                            {
+                                CheckoutDatabaseUpdate(dueDate);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("This user has reached his/her item limit!");
+                        }
+                        
                     }
+                    else
+                    {
+                        MessageBox.Show($"This item is already checked out to user {selectedItem.currentlyCheckedOutBy}!");
+                    }
+                    
                 }
                 else
                 {
@@ -342,6 +358,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
                         "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
                         "FROM [items] ORDER BY [ISXX], [copyID]", false);
+                    LoadDataGrid("SELECT * FROM accounts", true);
                     Item check = (Item)dataGridItems.Items[0];
                     this.selectedItem = (Item)dataGridItems.Items[0];
                     labelSelectedItemTitle.Content = selectedItem.title;

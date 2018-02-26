@@ -65,6 +65,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private string edition;
         private string description;
         private string publicationYear;
+        private string currentlyCheckedOutBy;
         private string previousCheckedOutBy;
         private DateTime dueDate;
         public ItemRegistrationWindow(Item toEdit)
@@ -88,6 +89,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.comboBoxFormat.SelectedValue = this.toEditItem.format;
             this.textBoxCurrentlyCheckedOutBy.Text = this.toEditItem.currentlyCheckedOutBy;
             this.labelWindowTitle.Content = "View, Modify, or Checkout Item";
+            if (toEditItem.currentlyCheckedOutBy != "")
+            {
+                this.datePickerDueDate.IsEnabled = true;
+            }
             this.buttonRegisterItem.Content = "Save Changes - Edit Item";
             this.LoadRemainingFields();
             if (toEditItem.currentlyCheckedOutBy != "")
@@ -103,7 +108,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.c.Open();
             this.command.CommandText = "SELECT [authorLastName], [authorMiddleName], [authorFirstName], [ISBN10], [ISXX], " +
                 "[genreClassTwo], [genreClassThree], [publisher], [publicationYear], [edition], [description], " +
-                "[previousCheckedOutBy], [dueDate]" +
+                "[currentlyCheckedOUtBy], [previousCheckedOutBy], [dueDate]" +
                 $"FROM items WHERE [itemID] = '{this.toEditItem.itemID}'";
             this.command.CommandType = System.Data.CommandType.Text;
             this.reader = this.command.ExecuteReader();
@@ -131,6 +136,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.textBoxEdition.Text = this.edition;
             this.description = this.reader["description"].ToString();
             this.textBoxDescription.Text = this.description;
+            this.currentlyCheckedOutBy = this.reader["currentlyCheckedOutBy"].ToString();
+            this.textBoxCurrentlyCheckedOutBy.Text = currentlyCheckedOutBy;
             this.previousCheckedOutBy = this.reader["previousCheckedOutBy"].ToString();
             this.textBoxPreviousCheckedOutBy.Text = this.previousCheckedOutBy;
             string dueDateString = this.reader["dueDate"].ToString();
@@ -463,7 +470,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonCheckout_Click(object sender, RoutedEventArgs e)
         {
-            // Delete holder of book - throw error/messagebox if no one is holding
+            if (textBoxCurrentlyCheckedOutBy.Text != "")
+            {
+                textBoxCurrentlyCheckedOutBy.Text = "";
+                this.textBoxPreviousCheckedOutBy.Text = this.currentlyCheckedOutBy;
+            }
+            else
+            {
+                MessageBox.Show("This item is not checked out to any user.");
+            }
         }
 
         private void UpdateItemTable()
@@ -538,9 +553,27 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 UpdateColumn("format", this.comboBoxFormat.SelectedValue.ToString());
             }
 
+            if (this.textBoxCurrentlyCheckedOutBy.Text != this.currentlyCheckedOutBy)
+            {
+                UpdateColumn("currentlyCheckedOutBy", this.textBoxCurrentlyCheckedOutBy.Text);
+                UpdateColumn("previousCheckedOutBy", this.currentlyCheckedOutBy);
+                UpdateColumn("dueDate", "");
+                this.datePickerDueDate.SelectedDate = null;
+                c.Open();
+                command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberofCheckedOutItems] - 1 " +
+                    $"WHERE [userID] = '{this.currentlyCheckedOutBy}'";
+                command.ExecuteNonQuery();
+                c.Close();
+            }
+
             if (this.datePickerDueDate.SelectedDate != this.dueDate)
             {
-                UpdateColumn("dueDate", this.datePickerDueDate.SelectedDate.ToString());
+                if (this.datePickerDueDate.SelectedDate != null)
+                {
+
+                    DateTime newDueDate = ((DateTime)this.datePickerDueDate.SelectedDate).AddHours(23.9999);
+                    UpdateColumn("dueDate", newDueDate.ToString());
+                }
             }
 
             if (this.textBoxISXX.Text != this.isxx)
@@ -554,13 +587,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private bool UpdateColumn(string column, string newValue)
+        private void UpdateColumn(string column, string newValue)
         {
             this.c.Open();
             this.command.CommandText = $"UPDATE items SET [{column}] = '{newValue}' WHERE itemID = '{this.toEditItem.itemID}'";
             this.command.ExecuteNonQuery();
             this.c.Close();
-            return true;
         }
 
         private void datePickerDueDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
