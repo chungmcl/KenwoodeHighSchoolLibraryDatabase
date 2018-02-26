@@ -131,7 +131,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             catch
             {
-
+                MessageBox.Show("Please double-click a row to select a user.");
             }
         }
 
@@ -145,7 +145,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             catch
             {
-
+                MessageBox.Show("Please double-click a row to select an item.");
             }
         }
 
@@ -306,6 +306,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     MessageBox.Show("This book is already checked out to this user!");
                 }
             }
+            else
+            {
+                MessageBox.Show("Please double-click a user and an item to select them for checkout.");
+            }
         }
 
         private void CheckoutDatabaseUpdate(DateTime dueDate)
@@ -328,8 +332,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonEditItem_Click(object sender, RoutedEventArgs e)
         {
-            ItemRegistrationWindow w = new ItemRegistrationWindow(selectedItem);
-            w.ShowDialog();
+            if (itemSelected)
+            {
+                ItemRegistrationWindow w = new ItemRegistrationWindow(selectedItem);
+                w.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Please double-click an item to select them for editing.");
+            }
         }
     }
 

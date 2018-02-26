@@ -1,14 +1,14 @@
-﻿<Window x:Class="KenwoodeHighSchoolLibraryDatabase.ItemRegistrationWindow"
+﻿<Window x:Name="Registration_Edit" x:Class="KenwoodeHighSchoolLibraryDatabase.ItemRegistrationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="ItemRegistrationWindow" Height="845.533" Width="770.195">
+        Title="ItemRegistrationWindow" Height="823.133" Width="738.195" ResizeMode="CanMinimize">
     <Grid Margin="0,0,0.2,0.2">
-        <Label x:Name="labelWindowTitle" Margin="321,10,323.2,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width ="100" Height="30"/>
-        <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="751" Margin="45,44,0,0" VerticalAlignment="Top" Width="674">
+        <Label x:Name="labelWindowTitle" Margin="271,10,287.4,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width ="207" Height="30"/>
+        <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="739" Margin="45,44,0,0" VerticalAlignment="Top" Width="677">
             <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="700" Margin="10,0,0,0" VerticalAlignment="Top" Width="101">
                 <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelGenre" Content="Genre" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
@@ -22,56 +22,44 @@
                 <Label x:Name="labelPublisher" Content="Publisher" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelPublicationYear" Content="Publication Year" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelEdition" Content="Edition" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
+                <Label x:Name="labelDescription" Content="Description" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="150"/>
                 <Label x:Name="labelCurrentlyCheckedOutBy" Content="Checked Out By" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
                 <Label x:Name="labelPreviousCheckedOutBy" Content="Previous Holder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelDescription" Content="Description" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
+                <Label x:Name="labelDueDate" Content="Due Date" Height="35" Margin="0,0,-0.2,0"/>
             </StackPanel>
-            <StackPanel x:Name="stackPanelItemRegistrationInput" HorizontalAlignment="Left" Height="648" Margin="126,0,0,0" VerticalAlignment="Top" Width="546">
-                <TextBox x:Name="textBoxTitle" Height="35" TextWrapping="Wrap" Margin="0,0,74.2,0" HorizontalAlignment="Left" Width="380"/>
+            <StackPanel x:Name="stackPanelItemRegistrationInput" HorizontalAlignment="Left" Height="700" Margin="126,0,0,0" VerticalAlignment="Top" Width="546">
+                <TextBox x:Name="textBoxTitle" Height="35" TextWrapping="Wrap" Margin="0,0,74.2,0" HorizontalAlignment="Left" Width="380" SpellCheck.IsEnabled="True"/>
                 <StackPanel x:Name="stackPanelGenre" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="381" Orientation="Horizontal">
-                    <ComboBox x:Name="comboBoxGenreHundreds" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreHundreds_SelectionChanged">
-                        <ListBoxItem Content="Computer Science Information and General Works"/>
-                        <ListBoxItem Content="Philosophy &amp; Psychology"/>
-                        <ListBoxItem Content="Religion"/>
-                        <ListBoxItem Content="Social Sciences"/>
-                        <ListBoxItem Content="Language"/>
-                        <ListBoxItem Content="Science"/>
-                        <ListBoxItem Content="Technology"/>
-                        <ListBoxItem Content="Arts and Recreation"/>
-                        <ListBoxItem Content="Literature and Rhetoric"/>
-                        <ListBoxItem Content="History &amp; Geography"/>
-                        <ListBoxItem Content="Fiction"/>
-                    </ComboBox>
+                    <ComboBox x:Name="comboBoxGenreHundreds" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreHundreds_SelectionChanged"/>
                     <ComboBox x:Name="comboBoxGenreTens" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreTens_SelectionChanged"/>
                     <ComboBox x:Name="comboBoxGenreOnes" Width="126" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
                 </StackPanel>
                 <ComboBox x:Name="comboBoxFormat" Height="35" Width="380" HorizontalAlignment="Left" SelectionChanged="comboBoxFormat_SelectionChanged">
-                    <ListBoxItem Content="Book"/>
-                    <ListBoxItem Content="Other"/>
                 </ComboBox>
                 <TextBox x:Name="textBoxAuthorFName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                 <TextBox x:Name="textBoxAuthorMName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                 <TextBox x:Name="textBoxAuthorLName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                 <StackPanel HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="545" Orientation="Horizontal">
-                    <TextBox x:Name="textBoxDeweyDecimal" TextWrapping="Wrap" Width="380" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top"/>
+                    <TextBox x:Name="textBoxDeweyDecimal" TextWrapping="Wrap" Width="380" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SpellCheck.IsEnabled="True"/>
                     <Button x:Name="buttonGenerateDeweyDecimal" Content="Calculate Dewey Decimal #&#xD;&#xA;(Partial)" Width="165" Height="35" VerticalAlignment="Top" Click="buttonGenerateDeweyDecimal_Click"/>
                 </StackPanel>
                 <StackPanel x:Name="stackPanelISBN10" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="545" Orientation="Horizontal">
-                    <TextBox x:Name="textBoxISBNTen" HorizontalAlignment="Left" TextWrapping="Wrap" Width="380" Height="35" VerticalAlignment="Top"/>
+                    <TextBox x:Name="textBoxISBNTen" HorizontalAlignment="Left" TextWrapping="Wrap" Width="380" Height="35" VerticalAlignment="Top" SpellCheck.IsEnabled="True"/>
                     <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="165" Click="buttonConvertToISBN13_Click" Height="35" VerticalAlignment="Top"/>
                 </StackPanel>
                 <TextBox x:Name="textBoxISXX" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                 <TextBox x:Name="textBoxPublisher" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
-                <TextBox x:Name="textBoxPublicationYear" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
-                <TextBox x:Name="textBoxEdition" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
+                <TextBox x:Name="textBoxPublicationYear" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" SpellCheck.IsEnabled="True"/>
+                <TextBox x:Name="textBoxEdition" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" SpellCheck.IsEnabled="True"/>
+                <TextBox x:Name="textBoxDescription" HorizontalAlignment="Left" Height="150" TextWrapping="Wrap" VerticalAlignment="Top" Width="380" SpellCheck.IsEnabled="True"/>
                 <StackPanel x:Name="stackPanelCheckout" HorizontalAlignment="Left" Width="546" Height="35" Margin="0,0,-0.4,0" VerticalAlignment="Top" Orientation="Horizontal">
-                    <TextBox x:Name="textBoxCurrentlyCheckedOutBy" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" Height="35" VerticalAlignment="Top"/>
-                    <Button x:Name="buttonCheckout" HorizontalAlignment="Right" Content="Check Out Book To User" Width="165" Click="buttonCheckout_Click" Height="35" VerticalAlignment="Top" Margin="0,0,393.4,0"/>
+                    <TextBox x:Name="textBoxCurrentlyCheckedOutBy" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" Height="35" VerticalAlignment="Top" IsEnabled="False"/>
+                    <Button x:Name="buttonCheckout" HorizontalAlignment="Right" Content="Uncheckout Item From User" Width="165" Click="buttonCheckout_Click" Height="35" VerticalAlignment="Top" Margin="0,0,393.4,0"/>
                 </StackPanel>
-                <TextBox x:Name="textBoxPreviousCheckedOutBy" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
-                <TextBox x:Name="textBoxDescription" HorizontalAlignment="Left" Height="149" TextWrapping="Wrap" VerticalAlignment="Top" Width="380"/>
+                <TextBox x:Name="textBoxPreviousCheckedOutBy" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" IsEnabled="False"/>
+                <DatePicker x:Name="datePickerDueDate" HorizontalAlignment="Left" Width="381"/>
             </StackPanel>
-            <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="252,707,0,0" VerticalAlignment="Top" Width="96" Click="buttonRegisterItem_Click"/>
+            <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="261,700,0,0" VerticalAlignment="Top" Width="189" Click="buttonRegisterItem_Click" RenderTransformOrigin="0.717,2.865"/>
             <Label x:Name="labelItemID" HorizontalAlignment="Left" Margin="282,777,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.359,0.234"/>
         </Grid>
     </Grid>

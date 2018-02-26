@@ -137,7 +137,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 return "User Book Limit must be in integer format."; // need to check for negative integers
             }
-            if (!(int.TryParse(textBoxBookLimit.Text.Trim(), out this.dateLimit)))
+            if (!(int.TryParse(textBoxDateLimit.Text.Trim(), out this.dateLimit)))
             {
                 return "User Date Limit must be in integer format."; // need to check for negative integers
             }

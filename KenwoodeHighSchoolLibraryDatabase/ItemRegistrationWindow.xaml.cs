@@ -27,111 +27,121 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public ItemRegistrationWindow()
         {
             InitializeComponent();
-            c = new OleDbConnection();
-            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+            this.c = new OleDbConnection();
+            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
                 "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            command = new OleDbCommand();
-            command.Connection = c;
-            reader = null;
+            this.command = new OleDbCommand();
+            this.command.Connection = this.c;
+            this.reader = null;
 
-            textBoxPreviousCheckedOutBy.IsEnabled = false;
-            textBoxCurrentlyCheckedOutBy.IsEnabled = false;
-            labelPreviousCheckedOutBy.IsEnabled = false;
-            labelCurrentlyCheckedOutBy.IsEnabled = false;
-            buttonCheckout.IsEnabled = false;
+            this.textBoxPreviousCheckedOutBy.IsEnabled = false;
+            this.textBoxCurrentlyCheckedOutBy.IsEnabled = false;
+            this.labelPreviousCheckedOutBy.IsEnabled = false;
+            this.labelCurrentlyCheckedOutBy.IsEnabled = false;
+            this.buttonCheckout.IsEnabled = false;
+            this.labelDueDate.IsEnabled = false;
 
-            selectedColumnValues = new List<String>();
+            InitializeComboBoxes();
 
-            labelWindowTitle.Content = "Register Item";
+            this.selectedColumnValues = new List<String>();
+
+            this.labelWindowTitle.Content = "Register Item";
         }
 
-        private string itemID;
-        private string deweyDecimal;
-        private string title;
+        
+        Item toEditItem;
+        private string isbnTen;
+        private string isxx;
         private string authorLastName;
         private string authorMiddleName;
         private string authorFirstName;
-        private string genreClassOne;
         private string genreClassTwo;
         private string genreClassThree;
-        private string format;
-        private string currentlyCheckedOutBy;
-        private string isxx;
-        private string isbnTen;
         private string publisher;
-        private string publicationYear;
         private string edition;
         private string description;
+        private string publicationYear;
         private string previousCheckedOutBy;
-        public ItemRegistrationWindow(Item item)
+        public ItemRegistrationWindow(Item toEdit)
         {
             InitializeComponent();
-            selectedColumnValues = new List<String>();
-            c = new OleDbConnection();
-            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+            this.selectedColumnValues = new List<String>();
+            this.c = new OleDbConnection();
+            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
                 "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            command = new OleDbCommand();
-            command.Connection = c;
-            reader = null;
-            itemID = item.itemID;
+            this.command = new OleDbCommand();
+            this.command.Connection = this.c;
+            this.reader = null;
+
+            InitializeComboBoxes();
+
+            this.toEditItem = toEdit;
             // Add a label listing itemID
-            deweyDecimal = item.deweyDecimal;
-            textBoxDeweyDecimal.Text = deweyDecimal;
-            title = item.title;
-            textBoxTitle.Text = title;
-            // author name cannot be determined by passed item
-            genreClassOne = item.genre;
-            ListBoxItem toSearch = new ListBoxItem();
-            toSearch.Content = genreClassOne;
-            comboBoxGenreHundreds.SelectedValue = toSearch; // does this work? (works for other two - try loading comboBoxGenreHundreds programatically)
-            format = item.format;
-            comboBoxFormat.SelectedValue = format; // does this work?
-            currentlyCheckedOutBy = item.currentlyCheckedOutBy;
-            textBoxCurrentlyCheckedOutBy.Text = currentlyCheckedOutBy;
-            //textBoxPreviousCheckedOutBy.IsEnabled = true;
-            //textBoxCurrentlyCheckedOutBy.IsEnabled = true;
-            //labelPreviousCheckedOutBy.IsEnabled = true;
-            //labelCurrentlyCheckedOutBy.IsEnabled = true;
-            labelWindowTitle.Content = "View, Modify, or Checkout Item";
-            LoadRemainingFields();
+            this.textBoxDeweyDecimal.Text = this.toEditItem.deweyDecimal;
+            this.textBoxTitle.Text = this.toEditItem.title;
+            this.comboBoxGenreHundreds.SelectedValue = this.toEditItem.genre;
+            this.comboBoxFormat.SelectedValue = this.toEditItem.format;
+            this.textBoxCurrentlyCheckedOutBy.Text = this.toEditItem.currentlyCheckedOutBy;
+            this.labelWindowTitle.Content = "View, Modify, or Checkout Item";
+            this.buttonRegisterItem.Content = "Save Changes - Edit Item";
+            this.LoadRemainingFields();
         }
 
         private void LoadRemainingFields()
         {
-            c.Open();
-            command.CommandText = "SELECT [authorLastName], [authorMiddleName], [authorFirstName], [ISBN10], [ISXX], " +
+            this.c.Open();
+            this.command.CommandText = "SELECT [authorLastName], [authorMiddleName], [authorFirstName], [ISBN10], [ISXX], " +
                 "[genreClassTwo], [genreClassThree], [publisher], [publicationYear], [edition], [description], " +
                 "[previousCheckedOutBy] " +
-                $"FROM items WHERE [itemID] = '{itemID}'";
-            command.CommandType = System.Data.CommandType.Text;
-            reader = command.ExecuteReader();
-            reader.Read();
-            isbnTen = reader["ISBN10"].ToString();
-            textBoxISBNTen.Text = isbnTen;
-            isxx = reader["ISXX"].ToString();
-            textBoxISXX.Text = isxx;
-            authorLastName = reader["authorLastName"].ToString();
-            textBoxAuthorLName.Text = authorLastName;
-            authorMiddleName = reader["authorMiddleName"].ToString();
-            textBoxAuthorMName.Text = authorMiddleName;
-            authorFirstName = reader["authorFirstName"].ToString();
-            textBoxAuthorFName.Text = authorFirstName;
-            genreClassTwo = reader["genreClassTwo"].ToString();
-            comboBoxGenreTens.SelectedValue = genreClassTwo; // does this work?
-            genreClassThree = reader["genreClassThree"].ToString();
-            comboBoxGenreOnes.SelectedValue = genreClassThree; // does this work?
-            publisher = reader["publisher"].ToString();
-            textBoxPublisher.Text = publisher;
-            publicationYear = reader["publicationYear"].ToString();
-            textBoxPublicationYear.Text = publicationYear;
-            edition = reader["edition"].ToString();
-            textBoxEdition.Text = edition;
-            description = reader["description"].ToString();
-            textBoxDescription.Text = description;
-            previousCheckedOutBy = reader["previousCheckedOutBy"].ToString();
-            textBoxPreviousCheckedOutBy.Text = previousCheckedOutBy;
-            reader.Close();
-            c.Close();
+                $"FROM items WHERE [itemID] = '{this.toEditItem.itemID}'";
+            this.command.CommandType = System.Data.CommandType.Text;
+            this.reader = this.command.ExecuteReader();
+            this.reader.Read();
+
+            this.isbnTen = this.reader["ISBN10"].ToString();
+            this.textBoxISBNTen.Text = this.isbnTen;
+            this.isxx = this.reader["ISXX"].ToString();
+            this.textBoxISXX.Text = this.isxx;
+            this.authorLastName = this.reader["authorLastName"].ToString();
+            this.textBoxAuthorLName.Text = this.authorLastName;
+            this.authorMiddleName = this.reader["authorMiddleName"].ToString();
+            this.textBoxAuthorMName.Text = this.authorMiddleName;
+            this.authorFirstName = this.reader["authorFirstName"].ToString();
+            this.textBoxAuthorFName.Text = this.authorFirstName;
+            this.genreClassTwo = this.reader["genreClassTwo"].ToString();
+            this.comboBoxGenreTens.SelectedValue = this.genreClassTwo;
+            this.genreClassThree = this.reader["genreClassThree"].ToString();
+            this.comboBoxGenreOnes.SelectedValue = this.genreClassThree;
+            this.publisher = this.reader["publisher"].ToString();
+            this.textBoxPublisher.Text = this.publisher;
+            this.publicationYear = this.reader["publicationYear"].ToString();
+            this.textBoxPublicationYear.Text = this.publicationYear;
+            this.edition = this.reader["edition"].ToString();
+            this.textBoxEdition.Text = this.edition;
+            this.description = this.reader["description"].ToString();
+            this.textBoxDescription.Text = this.description;
+            this.previousCheckedOutBy = this.reader["previousCheckedOutBy"].ToString();
+            this.textBoxPreviousCheckedOutBy.Text = this.previousCheckedOutBy;
+            this.reader.Close();
+            this.c.Close();
+        }
+
+        private void InitializeComboBoxes()
+        {
+            this.comboBoxGenreHundreds.Items.Add("Computer Science, Information and General Works");
+            this.comboBoxGenreHundreds.Items.Add("Philosophy and Psychology");
+            this.comboBoxGenreHundreds.Items.Add("Religion");
+            this.comboBoxGenreHundreds.Items.Add("Social Sciences");
+            this.comboBoxGenreHundreds.Items.Add("Language");
+            this.comboBoxGenreHundreds.Items.Add("Science");
+            this.comboBoxGenreHundreds.Items.Add("Technology");
+            this.comboBoxGenreHundreds.Items.Add("Arts and Recreation");
+            this.comboBoxGenreHundreds.Items.Add("Literature and Rhetoric");
+            this.comboBoxGenreHundreds.Items.Add("History and Geography");
+            this.comboBoxGenreHundreds.Items.Add("Fiction");
+
+            this.comboBoxFormat.Items.Add("Book");
+            this.comboBoxFormat.Items.Add("Other");
         }
 
         #region Register
@@ -193,12 +203,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
-            string isbnTen = textBoxISBNTen.Text.Trim();
-            isbnTen = AgressiveTrim(isbnTen);
+            string isbnTen = this.textBoxISBNTen.Text.Trim();
+            this.isbnTen = AgressiveTrim(isbnTen);
             if (isbnTen != "" && isbnTen.ToArray().Count() == 10)
             {
 
-                textBoxISXX.Text = ConvertToISBNThirteen(isbnTen);
+                this.textBoxISXX.Text = ConvertToISBNThirteen(isbnTen);
             }
             else
             {
@@ -208,84 +218,84 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void comboBoxGenreHundreds_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (comboBoxGenreHundreds.SelectedIndex < 10)
+            if (this.comboBoxGenreHundreds.SelectedIndex < 10)
             {
-                comboBoxGenreTens.IsEnabled = true;
-                comboBoxGenreOnes.IsEnabled = true;
-                comboBoxGenreTens.Items.Clear();
-                selectedColumnValues.Clear();
-                int column = comboBoxGenreHundreds.SelectedIndex;
-                c.Open();
-                command.CommandType = System.Data.CommandType.Text;
-                command.CommandText = $"SELECT [{column}] FROM deweyDecimal";
-                reader = command.ExecuteReader();
+                this.comboBoxGenreTens.IsEnabled = true;
+                this.comboBoxGenreOnes.IsEnabled = true;
+                this.comboBoxGenreTens.Items.Clear();
+                this.selectedColumnValues.Clear();
+                int column = this.comboBoxGenreHundreds.SelectedIndex;
+                this.c.Open();
+                this.command.CommandType = System.Data.CommandType.Text;
+                this.command.CommandText = $"SELECT [{column}] FROM deweyDecimal";
+                this.reader = this.command.ExecuteReader();
                 int count = 0;
-                selectedColumnValues.Add("[General]");
-                while (reader.Read())
+                this.selectedColumnValues.Add("[General]");
+                while (this.reader.Read())
                 {
-                    string toAdd = reader[$"{column}"].ToString();
-                    selectedColumnValues.Add(toAdd);
+                    string toAdd = this.reader[$"{column}"].ToString();
+                    this.selectedColumnValues.Add(toAdd);
                     if ((count % 10) == 0)
                     {
-                        comboBoxGenreTens.Items.Add(selectedColumnValues[count]);
+                        this.comboBoxGenreTens.Items.Add(this.selectedColumnValues[count]);
                     }
                     count = count + 1;
                 }
-                c.Close();
-                reader.Close();
+                this.c.Close();
+                this.reader.Close();
             }
             else
             {
-                comboBoxGenreTens.IsEnabled = false;
-                comboBoxGenreTens.SelectedValue = "[General]";
-                comboBoxGenreOnes.IsEnabled = false;
-                comboBoxGenreOnes.SelectedValue = "[General]";
+                this.comboBoxGenreTens.IsEnabled = false;
+                this.comboBoxGenreTens.SelectedValue = "[General]";
+                this.comboBoxGenreOnes.IsEnabled = false;
+                this.comboBoxGenreOnes.SelectedValue = "[General]";
             }
         }
 
         private void comboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            comboBoxGenreOnes.Items.Clear();
-            //if (comboBoxGenreTens.SelectedValue != null)
-            //{
-                comboBoxGenreOnes.Items.Clear();
-                comboBoxGenreOnes.Items.Add("[General]");
-                int sectionStart = (comboBoxGenreTens.SelectedIndex * 10) + 1;
+            this.comboBoxGenreOnes.Items.Clear();
+            if (this.comboBoxGenreTens.SelectedValue != null)
+            {
+                this.comboBoxGenreOnes.Items.Clear();
+                this.comboBoxGenreOnes.Items.Add("[General]");
+                int sectionStart = (this.comboBoxGenreTens.SelectedIndex * 10) + 1;
                 for (int i = sectionStart; i <= sectionStart + 8; i++)
                 {
-                    string toAdd = selectedColumnValues[i];
-                    comboBoxGenreOnes.Items.Add(toAdd);
+                    string toAdd = this.selectedColumnValues[i];
+                    this.comboBoxGenreOnes.Items.Add(toAdd);
                 }
-            //}
+            }
         }
 
         private void buttonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
         {
-            if (comboBoxGenreHundreds.SelectedIndex == 10)
+            if (this.comboBoxGenreHundreds.SelectedIndex == 10)
             {
-                if (textBoxAuthorFName.Text.Length > 0 && textBoxAuthorLName.Text.Length >= 4)
+                if (this.textBoxAuthorFName.Text.Length > 0 && this.textBoxAuthorLName.Text.Length >= 4)
                 {
-                    textBoxDeweyDecimal.Text = $"{textBoxAuthorFName.Text.Substring(0, 1)} {textBoxAuthorLName.Text.Substring(0, 4)}";
+                    this.textBoxDeweyDecimal.Text = $"{this.textBoxAuthorFName.Text.Substring(0, 1)} {this.textBoxAuthorLName.Text.Substring(0, 4)}";
                 }
-                else if (textBoxAuthorFName.Text == "" || textBoxAuthorLName.Text == "")
+                else if (this.textBoxAuthorFName.Text == "" || this.textBoxAuthorLName.Text == "")
                 {
                     MessageBox.Show("Author first and last name boxes must be filled out to generate a Dewey Decimal");
                 }
-                else if (textBoxAuthorLName.Text.Length < 4)
+                else if (this.textBoxAuthorLName.Text.Length < 4)
                 {
                     MessageBox.Show("Fiction Dewey Decimal cannot be generated. Please enter manually.");
                 }
             }
             else
             {
-                if ((comboBoxGenreHundreds.SelectedIndex != -1) && (comboBoxGenreTens.SelectedIndex != -1)
-                && (comboBoxGenreOnes.SelectedIndex != -1))
+                if ((this.comboBoxGenreHundreds.SelectedIndex != -1) && (this.comboBoxGenreTens.SelectedIndex != -1)
+                && (this.comboBoxGenreOnes.SelectedIndex != -1))
                 {
-                    int hundreds = comboBoxGenreHundreds.SelectedIndex * 100;
-                    int tens = comboBoxGenreTens.SelectedIndex * 10;
-                    int ones = comboBoxGenreOnes.SelectedIndex;
+                    int hundreds = this.comboBoxGenreHundreds.SelectedIndex * 100;
+                    int tens = this.comboBoxGenreTens.SelectedIndex * 10;
+                    int ones = this.comboBoxGenreOnes.SelectedIndex;
                     string deweyDecimal = (hundreds + tens + ones).ToString();
-                    textBoxDeweyDecimal.Text = deweyDecimal;
+                    this.textBoxDeweyDecimal.Text = deweyDecimal;
                 }
                 else
                 {
@@ -295,56 +305,29 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
-        {
-            string message = CheckRequiredItemsFilledOut();
-            string isxx = textBoxISXX.Text;
-            if (message == "")
-            {
-                int copyID = GenerateCopyID(textBoxISXX.Text);
-                string itemID = textBoxISXX.Text + $"-{copyID}";
-                c.Open();
-                command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
-                    "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISXX], [publisher], " +
-                    "[publicationYear], [edition], [description]) " +
-                    $"VALUES ('{itemID}', {copyID}, '{textBoxTitle.Text}', '{comboBoxGenreHundreds.SelectedValue.ToString().Substring(37)}', " +
-                    $"'{comboBoxGenreTens.SelectedValue.ToString()}', '{comboBoxGenreOnes.SelectedValue.ToString()}', '{comboBoxFormat.SelectedValue.ToString().Substring(37)}', " +
-                    $"'{textBoxAuthorFName.Text}', '{textBoxAuthorMName.Text}', '{textBoxAuthorLName.Text}', " +
-                    $"'{textBoxDeweyDecimal.Text}', '{textBoxISBNTen.Text}', '{textBoxISXX.Text}', " +
-                    $"'{textBoxPublisher.Text}', '{textBoxPublicationYear.Text}', '{textBoxEdition.Text}', '{textBoxDescription.Text}')";
-                command.ExecuteNonQuery();
-                c.Close();
-                this.DialogResult = true;
-            }
-            else
-            {
-                MessageBox.Show(message);
-            }
-        }
-
         private string CheckRequiredItemsFilledOut()
         {
 
-            if (comboBoxGenreHundreds.SelectedIndex != 1)
+            if (this.comboBoxGenreHundreds.SelectedIndex != 1)
             {
-                if (comboBoxGenreHundreds.SelectedIndex <= 9 && (comboBoxGenreTens.SelectedIndex == -1
-                || comboBoxGenreOnes.SelectedIndex == -1))
+                if (this.comboBoxGenreHundreds.SelectedIndex <= 9 && (this.comboBoxGenreTens.SelectedIndex == -1
+                || this.comboBoxGenreOnes.SelectedIndex == -1))
                 {
                     return "A full genre is required. " +
                         "Genre boxes must be filled out. Please select values for all three Genre boxes.";
                 }
             }
-            if (comboBoxFormat.SelectedIndex == -1)
+            if (this.comboBoxFormat.SelectedIndex == -1)
             {
                 return "A format is required. " +
                     "Format box must be filled out. Please select values for the Format box.";
             }
-            if (textBoxISXX.Text == "")
+            if (this.textBoxISXX.Text == "")
             {
                 return "An ISBN13 number is required. Please enter a value for an ISBN13 number " +
                     "or generate one from an ISBN10 number.";
             }
-            if (textBoxDeweyDecimal.Text == "")
+            if (this.textBoxDeweyDecimal.Text == "")
             {
                 return "A Dewey Decimal number is required. Please enter a value for a Dewey Decimal number " +
                     "or generate one from the genre or author.";
@@ -354,27 +337,27 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private int GenerateCopyID(string isxx)
         {
-            isxx = textBoxISXX.Text;
-            c.Open();
-            command.CommandType = System.Data.CommandType.Text;
-            command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE itemID LIKE '%{isxx}-%' ORDER BY [copyID]";
-            reader = command.ExecuteReader();
+            isxx = this.textBoxISXX.Text;
+            this.c.Open();
+            this.command.CommandType = System.Data.CommandType.Text;
+            this.command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE itemID LIKE '%{isxx}-%' ORDER BY [copyID]";
+            this.reader = this.command.ExecuteReader();
             int previous;
             int copyID = 1;
             try
             {
-                reader.Read();
-                previous = int.Parse(reader[1].ToString());
+                this.reader.Read();
+                previous = int.Parse(this.reader[1].ToString());
             }
             catch (InvalidOperationException) // If no IDs contain specified ISBN13 (isbnThirteen)
             {
-                c.Close();
+                this.c.Close();
                 return 1;
             }
             
-            while (reader.Read()) // loop through ItemIDs and fill in gaps in suffixes if needed
+            while (this.reader.Read()) // loop through ItemIDs and fill in gaps in suffixes if needed
             {
-                int current = int.Parse(reader[1].ToString());
+                int current = int.Parse(this.reader[1].ToString());
                 if (current == previous + 1)
                 {
                     copyID = current + 1;
@@ -386,29 +369,70 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     break;
                 }
             }
-            c.Close();
+            this.c.Close();
             return copyID; // Also suffix of ItemID
         }
 
         private void comboBoxFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (comboBoxFormat.SelectedIndex == 1)
+            if (this.comboBoxFormat.SelectedIndex == 1)
             {
-                labelISXX.Content = "ISXX";
-                labelISBNTen.IsEnabled = false;
-                textBoxISBNTen.IsEnabled = false;
-                textBoxISBNTen.Clear();
-                buttonConvertToISBN13.IsEnabled = false;
+                this.labelISXX.Content = "ISXX";
+                this.labelISBNTen.IsEnabled = false;
+                this.textBoxISBNTen.IsEnabled = false;
+                this.textBoxISBNTen.Clear();
+                this.buttonConvertToISBN13.IsEnabled = false;
             }
             else
             {
-                labelISXX.Content = "ISBN 13";
-                labelISBNTen.IsEnabled = true;
-                textBoxISBNTen.IsEnabled = true;
-                buttonConvertToISBN13.IsEnabled = true;
+                this.labelISXX.Content = "ISBN 13";
+                this.labelISBNTen.IsEnabled = true;
+                this.textBoxISBNTen.IsEnabled = true;
+                this.buttonConvertToISBN13.IsEnabled = true;
             }
         }
         #endregion Register
+
+        private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.toEditItem.itemID == "")
+            {
+                string message = CheckRequiredItemsFilledOut();
+                string isxx = this.textBoxISXX.Text;
+                if (message == "")
+                {
+                    int copyID = GenerateCopyID(this.textBoxISXX.Text);
+                    string itemID = this.textBoxISXX.Text + $"-{copyID}";
+                    this.c.Open();
+                    this.command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
+                        "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISXX], [publisher], " +
+                        "[publicationYear], [edition], [description]) " +
+                        $"VALUES ('{itemID}', {copyID}, '{this.textBoxTitle.Text}', '{this.comboBoxGenreHundreds.SelectedValue}', " +
+                        $"'{this.comboBoxGenreTens.SelectedValue}', '{this.comboBoxGenreOnes.SelectedValue}', '{this.comboBoxFormat.SelectedValue}', " +
+                        $"'{this.textBoxAuthorFName.Text}', '{this.textBoxAuthorMName.Text}', '{this.textBoxAuthorLName.Text}', " +
+                        $"'{this.textBoxDeweyDecimal.Text}', '{this.textBoxISBNTen.Text}', '{this.textBoxISXX.Text}', " +
+                        $"'{this.textBoxPublisher.Text}', '{this.textBoxPublicationYear.Text}', '{this.textBoxEdition.Text}', '{this.textBoxDescription.Text}')";
+                    this.command.ExecuteNonQuery();
+                    this.c.Close();
+                    this.DialogResult = true;
+                }
+                else
+                {
+                    MessageBox.Show(message);
+                }
+            }
+            else
+            {
+                if (MessageBox.Show("Save Changes?", "Edits Detected", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    UpdateItemTable();
+                    MessageBox.Show("Item data updated.");
+                    this.c.Close();
+                    this.DialogResult = true;
+                }
+            }
+
+        }
 
         private void buttonCheckout_Click(object sender, RoutedEventArgs e)
         {
@@ -417,79 +441,79 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void UpdateItemTable()
         {
-            if (textBoxTitle.Text != this.title)
+            if (this.textBoxTitle.Text != this.toEditItem.title)
             {
-                UpdateColumn("title", textBoxTitle.Text);
+                UpdateColumn("title", this.textBoxTitle.Text);
             }
-            if (textBoxAuthorFName.Text != this.authorFirstName)
+            if (this.textBoxAuthorFName.Text != this.authorFirstName)
             {
-                UpdateColumn("authorFirstName", textBoxAuthorFName.Text);
+                UpdateColumn("authorFirstName", this.textBoxAuthorFName.Text);
             }
-            if (textBoxAuthorMName.Text != this.authorMiddleName)
+            if (this.textBoxAuthorMName.Text != this.authorMiddleName)
             {
-                UpdateColumn("authorMiddleName", textBoxAuthorMName.Text);
+                UpdateColumn("authorMiddleName", this.textBoxAuthorMName.Text);
             }
-            if (textBoxAuthorLName.Text != this.authorLastName)
+            if (this.textBoxAuthorLName.Text != this.authorLastName)
             {
-                UpdateColumn("authorLastName", textBoxAuthorLName.Text);
+                UpdateColumn("authorLastName", this.textBoxAuthorLName.Text);
             }
-            if (textBoxISBNTen.Text != this.isbnTen)
+            if (this.textBoxISBNTen.Text != this.isbnTen)
             {
-                UpdateColumn("ISBN10", textBoxISBNTen.Text);
+                UpdateColumn("ISBN10", this.textBoxISBNTen.Text);
             }
-            if (textBoxDeweyDecimal.Text != this.deweyDecimal)
+            if (this.textBoxDeweyDecimal.Text != this.toEditItem.deweyDecimal)
             {
-                UpdateColumn("deweyDecimal", textBoxISXX.Text);
+                UpdateColumn("deweyDecimal", this.textBoxISXX.Text);
             }
-            if (textBoxPublisher.Text != this.publisher)
+            if (this.textBoxPublisher.Text != this.publisher)
             {
-                UpdateColumn("publisher", textBoxPublisher.Text);
+                UpdateColumn("publisher", this.textBoxPublisher.Text);
             }
-            if (textBoxPublicationYear.Text != this.publicationYear)
+            if (this.textBoxPublicationYear.Text != this.publicationYear)
             {
-                UpdateColumn("publicationYear", textBoxPublicationYear.Text);
+                UpdateColumn("publicationYear", this.textBoxPublicationYear.Text);
             }
-            if (textBoxEdition.Text != this.edition)
+            if (this.textBoxEdition.Text != this.edition)
             {
-                UpdateColumn("edition", textBoxEdition.Text);
+                UpdateColumn("edition", this.textBoxEdition.Text);
             }
-            if (textBoxDescription.Text != this.description)
+            if (this.textBoxDescription.Text != this.description)
             {
-                UpdateColumn("description", textBoxDescription.Text);
+                UpdateColumn("description", this.textBoxDescription.Text);
             }
-            if (comboBoxGenreHundreds.SelectedValue.ToString() != this.genreClassOne)
+            if (this.comboBoxGenreHundreds.SelectedValue.ToString() != this.toEditItem.genre)
             {
-                UpdateColumn("genreClassOne", comboBoxGenreHundreds.SelectedValue.ToString());
+                UpdateColumn("genreClassOne", this.comboBoxGenreHundreds.SelectedValue.ToString());
             }
-            if (comboBoxGenreTens.SelectedValue.ToString() != this.genreClassTwo)
+            if (this.comboBoxGenreTens.SelectedValue.ToString() != this.genreClassTwo)
             {
-                UpdateColumn("genreClassTwo", comboBoxGenreTens.SelectedValue.ToString());
+                UpdateColumn("genreClassTwo", this.comboBoxGenreTens.SelectedValue.ToString());
             }
-            if (comboBoxGenreOnes.SelectedValue.ToString() != this.genreClassOne)
+            if (this.comboBoxGenreOnes.SelectedValue.ToString() != this.toEditItem.genre)
             {
-                UpdateColumn("genreClassThree", comboBoxGenreOnes.SelectedValue.ToString());
+                UpdateColumn("genreClassThree", this.comboBoxGenreOnes.SelectedValue.ToString());
             }
-            if (comboBoxFormat.SelectedValue.ToString() != this.format)
+            if (this.comboBoxFormat.SelectedValue.ToString() != this.toEditItem.format)
             {
-                UpdateColumn("format", comboBoxFormat.SelectedValue.ToString());
+                UpdateColumn("format", this.comboBoxFormat.SelectedValue.ToString());
             }
-            if (textBoxISXX.Text != this.isxx)
+            if (this.textBoxISXX.Text != this.isxx)
             {
-                UpdateColumn("ISXX", textBoxISXX.Text);
-                int newCopyID = GenerateCopyID(textBoxISXX.Text);
-                c.Open();
-                command.CommandText = $"UPDATE items SET [itemID] = '{textBoxISXX.Text}-{newCopyID}', [copyID] = {newCopyID} WHERE [itemID] = '{this.itemID}'";
-                command.ExecuteNonQuery();
-                c.Close();
+                UpdateColumn("ISXX", this.textBoxISXX.Text);
+                int newCopyID = GenerateCopyID(this.textBoxISXX.Text);
+                this.c.Open();
+                this.command.CommandText = $"UPDATE items SET [itemID] = '{this.textBoxISXX.Text}-{newCopyID}', [copyID] = {newCopyID} WHERE [itemID] = '{this.toEditItem.itemID}'";
+                this.command.ExecuteNonQuery();
+                this.c.Close();
             }
         }
 
         private void UpdateColumn(string column, string newValue)
         {
-            c.Open();
-            command.CommandText = $"UPDATE items SET [{column}] = {newValue} WHERE itemID = '{this.itemID}'";
-            command.ExecuteNonQuery();
-            c.Close();
+            this.c.Open();
+            this.command.CommandText = $"UPDATE items SET [{column}] = {newValue} WHERE itemID = '{this.toEditItem.itemID}'";
+            this.command.ExecuteNonQuery();
+            this.c.Close();
         }
     }
 }
