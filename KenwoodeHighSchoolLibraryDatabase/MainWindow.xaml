@@ -47,7 +47,7 @@
         <Label x:Name="labelSearchUser" Content="Search for user by: " HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
         <TextBox x:Name="textBoxAccountsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" TextChanged="textBoxAccountsSearchBy_TextChanged" GotFocus="textBoxAccountsSearchBy_GotFocus"/>
         <Image Margin="428,10,344,637" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="456"/>
-        <Button x:Name="BtnToBookRegistrationWindow" Content="Register New Item" HorizontalAlignment="Left" Margin="10,659,0,0" VerticalAlignment="Top" Width="106" Click="BtnToBookRegistrationWindow_Click" Height="25"/>
+        <Button x:Name="BtnToBookRegistrationWindow" Content="Register New Item" HorizontalAlignment="Left" Margin="10,659,0,0" VerticalAlignment="Top" Width="106" Click="BtnToBookRegistrationWindow_Click" Height="25"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
         <TextBox x:Name="textBoxItemsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" FontFamily="Sylfaen" GotFocus="textBoxItemsSearchBy_GotFocus" TextChanged="textBoxItemsSearchBy_TextChanged"/>
         <Label x:Name="labelSearchItems" Content="Search for item by: " HorizontalAlignment="Left" Margin="10,403,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
         <ComboBox x:Name="comboBoxItemsSearchByOptions" HorizontalAlignment="Left" Margin="119,406,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxItemsSearchByOptions_SelectionChanged">
@@ -58,9 +58,12 @@
             <ListBoxItem Content="Genre"/>
             <ListBoxItem Content="Lent To"/>
         </ComboBox>
-        <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" HorizontalAlignment="Left" Margin="895,434,0,0" VerticalAlignment="Top" Width="150" Click="BtnToCheckout_Click" Height="25"/>
+        <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" HorizontalAlignment="Left" Margin="895,434,0,0" VerticalAlignment="Top" Width="150" Click="BtnToCheckout_Click" Height="25"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
         <Label x:Name="labelSelectedItemTitle" Content="(Select an Item)" HorizontalAlignment="Left" Margin="895,464,0,0" VerticalAlignment="Top"/>
         <Label x:Name="labelSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="895,525,0,0" VerticalAlignment="Top"/>
         <Label x:Name="labelToSelectedUser" Content="To Selected User..." HorizontalAlignment="Left" Margin="895,495,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="buttonEditItem" Content="Edit Selected Item" HorizontalAlignment="Left" Margin="121,659,0,0" VerticalAlignment="Top" Width="101" Height="25" Click="buttonEditItem_Click"/>
     </Grid>
 </Window>

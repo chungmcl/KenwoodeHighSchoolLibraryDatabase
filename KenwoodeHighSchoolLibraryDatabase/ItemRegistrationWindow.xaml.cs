@@ -66,6 +66,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public ItemRegistrationWindow(Item item)
         {
             InitializeComponent();
+            selectedColumnValues = new List<String>();
             c = new OleDbConnection();
             c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
                 "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
@@ -74,15 +75,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
             reader = null;
             itemID = item.itemID;
             // Add a label listing itemID
-            isxx = itemID.Substring(0, 13);
-            textBoxISXX.Text = isxx;
             deweyDecimal = item.deweyDecimal;
             textBoxDeweyDecimal.Text = deweyDecimal;
             title = item.title;
             textBoxTitle.Text = title;
             // author name cannot be determined by passed item
             genreClassOne = item.genre;
-            comboBoxGenreHundreds.SelectedValue = genreClassOne; // does this work?
+            ListBoxItem toSearch = new ListBoxItem();
+            toSearch.Content = genreClassOne;
+            comboBoxGenreHundreds.SelectedValue = toSearch; // does this work? (works for other two - try loading comboBoxGenreHundreds programatically)
             format = item.format;
             comboBoxFormat.SelectedValue = format; // does this work?
             currentlyCheckedOutBy = item.currentlyCheckedOutBy;
@@ -98,15 +99,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void LoadRemainingFields()
         {
             c.Open();
-            command.CommandText = "SELECT [authorLastName], [authorMiddleName], [authorFirstName], [ISBN10], " +
+            command.CommandText = "SELECT [authorLastName], [authorMiddleName], [authorFirstName], [ISBN10], [ISXX], " +
                 "[genreClassTwo], [genreClassThree], [publisher], [publicationYear], [edition], [description], " +
                 "[previousCheckedOutBy] " +
-                $"FROM items WHERE [itemID] = {itemID}";
+                $"FROM items WHERE [itemID] = '{itemID}'";
             command.CommandType = System.Data.CommandType.Text;
             reader = command.ExecuteReader();
             reader.Read();
             isbnTen = reader["ISBN10"].ToString();
             textBoxISBNTen.Text = isbnTen;
+            isxx = reader["ISXX"].ToString();
+            textBoxISXX.Text = isxx;
             authorLastName = reader["authorLastName"].ToString();
             textBoxAuthorLName.Text = authorLastName;
             authorMiddleName = reader["authorMiddleName"].ToString();
@@ -116,7 +119,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             genreClassTwo = reader["genreClassTwo"].ToString();
             comboBoxGenreTens.SelectedValue = genreClassTwo; // does this work?
             genreClassThree = reader["genreClassThree"].ToString();
-            comboBoxGenreOnes.SelectedItem = genreClassThree; // does this work?
+            comboBoxGenreOnes.SelectedValue = genreClassThree; // does this work?
             publisher = reader["publisher"].ToString();
             textBoxPublisher.Text = publisher;
             publicationYear = reader["publicationYear"].ToString();
@@ -243,8 +246,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void comboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             comboBoxGenreOnes.Items.Clear();
-            if (comboBoxGenreTens.SelectedValue != null)
-            {
+            //if (comboBoxGenreTens.SelectedValue != null)
+            //{
                 comboBoxGenreOnes.Items.Clear();
                 comboBoxGenreOnes.Items.Add("[General]");
                 int sectionStart = (comboBoxGenreTens.SelectedIndex * 10) + 1;
@@ -253,7 +256,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     string toAdd = selectedColumnValues[i];
                     comboBoxGenreOnes.Items.Add(toAdd);
                 }
-            }
+            //}
         }
 
         private void buttonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
@@ -410,6 +413,83 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void buttonCheckout_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void UpdateItemTable()
+        {
+            if (textBoxTitle.Text != this.title)
+            {
+                UpdateColumn("title", textBoxTitle.Text);
+            }
+            if (textBoxAuthorFName.Text != this.authorFirstName)
+            {
+                UpdateColumn("authorFirstName", textBoxAuthorFName.Text);
+            }
+            if (textBoxAuthorMName.Text != this.authorMiddleName)
+            {
+                UpdateColumn("authorMiddleName", textBoxAuthorMName.Text);
+            }
+            if (textBoxAuthorLName.Text != this.authorLastName)
+            {
+                UpdateColumn("authorLastName", textBoxAuthorLName.Text);
+            }
+            if (textBoxISBNTen.Text != this.isbnTen)
+            {
+                UpdateColumn("ISBN10", textBoxISBNTen.Text);
+            }
+            if (textBoxDeweyDecimal.Text != this.deweyDecimal)
+            {
+                UpdateColumn("deweyDecimal", textBoxISXX.Text);
+            }
+            if (textBoxPublisher.Text != this.publisher)
+            {
+                UpdateColumn("publisher", textBoxPublisher.Text);
+            }
+            if (textBoxPublicationYear.Text != this.publicationYear)
+            {
+                UpdateColumn("publicationYear", textBoxPublicationYear.Text);
+            }
+            if (textBoxEdition.Text != this.edition)
+            {
+                UpdateColumn("edition", textBoxEdition.Text);
+            }
+            if (textBoxDescription.Text != this.description)
+            {
+                UpdateColumn("description", textBoxDescription.Text);
+            }
+            if (comboBoxGenreHundreds.SelectedValue.ToString() != this.genreClassOne)
+            {
+                UpdateColumn("genreClassOne", comboBoxGenreHundreds.SelectedValue.ToString());
+            }
+            if (comboBoxGenreTens.SelectedValue.ToString() != this.genreClassTwo)
+            {
+                UpdateColumn("genreClassTwo", comboBoxGenreTens.SelectedValue.ToString());
+            }
+            if (comboBoxGenreOnes.SelectedValue.ToString() != this.genreClassOne)
+            {
+                UpdateColumn("genreClassThree", comboBoxGenreOnes.SelectedValue.ToString());
+            }
+            if (comboBoxFormat.SelectedValue.ToString() != this.format)
+            {
+                UpdateColumn("format", comboBoxFormat.SelectedValue.ToString());
+            }
+            if (textBoxISXX.Text != this.isxx)
+            {
+                UpdateColumn("ISXX", textBoxISXX.Text);
+                int newCopyID = GenerateCopyID(textBoxISXX.Text);
+                c.Open();
+                command.CommandText = $"UPDATE items SET [itemID] = '{textBoxISXX.Text}-{newCopyID}', [copyID] = {newCopyID} WHERE [itemID] = '{this.itemID}'";
+                command.ExecuteNonQuery();
+                c.Close();
+            }
+        }
+
+        private void UpdateColumn(string column, string newValue)
+        {
+            c.Open();
+            command.CommandText = $"UPDATE items SET [{column}] = {newValue} WHERE itemID = '{this.itemID}'";
+            command.ExecuteNonQuery();
+            c.Close();
         }
     }
 }

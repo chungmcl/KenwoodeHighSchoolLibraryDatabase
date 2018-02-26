@@ -325,6 +325,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
             "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
+
+        private void buttonEditItem_Click(object sender, RoutedEventArgs e)
+        {
+            ItemRegistrationWindow w = new ItemRegistrationWindow(selectedItem);
+            w.ShowDialog();
+        }
     }
 
     public struct User
