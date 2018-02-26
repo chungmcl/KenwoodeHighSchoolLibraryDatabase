@@ -77,6 +77,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newUser.userType = reader["userType"].ToString();
                 newUser.itemLimit = reader["bookLimit"].ToString();
                 newUser.dateLimit = reader["dateLimit"].ToString();
+                newUser.checkedOut = reader["numberOfCheckedoutItems"].ToString();
+                //newUser.overdue = reader["overdue"].ToString();
+                newUser.fines = reader["fines"].ToString();
                 dataGridAccounts.Items.Add(newUser);
             }
         }
@@ -119,17 +122,31 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            selectedUser = (User)this.dataGridAccounts.SelectedItem;
-            labelSelectedUser.Content = $"({selectedUser.userID}) " +
-                $"{selectedUser.lastName}, {selectedUser.firstName}";
-            this.userSelected = true;
+            try
+            {
+                selectedUser = (User)this.dataGridAccounts.SelectedItem;
+                labelSelectedUser.Content = $"({selectedUser.userID}) " +
+                    $"{selectedUser.lastName}, {selectedUser.firstName}";
+                this.userSelected = true;
+            }
+            catch
+            {
+
+            }
         }
 
         private void dataGridItems_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            selectedItem = (Item)this.dataGridItems.SelectedItem;
-            labelSelectedItemTitle.Content = selectedItem.title;
-            this.itemSelected = true;
+            try
+            {
+                selectedItem = (Item)this.dataGridItems.SelectedItem;
+                labelSelectedItemTitle.Content = selectedItem.title;
+                this.itemSelected = true;
+            }
+            catch
+            {
+
+            }
         }
 
         #region DataGrid Queries
@@ -184,7 +201,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 if (queryColumn != "")
                 {
-                    LoadDataGrid($"SELECT * FROM accounts WHERE [{queryColumn}] = '{currentText}'", true);
+                    LoadDataGrid($"SELECT * FROM accounts WHERE [{queryColumn}] LIKE '%{currentText}%'", true);
                 }
             }
         }
@@ -225,7 +242,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 if (queryColumn != "")
                 {
-                    LoadDataGrid($"SELECT * FROM items WHERE [{queryColumn}] = '{currentText}'", false);
+                    LoadDataGrid($"SELECT * FROM items WHERE [{queryColumn}] LIKE '%{currentText}%'", false);
                 }
             }
         }
@@ -271,26 +288,42 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (userSelected && itemSelected)
             {
-                DateTime dueDate = (DateTime.Today.AddDays(double.Parse(selectedUser.dateLimit)).AddHours(23.9999));
-                if (MessageBox.Show(
-                    $"Confirm Checkout -\n" +
-                    $"Check out item: {selectedItem.title}\n" +
-                    $"To user: ({selectedUser.userID}) {selectedUser.lastName}, {selectedUser.firstName}\n" +
-                    $"For {selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
-                    , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                if (selectedItem.currentlyCheckedOutBy != selectedUser.userID)
                 {
-                    c.Open();
-                    command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = {selectedUser.userID} WHERE " +
-                        $"[itemID] = {selectedItem.itemID}";
-                    command.ExecuteNonQuery();
-                    int checkedOut = (int.Parse(selectedUser.checkedOut));
-                    command.CommandText = $"UPDATE accounts SET [numberOfCheckedoutItems] = {checkedOut++} WHERE " +
-                        $"[userID] = {selectedUser.userID}";
-                    command.ExecuteNonQuery();
-                    // not done!
+                    DateTime dueDate = (DateTime.Today.AddDays(double.Parse(selectedUser.dateLimit)).AddHours(23.9999));
+                    if (MessageBox.Show(
+                        $"Confirm Checkout -\n" +
+                        $"Check out item: {selectedItem.title}\n" +
+                        $"To user: ({selectedUser.userID}) {selectedUser.lastName}, {selectedUser.firstName}\n" +
+                        $"For {selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
+                        , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    {
+                        CheckoutDatabaseUpdate(dueDate);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("This book is already checked out to this user!");
                 }
             }
-            
+        }
+
+        private void CheckoutDatabaseUpdate(DateTime dueDate)
+        {
+            string userID = selectedUser.userID.ToString();
+            string stringDueDate = dueDate.ToString();
+            string itemID = selectedItem.itemID.ToString();
+            c.Open();
+            command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = {userID}, [dueDate] = '{stringDueDate}' WHERE itemID = '{itemID}'";
+            command.ExecuteNonQuery();
+            int checkedOut = (int.Parse(selectedUser.checkedOut.ToString())) + 1;
+            command.CommandText = $"UPDATE accounts SET [numberOfCheckedoutItems] = {checkedOut} WHERE userID = '{userID}'";
+            command.ExecuteNonQuery();
+            c.Close();
+            LoadDataGrid("SELECT * FROM accounts", true);
+            LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+            "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+            "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
     }
 
@@ -304,6 +337,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public string dateLimit { get; set; }
         public string checkedOut { get; set; }
         public string overdue { get; set; }
+        public string fines { get; set; }
     }
 
     public struct Item
