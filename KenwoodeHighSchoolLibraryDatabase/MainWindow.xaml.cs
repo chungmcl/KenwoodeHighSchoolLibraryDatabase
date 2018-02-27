@@ -45,9 +45,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
 
+
+
         #region LoadDataGrids
         private void LoadDataGrid(string sqlText, bool loadAccounts)
         {
+            CalculateOverdueAndFines();
             c.Open();
             command.CommandText = sqlText;
             command.CommandType = System.Data.CommandType.Text;
@@ -78,7 +81,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newUser.itemLimit = reader["itemLimit"].ToString();
                 newUser.dateLimit = reader["dateLimit"].ToString();
                 newUser.checkedOut = reader["numberOfCheckedoutItems"].ToString();
-                //newUser.overdue = reader["overdue"].ToString();
+                newUser.overdueItems = reader["overdueItems"].ToString();
                 newUser.fines = reader["fines"].ToString();
                 dataGridAccounts.Items.Add(newUser);
             }
@@ -110,6 +113,46 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
         #endregion
+
+        private void CalculateOverdueAndFines()
+        {
+            List<string[]> userIDs = new List<string[]>();
+            c.Open();
+            command.CommandText = "SELECT [userID], [finePerDay] FROM accounts";
+            reader = command.ExecuteReader();
+            while(reader.Read())
+            {
+                string[] toAdd = new string[] { reader[0].ToString(), reader[1].ToString() };
+                userIDs.Add(toAdd);
+            }
+            reader.Close();
+            for (int i = 0; i < userIDs.Count; i++)
+            {
+                int overDue = 0;
+                double fines = 0;
+                string currentUserID = userIDs[i][0];
+                string finePerDay = userIDs[i][1];
+                command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{currentUserID}'";
+                reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    DateTime dueDate = Convert.ToDateTime(reader[0].ToString());
+                    if (DateTime.Now >= dueDate)
+                    {
+                        overDue++;
+                        fines = (DateTime.Today - dueDate.Date).TotalDays * int.Parse(finePerDay);
+                    }
+                }
+                reader.Close();
+                command.CommandText = $"UPDATE accounts SET " +
+                    $"[overDueItems] = {overDue}, " +
+                    $"[fines] = {fines} " +
+                    $"WHERE [userID] = '{currentUserID}'";
+                command.ExecuteNonQuery();
+            }
+            c.Close();
+            reader.Close();
+        }
 
         #region Select Item or User
         private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -332,7 +375,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string stringDueDate = dueDate.ToString();
             string itemID = selectedItem.itemID.ToString();
             c.Open();
-            command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = {userID}, [dueDate] = '{stringDueDate}' WHERE itemID = '{itemID}'";
+            command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '{userID}', [dueDate] = '{stringDueDate}' WHERE itemID = '{itemID}'";
             command.ExecuteNonQuery();
             int checkedOut = (int.Parse(selectedUser.checkedOut.ToString())) + 1;
             command.CommandText = $"UPDATE accounts SET [numberOfCheckedoutItems] = {checkedOut} WHERE userID = '{userID}'";
@@ -458,7 +501,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public string itemLimit { get; set; }
         public string dateLimit { get; set; }
         public string checkedOut { get; set; }
-        public string overdue { get; set; }
+        public string overdueItems { get; set; }
         public string fines { get; set; }
     }
 

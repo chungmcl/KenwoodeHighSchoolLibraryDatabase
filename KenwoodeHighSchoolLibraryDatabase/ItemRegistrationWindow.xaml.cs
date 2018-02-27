@@ -231,7 +231,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
             string isbnTen = this.textBoxISBNTen.Text.Trim();
-            this.isbnTen = AgressiveTrim(isbnTen);
+            isbnTen = AgressiveTrim(isbnTen);
             if (isbnTen != "" && isbnTen.ToArray().Count() == 10)
             {
 
@@ -368,7 +368,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             isxx = this.textBoxISXX.Text;
             this.c.Open();
             this.command.CommandType = System.Data.CommandType.Text;
-            this.command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE itemID LIKE '%{isxx}-%' ORDER BY [copyID]";
+            this.command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE [itemID] LIKE '%{isxx}-%' ORDER BY [copyID]";
             this.reader = this.command.ExecuteReader();
             int previous;
             int copyID = 1;
@@ -376,13 +376,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 this.reader.Read();
                 previous = int.Parse(this.reader[1].ToString());
+                if (previous >= 1)
+                {
+                    this.c.Close();
+                    return 0;
+                }
             }
             catch (InvalidOperationException) // If no IDs contain specified ISBN13 (isbnThirteen)
             {
                 this.c.Close();
-                return 1;
+                return 0;
             }
-            
             while (this.reader.Read()) // loop through ItemIDs and fill in gaps in suffixes if needed
             {
                 int current = int.Parse(this.reader[1].ToString());
