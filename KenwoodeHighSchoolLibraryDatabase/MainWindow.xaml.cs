@@ -75,7 +75,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newUser.lastName = reader["lastName"].ToString();
                 newUser.userID = reader["userID"].ToString();
                 newUser.userType = reader["userType"].ToString();
-                newUser.itemLimit = reader["bookLimit"].ToString();
+                newUser.itemLimit = reader["itemLimit"].ToString();
                 newUser.dateLimit = reader["dateLimit"].ToString();
                 newUser.checkedOut = reader["numberOfCheckedoutItems"].ToString();
                 //newUser.overdue = reader["overdue"].ToString();

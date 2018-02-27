@@ -20,16 +20,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class UserRegistrationWindow : Window
     {
-        OleDbConnection c;
-        OleDbCommand command;
-        OleDbDataReader reader;
-        List<string[]> userIDs;
-        string fName;
-        string lName;
-        string uID;
-        string uType;
-        int bookLimit;
-        int dateLimit;
+        private OleDbConnection c;
+        private OleDbCommand command;
+        private OleDbDataReader reader;
+        private List<string[]> userIDs;
+        private string fName;
+        private string lName;
+        private string uID;
+        private string uType;
+        private int itemLimit;
+        private int dateLimit;
+        private double finePerDay;
         public UserRegistrationWindow()
         {
             InitializeComponent();
@@ -41,6 +42,26 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.Connection = c;
             reader = null;
             userIDs = LoadUserIDs();
+        }
+
+        User toEditUser;
+        private int toEditUserFinePerDay;
+        public UserRegistrationWindow(User user)
+        {
+            toEditUser = user;
+            c.Open();
+            command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = {user.userID}";
+            reader = command.ExecuteReader();
+            reader.Read();
+            this.toEditUserFinePerDay = int.Parse(reader[0].ToString());
+            c.Close();
+
+            textBoxFirstNameRegister.Text = toEditUser.firstName;
+            textBoxSurnameRegister.Text = toEditUser.lastName;
+            textBoxUserIDRegister.Text = toEditUser.userID;
+            textBoxItemLimit.Text = toEditUser.itemLimit;
+            textBoxDateLimit.Text = toEditUser.dateLimit;
+            textBoxFinePerDay.Text = this.toEditUserFinePerDay.ToString();
         }
 
         private List<string[]> LoadUserIDs()
@@ -87,8 +108,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 int checkUserID = ContainsUserID(uID);
                 if (checkUserID == -1)
                 {
-                    command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [bookLimit], [dateLimit]) " +
-                    $"VALUES ('{fName}', '{lName}', '{uID}', '{uType}', {bookLimit}, {dateLimit})";
+                    command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [itemLimit], [dateLimit], [finePerDay]) " +
+                    $"VALUES ('{this.fName}', '{this.lName}', '{this.uID}', '{this.uType}', {this.itemLimit}, {this.dateLimit}, {this.finePerDay})";
                     command.ExecuteNonQuery();
                 }
                 else
@@ -112,35 +133,60 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 return "A first name is required.";
             }
+
             if (textBoxSurnameRegister.Text == "")
             {
                 return "A surname is required.";
             }
+
             if (textBoxUserIDRegister.Text == "")
             {
                 return "A User ID is required. (School/Employee ID)";
             }
+
             if (comboBoxUserTypeRegister.SelectedIndex == -1)
             {
                 return "A usertype must be selected.";
             }
-            if (textBoxBookLimit.Text == "")
+
+            if (textBoxItemLimit.Text == "")
             {
                 return "A book limit is required in integer format.";
             }
+
             if (textBoxDateLimit.Text == "")
             {
                 return "A date limit is required in integer format.\n" +
                     "(Number of days a user can checkout a book.)";
             }
-            if (!(int.TryParse(textBoxBookLimit.Text.Trim(), out this.bookLimit)))
+
+            if (!(int.TryParse(textBoxItemLimit.Text.Trim(), out this.itemLimit)))
             {
                 return "User Book Limit must be in integer format."; // need to check for negative integers
             }
+            else if (this.itemLimit < 0)
+            {
+                return "User Book Limit must be a positive integer.";
+            }
+
             if (!(int.TryParse(textBoxDateLimit.Text.Trim(), out this.dateLimit)))
             {
                 return "User Date Limit must be in integer format."; // need to check for negative integers
             }
+            else if (this.dateLimit < 0)
+            {
+                return "User Date Limit must be a positive integer.";
+            }
+
+            if (!(double.TryParse(textBoxFinePerDay.Text.Trim(), out this.finePerDay)))
+            {
+                return "User Fine Per (overdue) Day must be a number (integer or irrational)."; // need to check for negative numbers
+            }
+            else if (this.finePerDay < 0)
+            {
+                return "User Fine Per (overdue) day must be a positive number (integer or irrational).";
+            }
+
             return "";
         }
 
