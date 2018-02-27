@@ -165,12 +165,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                             $"[userType] = '{this.comboBoxUserTypeRegister.SelectedValue}', " +
                             $"[itemLimit] = {this.textBoxItemLimit.Text}, " +
                             $"[dateLimit] = {this.textBoxDateLimit.Text}, " +
-                            $"[finePerDay] = {this.textBoxFinePerDay.Text} " +
+                            $"[finePerDay] = {this.finePerDay} " +
                             $"WHERE [userID] = '{this.toEditUser.userID}'";
                         command.ExecuteNonQuery();
 
                         command.CommandText = $"UPDATE items SET " +
-                            $"[currentlyCheckedOutBy] = {this.textBoxUserIDRegister.Text} " +
+                            $"[currentlyCheckedOutBy] = '{this.textBoxUserIDRegister.Text}' " +
                             $"WHERE [currentlyCheckedOutBy] = '{this.toEditUser.userID}'";
                         command.ExecuteNonQuery();
 
@@ -180,6 +180,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         command.ExecuteNonQuery();
 
                         c.Close();
+                        this.DialogResult = true;
                     }
                 }
                 else
@@ -214,8 +215,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 int checkUserID = ContainsUserID(textBoxUserIDRegister.Text);
                 if (checkUserID != -1)
                 {
-                    return $"Another student ({userIDs[checkUserID][1]} {userIDs[checkUserID][2]}) already " +
-                                $"holds this Student/Teacher ID ({userIDs[checkUserID][0]}). Did you enter the wrong ID?";
+                    if (this.userIDs[checkUserID][0] != toEditUser.userID) // User may be editing
+                    {
+                        return $"Another student ({userIDs[checkUserID][1]} {userIDs[checkUserID][2]}) already " +
+                                    $"holds this Student/Teacher ID ({userIDs[checkUserID][0]}). Did you enter the wrong ID?";
+                    }
                 }
             }
 
@@ -255,7 +259,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
             if (!(double.TryParse(textBoxFinePerDay.Text.Trim(), out this.finePerDay)))
             {
-                return "User Fine Per (overdue) Day must be a number (integer or irrational)."; // need to check for negative numbers
+                return "User Fine Per (overdue) Day must be a number."; // need to check for negative numbers
             }
             else if (this.finePerDay < 0)
             {

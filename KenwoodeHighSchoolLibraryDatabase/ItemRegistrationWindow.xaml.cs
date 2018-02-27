@@ -618,15 +618,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.command.ExecuteNonQuery();
             this.c.Close();
         }
-
-        private void datePickerDueDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.datePickerDueDate.SelectedDate < DateTime.Today)
-            {
-                MessageBox.Show("You cannot reset the due date to be before today.");
-                this.datePickerDueDate.SelectedDate = dueDate;
-            }
-        }
         #endregion
     }
 }

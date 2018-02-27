@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="ItemRegistrationWindow" Height="823.133" Width="738.195" ResizeMode="CanMinimize">
+        Title="Item Registration/ViewEdit" Height="823.133" Width="738.195" ResizeMode="CanMinimize">
     <Grid Margin="0,0,0.2,0.2">
         <Label x:Name="labelWindowTitle" Margin="252,0,279.8,0" VerticalAlignment="Top" Height="30" FontWeight="Bold" RenderTransformOrigin="0.592,0.507"/>
         <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="739" Margin="45,44,0,0" VerticalAlignment="Top" Width="677">
@@ -57,7 +57,7 @@
                     <Button x:Name="buttonCheckout" HorizontalAlignment="Right" Content="Uncheckout Item From User" Width="165" Click="buttonCheckout_Click" Height="35" VerticalAlignment="Top" Margin="0,0,393.4,0" FontFamily="Sylfaen"/>
                 </StackPanel>
                 <TextBox x:Name="textBoxPreviousCheckedOutBy" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" IsEnabled="False" FontFamily="Sylfaen"/>
-                <DatePicker x:Name="datePickerDueDate" HorizontalAlignment="Left" Width="381" SelectedDateChanged="datePickerDueDate_SelectedDateChanged" IsEnabled="False" FontFamily="Sylfaen"/>
+                <DatePicker x:Name="datePickerDueDate" HorizontalAlignment="Left" Width="381" IsEnabled="False" FontFamily="Sylfaen"/>
             </StackPanel>
             <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="215,700,0,0" VerticalAlignment="Top" Width="189" Click="buttonRegisterItem_Click" RenderTransformOrigin="0.717,2.865" FontFamily="Sylfaen"/>
             <Label x:Name="labelItemID" HorizontalAlignment="Left" Margin="282,777,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.359,0.234"/>

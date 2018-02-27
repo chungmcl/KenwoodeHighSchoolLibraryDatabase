@@ -1,4 +1,4 @@
-﻿<Window x:Class="KenwoodeHighSchoolLibraryDatabase.UserRegistrationWindow"
+﻿<Window x:Name="windowUserRegistratonAndEditing" x:Class="KenwoodeHighSchoolLibraryDatabase.UserRegistrationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
         Closing="Window_Closing"
-    Title="UserRegistrationWindow" Height="332.534" Width="302.133" MinWidth="300" ResizeMode="CanMinimize">
+    Title="Registration/ViewEdit" Height="332.534" Width="302.133" MinWidth="300" ResizeMode="CanMinimize">
     <Grid>
         <Grid x:Name="gridRegistration" Margin="10,10,0,10.4" HorizontalAlignment="Left" Width="274">
             <Grid.ColumnDefinitions>

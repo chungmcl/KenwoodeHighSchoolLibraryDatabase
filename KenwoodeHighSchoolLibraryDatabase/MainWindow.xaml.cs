@@ -140,7 +140,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     if (DateTime.Now >= dueDate)
                     {
                         overDue++;
-                        fines = (DateTime.Today - dueDate.Date).TotalDays * int.Parse(finePerDay);
+                        fines = fines + (DateTime.Today - dueDate.AddSeconds(1)).TotalDays * double.Parse(finePerDay);
+                        // Add one second because books are due at 11:59:59 of the due date, so charge fines day after
                     }
                 }
                 reader.Close();
@@ -454,6 +455,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
                             "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
                             "FROM [items] ORDER BY [ISXX], [copyID]", false);
+
+                    itemSelected = false;
+                    selectedItem = new Item();
+                    labelSelectedItem.Content = "(Select an Item)";
+                    labelCheckoutSelectedItemTitle.Content = "(Select an Item)";
                 }
             }
             else
@@ -481,6 +487,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
                             "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
                             "FROM [items] ORDER BY [ISXX], [copyID]", false);
+
+                    userSelected = false;
+                    selectedUser = new User();
+                    labelSelectedUser.Content = "(Select a User)";
+                    labelCheckoutSelectedUser.Content = "(Select a User)";
                 }
             }
             else
