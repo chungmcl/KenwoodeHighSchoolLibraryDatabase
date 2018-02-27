@@ -5,69 +5,85 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="Kenwoode HS Library Database" Height="774.6" Width="1237.7" ResizeMode="CanMinimize">
+        Title="Kenwoode HS Library Database" Height="736.6" Width="1362.5" ResizeMode="CanMinimize">
     <Grid x:Name="GridMain" Background="White" Margin="0,0,3.2,0.8">
-        <Button x:Name="BtnToUserRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="13,346,0,0" Click="BtnToUserRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Height="20"/>
-        <Button x:Name="ButtonDeleteSelectedUser" Content="Delete Selected User" HorizontalAlignment="Left" Margin="274,346,0,0" VerticalAlignment="Top" Width="110" Height="20" Click="ButtonDeleteSelectedUser_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
-        <DataGrid x:Name="dataGridAccounts" 
-                  HorizontalAlignment="Left" Height="220" Margin="9,121,0,0" VerticalAlignment="Top" Width="880" 
-                  MouseDoubleClick="dataGridAccounts_DoubleClick"
-                  FontFamily="Sylfaen">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="190"/>
-                <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding lastName, Mode=OneWay}" Width="190"/>
-                <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="70"/>
-                <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="70"/>
-                <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding itemLimit, Mode=OneWay}" Width="70"/>
-                <DataGridTextColumn Header="Date Limit" IsReadOnly="True" Binding="{Binding dateLimit, Mode=OneWay}" Width="70"/>
-                <DataGridTextColumn Header="Checked Out" IsReadOnly="True" Binding="{Binding checkedOut, Mode=OneWay}" Width="75"/>
-                <DataGridTextColumn Header="Overdue" IsReadOnly="True" Binding="{Binding overdueItems, Mode=OneWay}" Width="75"/>
-                <DataGridTextColumn Header="Fines (USD)" IsReadOnly="True" Binding="{Binding fines, Mode=OneWay}" Width="75"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <DataGrid x:Name="dataGridItems" 
-                  HorizontalAlignment="Left" Height="220" Margin="10,434,0,0" VerticalAlignment="Top" Width="880" 
-                   MouseDoubleClick="dataGridItems_DoubleClick"
-                  FontFamily="Sylfaen">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="120"/>
-                <DataGridTextColumn Header="D. Decimal" IsReadOnly="True" Binding="{Binding deweyDecimal, Mode=OneWay}" Width="70"/>
-                <DataGridTextColumn Header="Format" IsReadOnly="True" Binding="{Binding format, Mode=OneWay}" Width="70"/>
-                <DataGridTextColumn Header="Genre" IsReadOnly="True" Binding="{Binding genre, Mode=OneWay}" Width="150"/>
-                <DataGridTextColumn Header="Title" IsReadOnly="True" Binding="{Binding title, Mode=OneWay}" Width="200"/>
-                <DataGridTextColumn Header="Author" IsReadOnly="True" Binding="{Binding authorName, Mode=OneWay}" Width="135"/>
-                <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding currentlyCheckedOutBy, Mode=OneWay}" Width="135"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <ComboBox x:Name="comboBoxAccountsSearchByOptions" HorizontalAlignment="Left" Margin="120,95,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxAccountsSearchByOptions_SelectionChanged">
-            <ListBoxItem Content="First Name"/>
-            <ListBoxItem Content="Surname"/>
-            <ListBoxItem Content="User ID"/>
-        </ComboBox>
-        <Label x:Name="labelSearchUser" Content="Search for user by: " HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
-        <TextBox x:Name="textBoxAccountsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" TextChanged="textBoxAccountsSearchBy_TextChanged" GotFocus="textBoxAccountsSearchBy_GotFocus"/>
-        <Image Margin="428,10,344,637" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="456"/>
-        <Button x:Name="BtnToBookRegistrationWindow" Content="Register New Item" HorizontalAlignment="Left" Margin="10,659,0,0" VerticalAlignment="Top" Width="106" Click="BtnToBookRegistrationWindow_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
-        <TextBox x:Name="textBoxItemsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" FontFamily="Sylfaen" GotFocus="textBoxItemsSearchBy_GotFocus" TextChanged="textBoxItemsSearchBy_TextChanged"/>
-        <Label x:Name="labelSearchItems" Content="Search for item by: " HorizontalAlignment="Left" Margin="10,403,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
-        <ComboBox x:Name="comboBoxItemsSearchByOptions" HorizontalAlignment="Left" Margin="119,406,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxItemsSearchByOptions_SelectionChanged">
-            <ListBoxItem Content="Dewey Decimal"/>
-            <ListBoxItem Content="Book/Item ID"/>
-            <ListBoxItem Content="Title"/>
-            <ListBoxItem Content="Author Name"/>
-            <ListBoxItem Content="Genre"/>
-            <ListBoxItem Content="Lent To"/>
-        </ComboBox>
-        <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" HorizontalAlignment="Left" Margin="895,444,0,0" VerticalAlignment="Top" Width="150" Click="BtnToCheckout_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
-        <Label x:Name="labelCheckoutSelectedItemTitle" Content="(Select an Item)" HorizontalAlignment="Left" Margin="895,464,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
-        <Label x:Name="labelCheckoutSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="895,525,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
-        <Label x:Name="labelToSelectedUser" Content="To Selected User..." HorizontalAlignment="Left" Margin="895,495,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Sylfaen"/>
-        <Button x:Name="buttonEditItem" Content="Edit/View Selected Item" HorizontalAlignment="Left" Margin="121,659,0,0" VerticalAlignment="Top" Width="132" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonEditItem_Click" />
-        <Button x:Name="BtnToUserEditWindow" Content="Edit/View Selected User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="145" Margin="124,346,0,0" Click="BtnToUserEditWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Height="20"/>
+        <Image Margin="521,10,498.6,1007.8" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="330"/>
         <Label x:Name="labelSelectedItem" Content="(Select an Item)" HorizontalAlignment="Left" Margin="85,42,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontStyle="Italic"/>
         <Label x:Name="labelSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="85,10,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontStyle="Italic"/>
         <Label x:Name="labelDesSelectedUser" Content="Selected User: " HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontWeight="Bold"/>
         <Label x:Name="labelDesSelectedItem" Content="Selected Item:" HorizontalAlignment="Left" Margin="0,42,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontWeight="Bold"/>
-        <Button x:Name="buttonDeleteSelectedItem" Content="Delete Selected Item" HorizontalAlignment="Left" Margin="258,659,0,0" VerticalAlignment="Top" Width="121" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonDeleteSelectedItem_Click" />
+        <GroupBox x:Name="groupBoxCheckout" Header="Checkout" HorizontalAlignment="Left" Height="153" Margin="930,380,0,0" VerticalAlignment="Top" Width="323" FontFamily="Sylfaen">
+            <Grid x:Name="gridCheckout" HorizontalAlignment="Left" Height="124" Margin="4,0,-3.4,0" VerticalAlignment="Top" Width="309">
+                <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top" Width="150" Click="BtnToCheckout_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
+                <Label x:Name="labelCheckoutSelectedItemTitle" Content="(Select an Item)" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
+                <Label x:Name="labelCheckoutSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
+                <Label x:Name="labelToSelectedUser" Content="To Selected User..." HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Sylfaen"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="groupBoxAccounts" Header="Accounts" HorizontalAlignment="Left" Height="302" Margin="10,73,0,0" VerticalAlignment="Top" Width="920" FontFamily="Sylfaen">
+            <Grid x:Name="gridAccounts" HorizontalAlignment="Left" Height="282" Margin="0,0,-1.8,-2" VerticalAlignment="Top" Width="909">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="53*"/>
+                    <RowDefinition Height="289*"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="BtnToUserRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" Width="106" Margin="11,214,0,0" Click="BtnToUserRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Grid.Row="1" Height="20" VerticalAlignment="Top"/>
+                <Button x:Name="ButtonDeleteSelectedUser" Content="Delete Selected User" HorizontalAlignment="Left" Margin="271,214,0,0" Width="110" Click="ButtonDeleteSelectedUser_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Grid.Row="1" Height="20" VerticalAlignment="Top"/>
+                <DataGrid x:Name="dataGridAccounts" 
+                  HorizontalAlignment="Left" Height="220" Margin="10,36,-144,0" VerticalAlignment="Top" Width="880" 
+                  MouseDoubleClick="dataGridAccounts_DoubleClick"
+                  FontFamily="Sylfaen" Grid.RowSpan="2">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="190"/>
+                        <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding lastName, Mode=OneWay}" Width="190"/>
+                        <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding itemLimit, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Date Limit" IsReadOnly="True" Binding="{Binding dateLimit, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Checked Out" IsReadOnly="True" Binding="{Binding checkedOut, Mode=OneWay}" Width="75"/>
+                        <DataGridTextColumn Header="Overdue" IsReadOnly="True" Binding="{Binding overdueItems, Mode=OneWay}" Width="75"/>
+                        <DataGridTextColumn Header="Fines (USD)" IsReadOnly="True" Binding="{Binding fines, Mode=OneWay}" Width="75"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <ComboBox x:Name="comboBoxAccountsSearchByOptions" HorizontalAlignment="Left" Margin="121,9,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxAccountsSearchByOptions_SelectionChanged">
+                    <ListBoxItem Content="First Name"/>
+                    <ListBoxItem Content="Surname"/>
+                    <ListBoxItem Content="User ID"/>
+                </ComboBox>
+                <Label x:Name="labelSearchUser" Content="Search for user by: " HorizontalAlignment="Left" Margin="11,7,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
+                <TextBox x:Name="textBoxAccountsSearchBy" HorizontalAlignment="Left" Height="23" Margin="246,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" TextChanged="textBoxAccountsSearchBy_TextChanged" GotFocus="textBoxAccountsSearchBy_GotFocus"/>
+                <Button x:Name="BtnToUserEditWindow" Content="Edit/View Selected User" HorizontalAlignment="Left" Width="145" Margin="121,214,0,0" Click="BtnToUserEditWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Grid.Row="1" Height="20" VerticalAlignment="Top"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="groupBoxItems" Header="Items" HorizontalAlignment="Left" Height="321" Margin="10,380,0,0" VerticalAlignment="Top" Width="920" FontFamily="Sylfaen">
+            <Grid HorizontalAlignment="Left" Height="293" Margin="10,10,0,0" VerticalAlignment="Top" Width="910">
+                <DataGrid x:Name="dataGridItems" 
+                  HorizontalAlignment="Left" Height="220" Margin="10,41,0,0" VerticalAlignment="Top" Width="880" 
+                   MouseDoubleClick="dataGridItems_DoubleClick"
+                  FontFamily="Sylfaen">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="120"/>
+                        <DataGridTextColumn Header="D. Decimal" IsReadOnly="True" Binding="{Binding deweyDecimal, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Format" IsReadOnly="True" Binding="{Binding format, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Genre" IsReadOnly="True" Binding="{Binding genre, Mode=OneWay}" Width="150"/>
+                        <DataGridTextColumn Header="Title" IsReadOnly="True" Binding="{Binding title, Mode=OneWay}" Width="200"/>
+                        <DataGridTextColumn Header="Author" IsReadOnly="True" Binding="{Binding authorName, Mode=OneWay}" Width="135"/>
+                        <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding currentlyCheckedOutBy, Mode=OneWay}" Width="135"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button x:Name="BtnToBookRegistrationWindow" Content="Register New Item" HorizontalAlignment="Left" Margin="10,266,0,0" VerticalAlignment="Top" Width="106" Click="BtnToBookRegistrationWindow_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
+                <TextBox x:Name="textBoxItemsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" FontFamily="Sylfaen" GotFocus="textBoxItemsSearchBy_GotFocus" TextChanged="textBoxItemsSearchBy_TextChanged"/>
+                <Label x:Name="labelSearchItems" Content="Search for item by: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
+                <ComboBox x:Name="comboBoxItemsSearchByOptions" HorizontalAlignment="Left" Margin="119,13,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxItemsSearchByOptions_SelectionChanged">
+                    <ListBoxItem Content="Dewey Decimal"/>
+                    <ListBoxItem Content="Book/Item ID"/>
+                    <ListBoxItem Content="Title"/>
+                    <ListBoxItem Content="Author Name"/>
+                    <ListBoxItem Content="Genre"/>
+                    <ListBoxItem Content="Lent To"/>
+                </ComboBox>
+                <Button x:Name="buttonEditItem" Content="Edit/View Selected Item" HorizontalAlignment="Left" Margin="121,266,0,0" VerticalAlignment="Top" Width="132" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonEditItem_Click" />
+                <Button x:Name="buttonDeleteSelectedItem" Content="Delete Selected Item" HorizontalAlignment="Left" Margin="258,266,0,0" VerticalAlignment="Top" Width="121" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonDeleteSelectedItem_Click" />
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>
