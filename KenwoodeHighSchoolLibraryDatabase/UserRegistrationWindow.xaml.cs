@@ -104,6 +104,26 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.userIDs =  userIDs;
         }
 
+        /// <summary>
+        /// Checks if paramater "userID" is in the "userIDs" list and returns location of "userID"
+        /// if "userID" is found in the "userIDs" list
+        /// (MS Access does not offer creation of UNIQUE columns)
+        /// </summary>
+        /// <param name="userID">The userID to check for</param>
+        /// <returns>Returns the location in "userIDs" list where the searched for userID is
+        /// Returns -1 if searched for userID is not found</returns>
+        private int ContainsUserID(string userID)
+        {
+            for (int i = 0; i <= userIDs.Count - 1; i++)
+            {
+                if (userIDs[i].Contains(userID))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
             if (toRegister)
@@ -243,26 +263,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
 
             return "";
-        }
-
-        /// <summary>
-        /// Checks if paramater "userID" is in the "userIDs" list and returns location of "userID"
-        /// if "userID" is found in the "userIDs" list
-        /// (MS Access does not offer creation of UNIQUE columns)
-        /// </summary>
-        /// <param name="userID">The userID to check for</param>
-        /// <returns>Returns the location in "userIDs" list where the searched for userID is
-        /// Returns -1 if searched for userID is not found</returns>
-        private int ContainsUserID(string userID)
-        {
-            for (int i = 0; i <= userIDs.Count - 1; i++)
-            {
-                if (userIDs[i].Contains(userID))
-                {
-                    return i;
-                }
-            }
-            return -1;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

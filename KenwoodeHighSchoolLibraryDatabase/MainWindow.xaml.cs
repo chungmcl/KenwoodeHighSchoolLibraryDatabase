@@ -111,6 +111,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
+        #region Select Item or User
         private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
@@ -143,6 +144,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 MessageBox.Show("Please double-click a row to select an item.");
             }
         }
+        #endregion
 
         #region DataGrid Queries
         private void comboBoxAccountsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -279,6 +281,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
+        #region Checkout Item to Selected User
         private void BtnToCheckout_Click(object sender, RoutedEventArgs e)
         {
             if (userSelected && itemSelected)
@@ -340,7 +343,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
             "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
+        #endregion
 
+        #region Editing Items
         private void buttonEditItem_Click(object sender, RoutedEventArgs e)
         {
             if (itemSelected)
@@ -384,7 +389,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 MessageBox.Show("Please double-click a user to select it for editing.");
             }
         }
+        #endregion
 
+        #region Deletion
         private void buttonDeleteSelectedItem_Click(object sender, RoutedEventArgs e)
         {
             if (itemSelected)
@@ -439,6 +446,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             
         }
+        #endregion
     }
 
     public struct User

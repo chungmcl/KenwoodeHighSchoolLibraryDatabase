@@ -103,6 +103,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             toRegister = false;
         }
 
+        #region Extra Intialization
         private void LoadRemainingFields()
         {
             this.c.Open();
@@ -168,6 +169,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.comboBoxFormat.Items.Add("Book");
             this.comboBoxFormat.Items.Add("Other");
         }
+        #endregion
 
         #region Register
         /// <summary>
@@ -419,55 +421,67 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion Register
 
+        #region Save Changes (Register AND Edit/Update)
         private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
         {
             if (toRegister)
             {
-                string message = CheckRequiredItemsFilledOut();
-                string isxx = this.textBoxISXX.Text;
-                if (message == "")
+                Register();
+            }
+            else
+            {
+                EditAndUpdate();
+            }
+        }
+
+        private void Register()
+        {
+            string message = CheckRequiredItemsFilledOut();
+            string isxx = this.textBoxISXX.Text;
+            if (message == "")
+            {
+                int copyID = GenerateCopyID(this.textBoxISXX.Text);
+                string itemID = this.textBoxISXX.Text + $"-{copyID}";
+                this.c.Open();
+                this.command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
+                    "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISXX], [publisher], " +
+                    "[publicationYear], [edition], [description]) " +
+                    $"VALUES ('{itemID}', {copyID}, '{this.textBoxTitle.Text}', '{this.comboBoxGenreHundreds.SelectedValue}', " +
+                    $"'{this.comboBoxGenreTens.SelectedValue}', '{this.comboBoxGenreOnes.SelectedValue}', '{this.comboBoxFormat.SelectedValue}', " +
+                    $"'{this.textBoxAuthorFName.Text}', '{this.textBoxAuthorMName.Text}', '{this.textBoxAuthorLName.Text}', " +
+                    $"'{this.textBoxDeweyDecimal.Text}', '{this.textBoxISBNTen.Text}', '{this.textBoxISXX.Text}', " +
+                    $"'{this.textBoxPublisher.Text}', '{this.textBoxPublicationYear.Text}', '{this.textBoxEdition.Text}', '{this.textBoxDescription.Text}')";
+                this.command.ExecuteNonQuery();
+                this.c.Close();
+                this.DialogResult = true;
+            }
+            else
+            {
+                MessageBox.Show(message);
+            }
+        }
+
+        private void EditAndUpdate()
+        {
+            if (MessageBox.Show("Save Changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                string errorMessage = CheckRequiredItemsFilledOut();
+                if (errorMessage.Length == 0)
                 {
-                    int copyID = GenerateCopyID(this.textBoxISXX.Text);
-                    string itemID = this.textBoxISXX.Text + $"-{copyID}";
-                    this.c.Open();
-                    this.command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
-                        "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISXX], [publisher], " +
-                        "[publicationYear], [edition], [description]) " +
-                        $"VALUES ('{itemID}', {copyID}, '{this.textBoxTitle.Text}', '{this.comboBoxGenreHundreds.SelectedValue}', " +
-                        $"'{this.comboBoxGenreTens.SelectedValue}', '{this.comboBoxGenreOnes.SelectedValue}', '{this.comboBoxFormat.SelectedValue}', " +
-                        $"'{this.textBoxAuthorFName.Text}', '{this.textBoxAuthorMName.Text}', '{this.textBoxAuthorLName.Text}', " +
-                        $"'{this.textBoxDeweyDecimal.Text}', '{this.textBoxISBNTen.Text}', '{this.textBoxISXX.Text}', " +
-                        $"'{this.textBoxPublisher.Text}', '{this.textBoxPublicationYear.Text}', '{this.textBoxEdition.Text}', '{this.textBoxDescription.Text}')";
-                    this.command.ExecuteNonQuery();
+                    UpdateItemTable();
+                    MessageBox.Show("Item data updated.");
                     this.c.Close();
                     this.DialogResult = true;
                 }
                 else
                 {
-                    MessageBox.Show(message);
+                    MessageBox.Show(errorMessage);
                 }
             }
-            else
-            {
-                if (MessageBox.Show("Save Changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    string errorMessage = CheckRequiredItemsFilledOut();
-                    if (errorMessage.Length == 0)
-                    {
-                        UpdateItemTable();
-                        MessageBox.Show("Item data updated.");
-                        this.c.Close();
-                        this.DialogResult = true;
-                    }
-                    else
-                    {
-                        MessageBox.Show(errorMessage);
-                    }
-                }
-            }
-
         }
+        #endregion
 
+        #region Editing and Viewing Item
         private void buttonCheckout_Click(object sender, RoutedEventArgs e)
         {
             if (textBoxCurrentlyCheckedOutBy.Text != "")
@@ -609,5 +623,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.datePickerDueDate.SelectedDate = dueDate;
             }
         }
+        #endregion
     }
 }
