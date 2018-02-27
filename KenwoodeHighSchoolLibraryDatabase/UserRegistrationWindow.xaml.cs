@@ -31,26 +31,27 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private int itemLimit;
         private int dateLimit;
         private double finePerDay;
+        bool toRegister;
         public UserRegistrationWindow()
         {
             InitializeComponent();
-
-            c = new OleDbConnection();
-            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            command = new OleDbCommand();
-            command.Connection = c;
-            reader = null;
-            userIDs = LoadUserIDs();
+            InitializeOthers();
+            LoadUserIDs();
+            toRegister = true;
         }
 
         User toEditUser;
         private int toEditUserFinePerDay;
         public UserRegistrationWindow(User user)
         {
-            toEditUser = user;
+            InitializeComponent();
+            InitializeOthers();
+            toRegister = false;
+            labelTitle.Content = "Edit Account";
+            buttonRegister.Content = "Save Changes";
+            this.toEditUser = user;
             c.Open();
-            command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = {user.userID}";
+            command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = '{user.userID}'";
             reader = command.ExecuteReader();
             reader.Read();
             this.toEditUserFinePerDay = int.Parse(reader[0].ToString());
@@ -59,12 +60,26 @@ namespace KenwoodeHighSchoolLibraryDatabase
             textBoxFirstNameRegister.Text = toEditUser.firstName;
             textBoxSurnameRegister.Text = toEditUser.lastName;
             textBoxUserIDRegister.Text = toEditUser.userID;
+            comboBoxUserTypeRegister.SelectedValue = toEditUser.userType;
             textBoxItemLimit.Text = toEditUser.itemLimit;
             textBoxDateLimit.Text = toEditUser.dateLimit;
             textBoxFinePerDay.Text = this.toEditUserFinePerDay.ToString();
         }
 
-        private List<string[]> LoadUserIDs()
+        private void InitializeOthers()
+        {
+            c = new OleDbConnection();
+            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
+            command = new OleDbCommand();
+            command.Connection = c;
+            this.reader = null;
+
+            comboBoxUserTypeRegister.Items.Add("Student");
+            comboBoxUserTypeRegister.Items.Add("Teacher");
+        }
+
+        private void LoadUserIDs()
         {
             List<string[]> userIDs = new List<string[]>();
             c.Open();
@@ -86,43 +101,72 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             reader.Close();
             c.Close();
-            return userIDs;
+            this.userIDs =  userIDs;
         }
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
-            LoadUserIDs();
-            string errorMessage = CheckRequiredValues();
-            if (errorMessage == "")
+            if (toRegister)
             {
-                c.Open();
-                this.fName = this.textBoxFirstNameRegister.Text.Trim();
-                this.lName = this.textBoxSurnameRegister.Text.Trim();
-                this.uID = this.textBoxUserIDRegister.Text.Trim();
-                this.uType = this.comboBoxUserTypeRegister.SelectedValue.ToString().Substring(37);
-                // book limit and date limit already set in CheckRequiredValues through int.TryParse (out)
-
-                // Save the location of the userID in the "userIDs" list
-                // so that we can display information about the account holding this userID
-                // if ContainsUserID could not find an account holding this userID, it would have returned -1
-                int checkUserID = ContainsUserID(uID);
-                if (checkUserID == -1)
+                LoadUserIDs();
+                string errorMessage = CheckRequiredValues();
+                if (errorMessage == "")
                 {
+                    c.Open();
+                    this.fName = this.textBoxFirstNameRegister.Text.Trim();
+                    this.lName = this.textBoxSurnameRegister.Text.Trim();
+                    this.uID = this.textBoxUserIDRegister.Text.Trim();
+                    this.uType = this.comboBoxUserTypeRegister.SelectedValue.ToString();
+
                     command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [itemLimit], [dateLimit], [finePerDay]) " +
-                    $"VALUES ('{this.fName}', '{this.lName}', '{this.uID}', '{this.uType}', {this.itemLimit}, {this.dateLimit}, {this.finePerDay})";
+                        $"VALUES ('{this.fName}', '{this.lName}', '{this.uID}', '{this.uType}', {this.itemLimit}, {this.dateLimit}, {this.finePerDay})";
                     command.ExecuteNonQuery();
+
+                    c.Close(); // close first
+                    this.DialogResult = true;
                 }
                 else
                 {
-                    MessageBox.Show($"Another student ({userIDs[checkUserID][1]} {userIDs[checkUserID][2]}) already " +
-                        $"holds this Student/Teacher ID ({userIDs[checkUserID][0]}). Did you enter the wrong ID?");
+                    MessageBox.Show(errorMessage);
                 }
-                c.Close(); // close first
-                this.DialogResult = true;
             }
             else
             {
-                MessageBox.Show(errorMessage);
+                string errorMessage = CheckRequiredValues();
+                if (errorMessage == "")
+                {
+                    if (MessageBox.Show("Save changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        c.Open();
+                        command.CommandText = $"UPDATE accounts SET " +
+                            $"[firstName] = '{this.textBoxFirstNameRegister.Text}', " +
+                            $"[lastName] = '{this.textBoxSurnameRegister.Text}', " +
+                            $"[userID] = '{this.textBoxUserIDRegister.Text}', " +
+                            $"[userType] = '{this.comboBoxUserTypeRegister.SelectedValue}', " +
+                            $"[itemLimit] = {this.textBoxItemLimit.Text}, " +
+                            $"[dateLimit] = {this.textBoxDateLimit.Text}, " +
+                            $"[finePerDay] = {this.textBoxFinePerDay.Text} " +
+                            $"WHERE [userID] = '{this.toEditUser.userID}'";
+                        command.ExecuteNonQuery();
+
+                        command.CommandText = $"UPDATE items SET " +
+                            $"[currentlyCheckedOutBy] = {this.textBoxUserIDRegister.Text} " +
+                            $"WHERE [currentlyCheckedOutBy] = '{this.toEditUser.userID}'";
+                        command.ExecuteNonQuery();
+
+                        command.CommandText = $"UPDATE items SET " +
+                            $"[previousCheckedOutBy] = '{this.textBoxUserIDRegister}' " +
+                            $"WHERE [previousCheckedOutBy] = '{this.toEditUser.userID}'";
+                        command.ExecuteNonQuery();
+
+                        c.Close();
+                    }
+                }
+                else
+                {
+
+                    MessageBox.Show(errorMessage);
+                }
             }
 
         }
@@ -141,7 +185,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
             if (textBoxUserIDRegister.Text == "")
             {
+                
                 return "A User ID is required. (School/Employee ID)";
+            }
+            else
+            {
+                LoadUserIDs();
+                int checkUserID = ContainsUserID(textBoxUserIDRegister.Text);
+                if (checkUserID != -1)
+                {
+                    return $"Another student ({userIDs[checkUserID][1]} {userIDs[checkUserID][2]}) already " +
+                                $"holds this Student/Teacher ID ({userIDs[checkUserID][0]}). Did you enter the wrong ID?";
+                }
             }
 
             if (comboBoxUserTypeRegister.SelectedIndex == -1)

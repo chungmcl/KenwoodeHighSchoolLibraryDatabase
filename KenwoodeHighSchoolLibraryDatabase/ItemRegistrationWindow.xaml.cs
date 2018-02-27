@@ -560,7 +560,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 UpdateColumn("dueDate", "");
                 this.datePickerDueDate.SelectedDate = null;
                 c.Open();
-                command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberofCheckedOutItems] - 1 " +
+                //command.CommandText = $"SELECT [numberofCheckedoutItems] FROM accounts WHERE [userID] = '{this.currentlyCheckedOutBy}'";
+                //reader = command.ExecuteReader();
+                //reader.Read();
+                //int numberOfCheckedOutItems = int.Parse(reader[0].ToString());
+                //reader.Close();
+                //if (numberOfCheckedOutItems != 0)
+                command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " + //lowercase o second
                     $"WHERE [userID] = '{this.currentlyCheckedOutBy}'";
                 command.ExecuteNonQuery();
                 c.Close();

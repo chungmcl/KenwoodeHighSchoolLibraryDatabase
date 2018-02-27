@@ -7,59 +7,59 @@
         mc:Ignorable="d"
         Title="ItemRegistrationWindow" Height="823.133" Width="738.195" ResizeMode="CanMinimize">
     <Grid Margin="0,0,0.2,0.2">
-        <Label x:Name="labelWindowTitle" Margin="265,9,266.8,0" VerticalAlignment="Top" Height="30" FontWeight="Bold" RenderTransformOrigin="0.592,0.507"/>
+        <Label x:Name="labelWindowTitle" Margin="252,0,279.8,0" VerticalAlignment="Top" Height="30" FontWeight="Bold" RenderTransformOrigin="0.592,0.507"/>
         <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="739" Margin="45,44,0,0" VerticalAlignment="Top" Width="677">
             <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="700" Margin="10,0,0,0" VerticalAlignment="Top" Width="101">
-                <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelGenre" Content="Genre" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelFormat" Content="Format" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelAuthorFirstName" Content="Author F. Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelAuthorMiddleName" Content="Author M. Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelAuthorSurname" Content="Author Surname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
-                <Label x:Name="labelDeweyDecimal" Content="Dewey Decimal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
-                <Label x:Name="labelISBNTen" Content="ISBN 10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
-                <Label x:Name="labelISXX" Content="ISBN 13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35"/>
-                <Label x:Name="labelPublisher" Content="Publisher" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelPublicationYear" Content="Publication Year" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelEdition" Content="Edition" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelDescription" Content="Description" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="150"/>
-                <Label x:Name="labelCurrentlyCheckedOutBy" Content="Checked Out By" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelPreviousCheckedOutBy" Content="Previous Holder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35"/>
-                <Label x:Name="labelDueDate" Content="Due Date" Height="35" Margin="0,0,-0.2,0"/>
+                <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelGenre" Content="Genre" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelFormat" Content="Format" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelAuthorFirstName" Content="Author F. Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelAuthorMiddleName" Content="Author M. Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelAuthorSurname" Content="Author Surname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelDeweyDecimal" Content="Dewey Decimal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelISBNTen" Content="ISBN 10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelISXX" Content="ISBN 13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-0.2,0" Width="101" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelPublisher" Content="Publisher" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelPublicationYear" Content="Publication Year" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelEdition" Content="Edition" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelDescription" Content="Description" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="150" FontFamily="Sylfaen"/>
+                <Label x:Name="labelCurrentlyCheckedOutBy" Content="Checked Out By" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelPreviousCheckedOutBy" Content="Previous Holder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
+                <Label x:Name="labelDueDate" Content="Due Date" Height="35" Margin="0,0,-0.2,0" FontFamily="Sylfaen"/>
             </StackPanel>
             <StackPanel x:Name="stackPanelItemRegistrationInput" HorizontalAlignment="Left" Height="700" Margin="126,0,0,0" VerticalAlignment="Top" Width="546">
-                <TextBox x:Name="textBoxTitle" Height="35" TextWrapping="Wrap" Margin="0,0,74.2,0" HorizontalAlignment="Left" Width="380" SpellCheck.IsEnabled="True"/>
+                <TextBox x:Name="textBoxTitle" Height="35" TextWrapping="Wrap" Margin="0,0,74.2,0" HorizontalAlignment="Left" Width="380" SpellCheck.IsEnabled="True" FontFamily="Sylfaen"/>
                 <StackPanel x:Name="stackPanelGenre" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="381" Orientation="Horizontal">
-                    <ComboBox x:Name="comboBoxGenreHundreds" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreHundreds_SelectionChanged"/>
-                    <ComboBox x:Name="comboBoxGenreTens" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreTens_SelectionChanged" IsEnabled="False"/>
-                    <ComboBox x:Name="comboBoxGenreOnes" Width="126" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" IsEnabled="False"/>
+                    <ComboBox x:Name="comboBoxGenreHundreds" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreHundreds_SelectionChanged" FontFamily="Sylfaen"/>
+                    <ComboBox x:Name="comboBoxGenreTens" Width="127" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SelectionChanged="comboBoxGenreTens_SelectionChanged" IsEnabled="False" FontFamily="Sylfaen"/>
+                    <ComboBox x:Name="comboBoxGenreOnes" Width="126" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" IsEnabled="False" FontFamily="Sylfaen"/>
                 </StackPanel>
-                <ComboBox x:Name="comboBoxFormat" Height="35" Width="380" HorizontalAlignment="Left" SelectionChanged="comboBoxFormat_SelectionChanged">
+                <ComboBox x:Name="comboBoxFormat" Height="35" Width="380" HorizontalAlignment="Left" SelectionChanged="comboBoxFormat_SelectionChanged" FontFamily="Sylfaen">
                 </ComboBox>
-                <TextBox x:Name="textBoxAuthorFName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
-                <TextBox x:Name="textBoxAuthorMName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
-                <TextBox x:Name="textBoxAuthorLName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                <TextBox x:Name="textBoxAuthorFName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Sylfaen"/>
+                <TextBox x:Name="textBoxAuthorMName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Sylfaen"/>
+                <TextBox x:Name="textBoxAuthorLName" Height="35" Width="380" TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Sylfaen"/>
                 <StackPanel HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="545" Orientation="Horizontal">
-                    <TextBox x:Name="textBoxDeweyDecimal" TextWrapping="Wrap" Width="380" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SpellCheck.IsEnabled="True"/>
-                    <Button x:Name="buttonGenerateDeweyDecimal" Content="Calculate Dewey Decimal #&#xD;&#xA;(Partial)" Width="165" Height="35" VerticalAlignment="Top" Click="buttonGenerateDeweyDecimal_Click"/>
+                    <TextBox x:Name="textBoxDeweyDecimal" TextWrapping="Wrap" Width="380" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" SpellCheck.IsEnabled="True" FontFamily="Sylfaen"/>
+                    <Button x:Name="buttonGenerateDeweyDecimal" Content="Calculate Dewey Decimal #&#xD;&#xA;(Partial)" Width="165" Height="35" VerticalAlignment="Top" Click="buttonGenerateDeweyDecimal_Click" FontFamily="Sylfaen"/>
                 </StackPanel>
                 <StackPanel x:Name="stackPanelISBN10" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="545" Orientation="Horizontal">
-                    <TextBox x:Name="textBoxISBNTen" HorizontalAlignment="Left" TextWrapping="Wrap" Width="380" Height="35" VerticalAlignment="Top" SpellCheck.IsEnabled="True"/>
-                    <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="165" Click="buttonConvertToISBN13_Click" Height="35" VerticalAlignment="Top"/>
+                    <TextBox x:Name="textBoxISBNTen" HorizontalAlignment="Left" TextWrapping="Wrap" Width="380" Height="35" VerticalAlignment="Top" SpellCheck.IsEnabled="True" FontFamily="Sylfaen"/>
+                    <Button x:Name="buttonConvertToISBN13" HorizontalAlignment="Right" Content="Convert to ISBN13" Width="165" Click="buttonConvertToISBN13_Click" Height="35" VerticalAlignment="Top" FontFamily="Sylfaen"/>
                 </StackPanel>
-                <TextBox x:Name="textBoxISXX" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
-                <TextBox x:Name="textBoxPublisher" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap"/>
-                <TextBox x:Name="textBoxPublicationYear" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" SpellCheck.IsEnabled="True"/>
-                <TextBox x:Name="textBoxEdition" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" SpellCheck.IsEnabled="True"/>
-                <TextBox x:Name="textBoxDescription" HorizontalAlignment="Left" Height="150" TextWrapping="Wrap" VerticalAlignment="Top" Width="380" SpellCheck.IsEnabled="True"/>
+                <TextBox x:Name="textBoxISXX" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" FontFamily="Sylfaen"/>
+                <TextBox x:Name="textBoxPublisher" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" FontFamily="Sylfaen"/>
+                <TextBox x:Name="textBoxPublicationYear" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" SpellCheck.IsEnabled="True" FontFamily="Sylfaen"/>
+                <TextBox x:Name="textBoxEdition" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" SpellCheck.IsEnabled="True" FontFamily="Sylfaen"/>
+                <TextBox x:Name="textBoxDescription" HorizontalAlignment="Left" Height="150" TextWrapping="Wrap" VerticalAlignment="Top" Width="380" SpellCheck.IsEnabled="True" FontFamily="Sylfaen"/>
                 <StackPanel x:Name="stackPanelCheckout" HorizontalAlignment="Left" Width="546" Height="35" Margin="0,0,-0.4,0" VerticalAlignment="Top" Orientation="Horizontal">
                     <TextBox x:Name="textBoxCurrentlyCheckedOutBy" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" Height="35" VerticalAlignment="Top" IsEnabled="False"/>
-                    <Button x:Name="buttonCheckout" HorizontalAlignment="Right" Content="Uncheckout Item From User" Width="165" Click="buttonCheckout_Click" Height="35" VerticalAlignment="Top" Margin="0,0,393.4,0"/>
+                    <Button x:Name="buttonCheckout" HorizontalAlignment="Right" Content="Uncheckout Item From User" Width="165" Click="buttonCheckout_Click" Height="35" VerticalAlignment="Top" Margin="0,0,393.4,0" FontFamily="Sylfaen"/>
                 </StackPanel>
-                <TextBox x:Name="textBoxPreviousCheckedOutBy" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" IsEnabled="False"/>
-                <DatePicker x:Name="datePickerDueDate" HorizontalAlignment="Left" Width="381" SelectedDateChanged="datePickerDueDate_SelectedDateChanged" IsEnabled="False"/>
+                <TextBox x:Name="textBoxPreviousCheckedOutBy" Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" IsEnabled="False" FontFamily="Sylfaen"/>
+                <DatePicker x:Name="datePickerDueDate" HorizontalAlignment="Left" Width="381" SelectedDateChanged="datePickerDueDate_SelectedDateChanged" IsEnabled="False" FontFamily="Sylfaen"/>
             </StackPanel>
-            <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="261,700,0,0" VerticalAlignment="Top" Width="189" Click="buttonRegisterItem_Click" RenderTransformOrigin="0.717,2.865"/>
+            <Button x:Name="buttonRegisterItem" Content="Register Item" HorizontalAlignment="Left" Margin="215,700,0,0" VerticalAlignment="Top" Width="189" Click="buttonRegisterItem_Click" RenderTransformOrigin="0.717,2.865" FontFamily="Sylfaen"/>
             <Label x:Name="labelItemID" HorizontalAlignment="Left" Margin="282,777,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.359,0.234"/>
         </Grid>
     </Grid>

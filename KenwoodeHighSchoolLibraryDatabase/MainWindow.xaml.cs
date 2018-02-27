@@ -111,22 +111,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
-        private void TstBtnDeleteFromAccounts_Click(object sender, RoutedEventArgs e)
-        {
-            c.Open();
-            command.CommandText = "DELETE * FROM accounts";
-            command.ExecuteNonQuery();
-            c.Close();
-            LoadDataGrid("SELECT * FROM accounts", true);
-        }
-
         private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
             {
                 selectedUser = (User)this.dataGridAccounts.SelectedItem;
-                labelCheckoutSelectedUser.Content = $"({selectedUser.userID}) " +
+                string selectedUserInfo = $"({selectedUser.userID}) " +
                     $"{selectedUser.firstName} {selectedUser.lastName}";
+                labelCheckoutSelectedUser.Content = selectedUserInfo;
+                labelSelectedUser.Content = selectedUserInfo;
                 this.userSelected = true;
             }
             catch
@@ -140,7 +133,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             try
             {
                 selectedItem = (Item)this.dataGridItems.SelectedItem;
-                labelCheckoutSelectedItemTitle.Content = $"{selectedItem.title} ({selectedItem.itemID})";
+                string selectedItemInfo = $"{selectedItem.title} ({selectedItem.itemID})";
+                labelCheckoutSelectedItemTitle.Content = selectedItemInfo;
+                labelSelectedItem.Content = selectedItemInfo;
                 this.itemSelected = true;
             }
             catch
@@ -366,7 +361,67 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             else
             {
-                MessageBox.Show("Please double-click an item to select them for editing.");
+                MessageBox.Show("Please double-click an item to select it for editing.");
+            }
+        }
+
+        private void BtnToUserEditWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (userSelected)
+            {
+                UserRegistrationWindow w = new UserRegistrationWindow(selectedUser);
+                bool? receive = w.ShowDialog();
+                if (receive == true)
+                {
+                    LoadDataGrid("SELECT * FROM accounts", true);
+                    LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+                            "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                            "FROM [items] ORDER BY [ISXX], [copyID]", false);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please double-click a user to select it for editing.");
+            }
+        }
+
+        private void buttonDeleteSelectedItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Delete Selected Item?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                c.Open();
+                command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
+                    $"WHERE [userID] = '{selectedItem.currentlyCheckedOutBy}'";
+                command.ExecuteNonQuery();
+
+                command.CommandText = $"DELETE * FROM items WHERE [itemID] = '{selectedItem.itemID}'";
+                command.ExecuteNonQuery();
+                c.Close();
+
+                LoadDataGrid("SELECT * FROM accounts", true);
+                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                        "FROM [items] ORDER BY [ISXX], [copyID]", false);
+            }
+        }
+
+        private void ButtonDeleteSelectedUser_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Delete Selected User?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                c.Open();
+                command.CommandText = "UPDATE items SET [currentlyCheckedOutBy] = ''" +
+                    $"WHERE [currentlyCheckedOutBy] = '{selectedUser.userID}'";
+                command.ExecuteNonQuery();
+
+                command.CommandText = $"DELETE * FROM accounts WHERE [userID] = '{selectedUser.userID}'";
+                command.ExecuteNonQuery();
+                c.Close();
+
+                LoadDataGrid("SELECT * FROM accounts", true);
+                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                        "FROM [items] ORDER BY [ISXX], [copyID]", false);
             }
         }
     }

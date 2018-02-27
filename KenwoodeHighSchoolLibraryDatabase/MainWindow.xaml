@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="Kenwoode HS Library Database" Height="774.6" Width="1237.7" ResizeMode="CanMinimize">
     <Grid x:Name="GridMain" Background="White" Margin="0,0,3.2,0.8">
-        <Button x:Name="BtnToUserRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="164,347,0,0" Click="BtnToUserRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
-        <Button x:Name="TstBtnDeleteFromAccounts" Content="Delete Accounts Table Data" HorizontalAlignment="Left" Margin="9,347,0,0" VerticalAlignment="Top" Width="150" Height="20" Click="TstBtnDeleteFromAccounts_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
+        <Button x:Name="BtnToUserRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106" Margin="13,346,0,0" Click="BtnToUserRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Height="20"/>
+        <Button x:Name="ButtonDeleteSelectedUser" Content="Delete Selected User" HorizontalAlignment="Left" Margin="274,346,0,0" VerticalAlignment="Top" Width="110" Height="20" Click="ButtonDeleteSelectedUser_Click" Background="#FFD33E3E" FontFamily="Sylfaen"/>
         <DataGrid x:Name="dataGridAccounts" 
                   HorizontalAlignment="Left" Height="220" Margin="9,121,0,0" VerticalAlignment="Top" Width="880" 
                   MouseDoubleClick="dataGridAccounts_DoubleClick"
@@ -47,7 +47,7 @@
         <Label x:Name="labelSearchUser" Content="Search for user by: " HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
         <TextBox x:Name="textBoxAccountsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" TextChanged="textBoxAccountsSearchBy_TextChanged" GotFocus="textBoxAccountsSearchBy_GotFocus"/>
         <Image Margin="428,10,344,637" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="456"/>
-        <Button x:Name="BtnToBookRegistrationWindow" Content="Register New Item" HorizontalAlignment="Left" Margin="10,659,0,0" VerticalAlignment="Top" Width="106" Click="BtnToBookRegistrationWindow_Click" Height="25"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
+        <Button x:Name="BtnToBookRegistrationWindow" Content="Register New Item" HorizontalAlignment="Left" Margin="10,659,0,0" VerticalAlignment="Top" Width="106" Click="BtnToBookRegistrationWindow_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
         <TextBox x:Name="textBoxItemsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" FontFamily="Sylfaen" GotFocus="textBoxItemsSearchBy_GotFocus" TextChanged="textBoxItemsSearchBy_TextChanged"/>
         <Label x:Name="labelSearchItems" Content="Search for item by: " HorizontalAlignment="Left" Margin="10,403,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
         <ComboBox x:Name="comboBoxItemsSearchByOptions" HorizontalAlignment="Left" Margin="119,406,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxItemsSearchByOptions_SelectionChanged">
@@ -58,10 +58,16 @@
             <ListBoxItem Content="Genre"/>
             <ListBoxItem Content="Lent To"/>
         </ComboBox>
-        <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" HorizontalAlignment="Left" Margin="895,434,0,0" VerticalAlignment="Top" Width="150" Click="BtnToCheckout_Click" Height="25"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
-        <Label x:Name="labelCheckoutSelectedItemTitle" Content="(Select an Item)" HorizontalAlignment="Left" Margin="895,464,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="labelCheckoutSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="895,525,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="labelToSelectedUser" Content="To Selected User..." HorizontalAlignment="Left" Margin="895,495,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Button x:Name="buttonEditItem" Content="Edit Selected Item" HorizontalAlignment="Left" Margin="121,659,0,0" VerticalAlignment="Top" Width="101" Height="25" Click="buttonEditItem_Click"/>
+        <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" HorizontalAlignment="Left" Margin="895,444,0,0" VerticalAlignment="Top" Width="150" Click="BtnToCheckout_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
+        <Label x:Name="labelCheckoutSelectedItemTitle" Content="(Select an Item)" HorizontalAlignment="Left" Margin="895,464,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
+        <Label x:Name="labelCheckoutSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="895,525,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
+        <Label x:Name="labelToSelectedUser" Content="To Selected User..." HorizontalAlignment="Left" Margin="895,495,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Sylfaen"/>
+        <Button x:Name="buttonEditItem" Content="Edit/View Selected Item" HorizontalAlignment="Left" Margin="121,659,0,0" VerticalAlignment="Top" Width="132" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonEditItem_Click" />
+        <Button x:Name="BtnToUserEditWindow" Content="Edit/View Selected User" HorizontalAlignment="Left" VerticalAlignment="Top" Width="145" Margin="124,346,0,0" Click="BtnToUserEditWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Height="20"/>
+        <Label x:Name="labelSelectedItem" Content="(Select an Item)" HorizontalAlignment="Left" Margin="85,42,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontStyle="Italic"/>
+        <Label x:Name="labelSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="85,10,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontStyle="Italic"/>
+        <Label x:Name="labelDesSelectedUser" Content="Selected User: " HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontWeight="Bold"/>
+        <Label x:Name="labelDesSelectedItem" Content="Selected Item:" HorizontalAlignment="Left" Margin="0,42,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontWeight="Bold"/>
+        <Button x:Name="buttonDeleteSelectedItem" Content="Delete Selected Item" HorizontalAlignment="Left" Margin="258,659,0,0" VerticalAlignment="Top" Width="121" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonDeleteSelectedItem_Click" />
     </Grid>
 </Window>
