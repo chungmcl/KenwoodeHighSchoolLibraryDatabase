@@ -301,17 +301,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (this.comboBoxGenreHundreds.SelectedIndex == 10)
             {
-                if (this.textBoxAuthorFName.Text.Length > 0 && this.textBoxAuthorLName.Text.Length >= 4)
-                {
-                    this.textBoxDeweyDecimal.Text = $"{this.textBoxAuthorFName.Text.Substring(0, 1)} {this.textBoxAuthorLName.Text.Substring(0, 4)}";
-                }
-                else if (this.textBoxAuthorFName.Text == "" || this.textBoxAuthorLName.Text == "")
+                if (this.textBoxAuthorFName.Text == "" || this.textBoxAuthorLName.Text == "")
                 {
                     MessageBox.Show("Author first and last name boxes must be filled out to generate a Dewey Decimal");
                 }
                 else if (this.textBoxAuthorLName.Text.Length < 4)
                 {
                     MessageBox.Show("Fiction Dewey Decimal cannot be generated. Please enter manually.");
+                }
+                else
+                {
+                    this.textBoxDeweyDecimal.Text = $"{this.textBoxAuthorFName.Text.Substring(0, 1)} {this.textBoxAuthorLName.Text.Substring(0, 4)}";
                 }
             }
             else
