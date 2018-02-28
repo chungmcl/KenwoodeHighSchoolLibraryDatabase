@@ -435,7 +435,20 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         private void buttonReturnSelectedItem_Click(object sender, RoutedEventArgs e)
         {
-
+            c.Open();
+            // UpdateColumn("currentlyCheckedOutBy", this.textBoxCurrentlyCheckedOutBy.Text);
+            command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{selectedItem.itemID}'";
+            command.ExecuteNonQuery();
+            // UpdateColumn("previousCheckedOutBy", this.currentlyCheckedOutBy);
+            command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{selectedItem.currentlyCheckedOutBy}' WHERE [itemID] = '{selectedItem.itemID}'";
+            command.ExecuteNonQuery();
+            // UpdateColumn("dueDate", "");
+            command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{selectedItem.itemID}'";
+            command.ExecuteNonQuery();
+            command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " + //lowercase o second
+                $"WHERE [userID] = '{selectedItem.currentlyCheckedOutBy}'";
+            command.ExecuteNonQuery();
+            c.Close();
         }
         #endregion
 
