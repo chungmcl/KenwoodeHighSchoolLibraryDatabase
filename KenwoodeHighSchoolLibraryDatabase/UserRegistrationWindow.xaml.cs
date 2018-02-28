@@ -41,7 +41,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         User toEditUser;
-        private int toEditUserFinePerDay;
+        private double toEditUserFinePerDay;
         public UserRegistrationWindow(User user)
         {
             InitializeComponent();
@@ -54,7 +54,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = '{user.userID}'";
             reader = command.ExecuteReader();
             reader.Read();
-            this.toEditUserFinePerDay = int.Parse(reader[0].ToString());
+            this.toEditUserFinePerDay = double.Parse(reader[0].ToString());
             c.Close();
 
             textBoxFirstNameRegister.Text = toEditUser.firstName;

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Kenwoode HS Library Database" Height="770.2" Width="1368.5" ResizeMode="CanMinimize">
     <Grid x:Name="GridMain" Background="White" Margin="0,0,3.2,0.8">
-        <Image Margin="553,10,490.2,654" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="316"/>
+        <Image Margin="553,10,490.2,667" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="316"/>
         <Label x:Name="labelSelectedItem" Content="(Select an Item)" HorizontalAlignment="Left" Margin="85,42,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontStyle="Italic"/>
         <Label x:Name="labelSelectedUser" Content="(Select a User)" HorizontalAlignment="Left" Margin="85,10,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontStyle="Italic"/>
         <Label x:Name="labelDesSelectedUser" Content="Selected User: " HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontFamily="Sylfaen" FontWeight="Bold"/>
@@ -85,5 +85,6 @@
                 <Button x:Name="buttonDeleteSelectedItem" Content="Delete Selected Item" HorizontalAlignment="Left" Margin="258,266,0,0" VerticalAlignment="Top" Width="121" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonDeleteSelectedItem_Click" />
             </Grid>
         </GroupBox>
+        <Button x:Name="buttonReturnSelectedItem" Content="Return Selected Item" HorizontalAlignment="Left" Margin="935,538,0,0" VerticalAlignment="Top" Width="150" Click="buttonReturnSelectedItem_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
     </Grid>
 </Window>

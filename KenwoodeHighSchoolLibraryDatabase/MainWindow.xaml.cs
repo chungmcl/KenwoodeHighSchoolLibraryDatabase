@@ -433,6 +433,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 MessageBox.Show("Please double-click a user to select it for editing.");
             }
         }
+        private void buttonReturnSelectedItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
         #endregion
 
         #region Deletion
