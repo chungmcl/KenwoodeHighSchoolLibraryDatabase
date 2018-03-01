@@ -230,22 +230,22 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
             if (textBoxItemLimit.Text == "")
             {
-                return "A book limit is required in integer format.";
+                return "An item limit is required in integer format.";
             }
 
             if (textBoxDateLimit.Text == "")
             {
                 return "A date limit is required in integer format.\n" +
-                    "(Number of days a user can checkout a book.)";
+                    "(Number of days a user can checkout an item.)";
             }
 
             if (!(int.TryParse(textBoxItemLimit.Text.Trim(), out this.itemLimit)))
             {
-                return "User Book Limit must be in integer format."; // need to check for negative integers
+                return "User Item Limit must be in integer format."; // need to check for negative integers
             }
             else if (this.itemLimit < 0)
             {
-                return "User Book Limit must be a positive integer.";
+                return "User Item Limit must be a positive integer.";
             }
 
             if (!(int.TryParse(textBoxDateLimit.Text.Trim(), out this.dateLimit)))

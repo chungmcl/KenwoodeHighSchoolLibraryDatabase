@@ -433,22 +433,61 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 MessageBox.Show("Please double-click a user to select it for editing.");
             }
         }
+
         private void buttonReturnSelectedItem_Click(object sender, RoutedEventArgs e)
         {
-            c.Open();
-            // UpdateColumn("currentlyCheckedOutBy", this.textBoxCurrentlyCheckedOutBy.Text);
-            command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{selectedItem.itemID}'";
-            command.ExecuteNonQuery();
-            // UpdateColumn("previousCheckedOutBy", this.currentlyCheckedOutBy);
-            command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{selectedItem.currentlyCheckedOutBy}' WHERE [itemID] = '{selectedItem.itemID}'";
-            command.ExecuteNonQuery();
-            // UpdateColumn("dueDate", "");
-            command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{selectedItem.itemID}'";
-            command.ExecuteNonQuery();
-            command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " + //lowercase o second
-                $"WHERE [userID] = '{selectedItem.currentlyCheckedOutBy}'";
-            command.ExecuteNonQuery();
-            c.Close();
+            if (itemSelected)
+            {
+                if (selectedItem.currentlyCheckedOutBy != "")
+                {
+                    c.Open();
+                    command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{selectedItem.currentlyCheckedOutBy}'";
+                    reader = command.ExecuteReader();
+                    reader.Read();
+                    DateTime dueDate = Convert.ToDateTime(reader[0].ToString());
+                    double overdueBy = (DateTime.Today - dueDate.AddSeconds(1)).TotalDays;
+                    // Add one second because book is due at 11:59:59 - count overdue days starting the next day
+                    command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE [userID] = '{selectedItem.currentlyCheckedOutBy}'";
+                    reader.Read();
+                    double totalFinesForItem = ((double)reader[0]) * overdueBy;
+                    reader.Close();
+
+                    if (MessageBox.Show($"Confirm Return of {selectedItem.title} - \n" +
+                        $"Lent to {selectedItem.currentlyCheckedOutBy}\n" +
+                        $"Overdue by {overdueBy} days.\n" +
+                        $"Fines owed for this item = USD${totalFinesForItem}", 
+                        "Confirm Return", 
+                        MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        // UpdateColumn("currentlyCheckedOutBy", this.textBoxCurrentlyCheckedOutBy.Text);
+                        command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{selectedItem.itemID}'";
+                        command.ExecuteNonQuery();
+                        // UpdateColumn("previousCheckedOutBy", this.currentlyCheckedOutBy);
+                        command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{selectedItem.currentlyCheckedOutBy}' WHERE [itemID] = '{selectedItem.itemID}'";
+                        command.ExecuteNonQuery();
+                        // UpdateColumn("dueDate", "");
+                        command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{selectedItem.itemID}'";
+                        command.ExecuteNonQuery();
+                        command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " + //lowercase o second
+                            $"WHERE [userID] = '{selectedItem.currentlyCheckedOutBy}'";
+                        command.ExecuteNonQuery();
+                        c.Close();
+
+                        LoadDataGrid("SELECT * FROM accounts", true);
+                        LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+                                "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                                "FROM [items] ORDER BY [ISXX], [copyID]", false);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("This item is not checked out to any user.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please double-click an item to select for returning.");
+            }
         }
         #endregion
 

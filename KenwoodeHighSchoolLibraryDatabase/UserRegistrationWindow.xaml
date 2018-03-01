@@ -13,24 +13,25 @@
                 <ColumnDefinition Width="9*"/>
                 <ColumnDefinition Width="8*"/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="textBoxFirstNameRegister" HorizontalAlignment="Center" Height="23" Margin="105,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
-            <TextBox x:Name="textBoxSurnameRegister" HorizontalAlignment="Center" Height="23" Margin="105,58,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
-            <TextBox x:Name="textBoxUserIDRegister" HorizontalAlignment="Center" Height="23" Margin="105,87,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
-            <TextBox x:Name="textBoxItemLimit" HorizontalAlignment="Left" Height="23" Margin="129,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
-            <TextBox x:Name="textBoxDateLimit" HorizontalAlignment="Left" Height="23" Margin="129,171,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
-            <ComboBox x:Name="comboBoxUserTypeRegister" HorizontalAlignment="Center" Margin="112,115,6.4,45" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" RenderTransformOrigin="0.56,-0.295" FontFamily="Sylfaen"/>
-            <Button x:Name="buttonRegister" Content="Register User" Click="buttonRegister_Click" Margin="97,253,95.6,0" RenderTransformOrigin="-0.997,0.417" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Width="81" FontFamily="Sylfaen"/>
+            <TextBox x:Name="textBoxFirstNameRegister" HorizontalAlignment="Center" TabIndex="0" Height="23" Margin="129,30,24.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
+            <TextBox x:Name="textBoxSurnameRegister" HorizontalAlignment="Center" TabIndex="1" Height="23" Margin="129,58,24.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
+            <TextBox x:Name="textBoxUserIDRegister" HorizontalAlignment="Center" TabIndex="2" Height="23" Margin="129,87,24.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
+            <TextBox x:Name="textBoxItemLimit" HorizontalAlignment="Left" TabIndex="3" Height="23" Margin="129,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
+            <TextBox x:Name="textBoxDateLimit" HorizontalAlignment="Left" TabIndex="4" Height="23" Margin="129,171,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
+            <ComboBox x:Name="comboBoxUserTypeRegister" HorizontalAlignment="Center" TabIndex="5" Margin="129,115,24.6,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" RenderTransformOrigin="0.56,-0.295" FontFamily="Sylfaen"/>
+            <TextBox x:Name="textBoxFinePerDay" HorizontalAlignment="Left" TabIndex="6" Height="23" Margin="129,199,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
+            <Button x:Name="buttonRegister" Content="Register User" TabIndex="7" Click="buttonRegister_Click" Margin="97,253,95.6,0" RenderTransformOrigin="-0.997,0.417" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Width="81" FontFamily="Sylfaen"/>
             <Label x:Name="labelTitle" Content="Register New User" Margin="72,0,56.4,148" HorizontalAlignment="Center" Width="110" Grid.ColumnSpan="2" VerticalAlignment="Top" FontFamily="Sylfaen"/>
-            <StackPanel x:Name="stackPanelLabelsRegistration" HorizontalAlignment="Center" Height="192" Margin="26,30,18.8,0" Width="100" VerticalAlignment="Top">
-                <Label x:Name="labelFirstNameRegister" Content="First Name&#xA;" Margin="0,0,10,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Center" Width="90" FontFamily="Sylfaen"/>
-                <Label x:Name="labelSurnameRegister" Content="Surname" HorizontalAlignment="Center" Margin="0,0,12,0" VerticalAlignment="Top" RenderTransformOrigin="0.474,0.18" Height="30" Width="88" FontFamily="Sylfaen"/>
-                <Label x:Name="labelUserIDRegister" Content="School ID" HorizontalAlignment="Center" Margin="0,0,12,0" VerticalAlignment="Top" RenderTransformOrigin="0.474,0.18" Width="88" Height="28" FontFamily="Sylfaen"/>
-                <Label x:Name="labelUserTypeRegister" Content="User Type" HorizontalAlignment="Center" Margin="0,0,12,0" VerticalAlignment="Top" Width="88" RenderTransformOrigin="0.582,0.461" Height="29" FontFamily="Sylfaen"/>
-                <Label x:Name="labelItemLimit" Content="Item # Limit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Height="27" FontFamily="Sylfaen"/>
-                <Label x:Name="labelDateLimit" Content="Date Limit" VerticalAlignment="Top" HorizontalAlignment="Left" Width="88" Height="25" FontFamily="Sylfaen"/>
-                <Label x:Name="labelFinePerDay" Content="Fine Per Day" VerticalAlignment="Top" HorizontalAlignment="Left" Width="88" Height="24" FontFamily="Sylfaen"/>
+            <StackPanel x:Name="stackPanelLabelsRegistration" HorizontalAlignment="Center" Height="192" Margin="10,30,18.8,0" Width="116" VerticalAlignment="Top">
+                <Label x:Name="labelFirstNameRegister" Content="First Name&#xA;" Margin="0,0,18,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Center" Width="98" FontFamily="Sylfaen"/>
+                <Label x:Name="labelSurnameRegister" Content="Surname" HorizontalAlignment="Center" Margin="0,0,20,0" VerticalAlignment="Top" RenderTransformOrigin="0.474,0.18" Height="30" Width="96" FontFamily="Sylfaen"/>
+                <Label x:Name="labelUserIDRegister" Content="School ID" HorizontalAlignment="Center" Margin="0,0,20,0" VerticalAlignment="Top" RenderTransformOrigin="0.474,0.18" Width="96" Height="28" FontFamily="Sylfaen"/>
+                <Label x:Name="labelUserTypeRegister" Content="User Type" HorizontalAlignment="Center" Margin="0,0,20,0" VerticalAlignment="Top" Width="96" RenderTransformOrigin="0.582,0.461" Height="29" FontFamily="Sylfaen"/>
+                <Label x:Name="labelItemLimit" Content="Item # Limit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="98" Height="27" FontFamily="Sylfaen"/>
+                <Label x:Name="labelDateLimit" Content="Checkout Period&#xD;&#xA;" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96" Height="25" FontFamily="Sylfaen"/>
+                <Label x:Name="labelFinePerDay" Content="Fine Per Day" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96" Height="24" FontFamily="Sylfaen"/>
             </StackPanel>
-            <TextBox x:Name="textBoxFinePerDay" HorizontalAlignment="Left" Height="23" Margin="129,199,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" FontFamily="Sylfaen"/>
+
         </Grid>
     </Grid>
 </Window>
