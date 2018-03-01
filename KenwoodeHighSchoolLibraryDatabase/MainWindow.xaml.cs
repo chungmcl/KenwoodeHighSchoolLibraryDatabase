@@ -446,9 +446,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     reader.Read();
                     DateTime dueDate = Convert.ToDateTime(reader[0].ToString());
                     double overdueBy = (DateTime.Today - dueDate.AddSeconds(1)).TotalDays;
+                    if (overdueBy < 0)
+                    {
+                        overdueBy = 0;
+                    }
                     // Add one second because book is due at 11:59:59 - count overdue days starting the next day
+
+                    string test = selectedItem.currentlyCheckedOutBy;
                     command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE [userID] = '{selectedItem.currentlyCheckedOutBy}'";
                     reader.Read();
+                    string check = reader["finePerDay"].ToString();
+
                     double totalFinesForItem = ((double)reader[0]) * overdueBy;
                     reader.Close();
 
