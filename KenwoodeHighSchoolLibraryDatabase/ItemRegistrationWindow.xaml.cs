@@ -91,6 +91,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         #region Extra Intialization
+        private void InitializeDatabaseConnection()
+        {
+            this.c = new OleDbConnection();
+            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
+            this.command = new OleDbCommand();
+            this.command.Connection = this.c;
+            this.reader = null;
+        }
+
         private void LoadRemainingFields()
         {
             this.c.Open();
@@ -137,16 +147,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             this.reader.Close();
             this.c.Close();
-        }
-
-        private void InitializeDatabaseConnection()
-        {
-            this.c = new OleDbConnection();
-            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            this.command = new OleDbCommand();
-            this.command.Connection = this.c;
-            this.reader = null;
         }
 
         private void InitializeComboBoxes()
