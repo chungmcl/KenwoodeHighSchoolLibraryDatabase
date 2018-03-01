@@ -60,7 +60,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private struct ItemDueThisWeek
         {
-
+            // Define
         }
     }
 }
