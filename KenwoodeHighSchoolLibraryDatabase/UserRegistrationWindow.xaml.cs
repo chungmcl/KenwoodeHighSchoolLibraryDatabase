@@ -35,7 +35,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public UserRegistrationWindow()
         {
             InitializeComponent();
-            InitializeOthers();
+            InitializeDatabaseConnection();
+            comboBoxUserTypeRegister.Items.Add("Student");
+            comboBoxUserTypeRegister.Items.Add("Teacher");
             LoadUserIDs();
             toRegister = true;
         }
@@ -45,11 +47,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public UserRegistrationWindow(User user)
         {
             InitializeComponent();
-            InitializeOthers();
+            InitializeDatabaseConnection();
             toRegister = false;
             labelTitle.Content = "Edit Account";
             buttonRegister.Content = "Save Changes";
             this.toEditUser = user;
+
             c.Open();
             command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = '{user.userID}'";
             reader = command.ExecuteReader();
@@ -66,7 +69,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             textBoxFinePerDay.Text = this.toEditUserFinePerDay.ToString();
         }
 
-        private void InitializeOthers()
+        private void InitializeDatabaseConnection()
         {
             c = new OleDbConnection();
             c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
@@ -75,8 +78,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.Connection = c;
             this.reader = null;
 
-            comboBoxUserTypeRegister.Items.Add("Student");
-            comboBoxUserTypeRegister.Items.Add("Teacher");
         }
 
         private void LoadUserIDs()
@@ -267,11 +268,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
 
             return "";
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            //this.MainWindow.LoadDataGrid("SELECT * FROM accounts");
         }
     }
 }

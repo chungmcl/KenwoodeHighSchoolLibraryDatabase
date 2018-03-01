@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Closing="Window_Closing"
     Title="Registration/ViewEdit" Height="332.534" Width="302.133" MinWidth="300" ResizeMode="CanMinimize">
     <Grid>
         <Grid x:Name="gridRegistration" Margin="10,10,0,10.4" HorizontalAlignment="Left" Width="274">

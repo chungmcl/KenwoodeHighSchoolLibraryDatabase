@@ -28,12 +28,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public ItemRegistrationWindow()
         {
             InitializeComponent();
-            this.c = new OleDbConnection();
-            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            this.command = new OleDbCommand();
-            this.command.Connection = this.c;
-            this.reader = null;
+            InitializeDatabaseConnection();
+            InitializeComboBoxes();
 
             this.textBoxPreviousCheckedOutBy.IsEnabled = false;
             this.textBoxCurrentlyCheckedOutBy.IsEnabled = false;
@@ -42,8 +38,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.buttonCheckout.IsEnabled = false;
             this.labelDueDate.IsEnabled = false;
             this.datePickerDueDate.IsEnabled = false;
-
-            InitializeComboBoxes();
 
             this.selectedColumnValues = new List<String>();
 
@@ -71,18 +65,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public ItemRegistrationWindow(Item toEdit)
         {
             InitializeComponent();
-            this.selectedColumnValues = new List<String>();
-            this.c = new OleDbConnection();
-            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            this.command = new OleDbCommand();
-            this.command.Connection = this.c;
-            this.reader = null;
-
+            InitializeDatabaseConnection();
             InitializeComboBoxes();
+            this.selectedColumnValues = new List<String>();
 
             this.toEditItem = toEdit;
-            // Add a label listing itemID
             this.textBoxDeweyDecimal.Text = this.toEditItem.deweyDecimal;
             this.textBoxTitle.Text = this.toEditItem.title;
             this.comboBoxGenreHundreds.SelectedValue = this.toEditItem.genre;
@@ -152,6 +139,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.c.Close();
         }
 
+        private void InitializeDatabaseConnection()
+        {
+            this.c = new OleDbConnection();
+            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
+            this.command = new OleDbCommand();
+            this.command.Connection = this.c;
+            this.reader = null;
+        }
+
         private void InitializeComboBoxes()
         {
             this.comboBoxGenreHundreds.Items.Add("Computer Science, Information and General Works");
@@ -171,7 +168,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
-        #region Register
+        #region Register Item
         /// <summary>
         /// Converts older books' ISBN10 numbers to the more modern ISBN13 format. 
         /// Can also function for related standards such as ISMN 

@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.OleDb;
 using System.Data;
+using System.Drawing;
+using System.Printing;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -43,9 +45,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
             LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
                     "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
                     "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
+
+            
         }
 
+        private void Print()
+        {
+            //PrintDialog printDlg = new PrintDialog();
+            //printDlg.PrintVisual(dataGridAccounts, "Accounts");
+            //printDlg.ShowDialog();
 
+        }
 
         #region LoadDataGrids
         private void LoadDataGrid(string sqlText, bool loadAccounts)
@@ -114,6 +124,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
+        #region Calculations
         private void CalculateOverdueAndFines()
         {
             List<string[]> userIDs = new List<string[]>();
@@ -154,6 +165,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             c.Close();
             reader.Close();
         }
+        #endregion Calculations
 
         #region Select Item or User
         private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -357,7 +369,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     {
                         MessageBox.Show($"This item is already checked out to user {selectedItem.currentlyCheckedOutBy}!");
                     }
-                    
                 }
                 else
                 {
@@ -389,7 +400,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
-        #region Editing Items
+        #region Editing Objects (Users and Items)
         private void buttonEditItem_Click(object sender, RoutedEventArgs e)
         {
             if (itemSelected)
@@ -446,24 +457,22 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     reader.Read();
                     DateTime dueDate = Convert.ToDateTime(reader[0].ToString());
                     double overdueBy = (DateTime.Today - dueDate.AddSeconds(1)).TotalDays;
+                    // Add one second because book is due at 11:59:59 - count overdue days starting the next day
                     if (overdueBy < 0)
                     {
                         overdueBy = 0;
                     }
-                    // Add one second because book is due at 11:59:59 - count overdue days starting the next day
-
-                    string test = selectedItem.currentlyCheckedOutBy;
+                    reader.Close();
                     command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE [userID] = '{selectedItem.currentlyCheckedOutBy}'";
+                    reader = command.ExecuteReader();
                     reader.Read();
-                    string check = reader["finePerDay"].ToString();
-
                     double totalFinesForItem = ((double)reader[0]) * overdueBy;
                     reader.Close();
 
-                    if (MessageBox.Show($"Confirm Return of {selectedItem.title} - \n" +
+                    if (MessageBox.Show($"Confirm Return of '{selectedItem.title}' - \n" +
                         $"Lent to {selectedItem.currentlyCheckedOutBy}\n" +
                         $"Overdue by {overdueBy} days.\n" +
-                        $"Fines owed for this item = USD${totalFinesForItem}", 
+                        $"Fines owed for this item = USD ${totalFinesForItem}", 
                         "Confirm Return", 
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
@@ -497,6 +506,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 MessageBox.Show("Please double-click an item to select for returning.");
             }
         }
+
         #endregion
 
         #region Deletion
@@ -565,6 +575,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             
         }
         #endregion
+
+        private void testButtonPrint_Click(object sender, RoutedEventArgs e)
+        {
+            Print();
+        }
     }
 
     public struct User
