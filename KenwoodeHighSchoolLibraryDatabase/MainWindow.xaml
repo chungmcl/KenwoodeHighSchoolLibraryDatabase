@@ -33,7 +33,7 @@
                   MouseDoubleClick="dataGridAccounts_DoubleClick"
                   FontFamily="Sylfaen" Grid.RowSpan="2">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="190"/>
+                        <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="*"/>
                         <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding lastName, Mode=OneWay}" Width="190"/>
                         <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="70"/>
                         <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="70"/>
@@ -61,7 +61,7 @@
                    MouseDoubleClick="dataGridItems_DoubleClick"
                   FontFamily="Sylfaen">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="120"/>
+                        <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="*"/>
                         <DataGridTextColumn Header="D. Decimal" IsReadOnly="True" Binding="{Binding deweyDecimal, Mode=OneWay}" Width="70"/>
                         <DataGridTextColumn Header="Format" IsReadOnly="True" Binding="{Binding format, Mode=OneWay}" Width="70"/>
                         <DataGridTextColumn Header="Genre" IsReadOnly="True" Binding="{Binding genre, Mode=OneWay}" Width="150"/>
@@ -86,6 +86,11 @@
             </Grid>
         </GroupBox>
         <Button x:Name="buttonReturnSelectedItem" Content="Return Selected Item" HorizontalAlignment="Left" Margin="935,538,0,0" VerticalAlignment="Top" Width="150" Click="buttonReturnSelectedItem_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
-        <Button x:Name="testButtonPrint" Content="Print Accounts" HorizontalAlignment="Left" Margin="935,87,0,0" VerticalAlignment="Top" Width="75" Click="testButtonPrint_Click"/>
+        <GroupBox x:Name="groupBoxPrint" Header="Print" HorizontalAlignment="Left" Height="115" Margin="935,73,0,0" VerticalAlignment="Top" Width="268" FontFamily="Sylfaen">
+            <Grid x:Name="gridPrint" HorizontalAlignment="Left" Height="89" Margin="10,0,0,0" VerticalAlignment="Top" Width="235">
+                <Button x:Name="buttonPrintUpcomingItems" Content="Print Upcoming Due Items This Week" HorizontalAlignment="Left" Margin="18,16,0,0" VerticalAlignment="Top" Width="202" Click="buttonPrintUpcomingItems_Click" FontFamily="Sylfaen" Background="#FFD33E3E"/>
+                <Button x:Name="buttonPrintFinedUsers" Content="Print Fines" HorizontalAlignment="Left" Margin="18,53,0,0" VerticalAlignment="Top" Width="202" Click="buttonPrintFinedUsers_Click" FontFamily="Sylfaen" Background="#FFD33E3E"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>

@@ -51,16 +51,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             reader = null;
         }
 
-        private void Print()
-        {
-            //PrintDialog printDlg = new PrintDialog();
-            //printDlg.PrintVisual(dataGridAccounts, "Accounts");
-            //printDlg.ShowDialog();
-
-            PrintUpcomingDueWindow w = new PrintUpcomingDueWindow();
-            w.Show();
-        }
-
         #region LoadDataGrids
         private void LoadDataGrid(string sqlText, bool loadAccounts)
         {
@@ -580,9 +570,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
-        private void testButtonPrint_Click(object sender, RoutedEventArgs e)
+        private void buttonPrintUpcomingItems_Click(object sender, RoutedEventArgs e)
         {
-            Print();
+            PrintUpcomingDueWindow w = new PrintUpcomingDueWindow();
+            w.Show();
+        }
+
+        private void buttonPrintFinedUsers_Click(object sender, RoutedEventArgs e)
+        {
+            PrintFinesWindow w = new PrintFinesWindow();
+            w.Show();
         }
     }
 

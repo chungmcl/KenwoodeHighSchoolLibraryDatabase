@@ -1,26 +1,26 @@
-﻿<Window x:Class="KenwoodeHighSchoolLibraryDatabase.PrintUpcomingDueWindow"
+﻿<Window x:Class="KenwoodeHighSchoolLibraryDatabase.PrintFinesWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="PrintUpcomingDueWindow" Height="805.296" Width="994.794" ResizeMode="CanMinimize">
+        Title="PrintFinesWindow" Height="805.296" Width="994.794" ResizeMode="CanMinimize">
     <Grid x:Name="gridMain">
-        <DataGrid x:Name="dataGridIssuedBooks" HorizontalAlignment="Left" Height="759" Margin="10,1,0,0" VerticalAlignment="Top" Width="717"
+        <DataGrid x:Name="dataGridFinedUsers" HorizontalAlignment="Left" Height="759" Margin="10,1,0,0" VerticalAlignment="Top" Width="717"
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding lentTo, Mode=OneWay}" Width="150"/>
-                <DataGridTextColumn Header="Title" IsReadOnly="True" Binding="{Binding title, Mode=OneWay}" Width="200"/>
-                <DataGridTextColumn Header="Due Date" IsReadOnly="True" Binding="{Binding dueDate, Mode=OneWay}" Width="100"/>
-                <DataGridTextColumn Header="Days Until Due Date" IsReadOnly="True" Binding="{Binding daysUntilDueDate, Mode=OneWay}" Width="115"/>
+                <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name, Mode=OneWay}" Width="200"/>
+                <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="150"/>
+                <DataGridTextColumn Header="Fines (USD)" IsReadOnly="True" Binding="{Binding fines, Mode=OneWay}" Width="100"/>
+                <DataGridTextColumn Header="# of Overdue Items" IsReadOnly="True" Binding="{Binding overdue, Mode=OneWay}" Width="115"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="buttonPreviousPage" Content="Previous Page" HorizontalAlignment="Left" Margin="746,94,0,0" VerticalAlignment="Top" Width="90" Click="buttonPreviousPage_Click" FontFamily="Sylfaen"/>
         <Button x:Name="buttonNextPage" Content="Next Page" HorizontalAlignment="Left" Margin="854,94,0,0" VerticalAlignment="Top" Width="90" Click="buttonNextPage_Click" FontFamily="Sylfaen"/>
         <Button x:Name="buttonPrintThisPage" Content="Print This Page" HorizontalAlignment="Left" Margin="746,217,0,0" VerticalAlignment="Top" Width="122" Click="buttonPrintThisPage_Click" FontFamily="Sylfaen"/>
         <Label x:Name="labelPageNumber" Content="" HorizontalAlignment="Left" Margin="746,118,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
-        <Label x:Name="labelTitle" Content="Print Upcoming Due Items This Week" HorizontalAlignment="Left" Margin="732,10,0,0" VerticalAlignment="Top" Width="212" FontFamily="Sylfaen" FontWeight="Bold"/>
+        <Label x:Name="labelTitle" Content="Print User Fines" HorizontalAlignment="Left" Margin="732,10,0,0" VerticalAlignment="Top" Width="212" FontFamily="Sylfaen" FontWeight="Bold"/>
     </Grid>
 </Window>
