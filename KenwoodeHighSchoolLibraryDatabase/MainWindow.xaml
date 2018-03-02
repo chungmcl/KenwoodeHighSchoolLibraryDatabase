@@ -26,7 +26,7 @@
                     <RowDefinition Height="53*"/>
                     <RowDefinition Height="289*"/>
                 </Grid.RowDefinitions>
-                <Button x:Name="BtnToUserRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" Width="106" Margin="11,214,0,0" Click="BtnToUserRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Grid.Row="1" Height="20" VerticalAlignment="Top"/>
+                <Button x:Name="buttonToUserRegistrationWindow" Content="Register New User" HorizontalAlignment="Left" Width="106" Margin="11,214,0,0" Click="buttonToUserRegistrationWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Grid.Row="1" Height="20" VerticalAlignment="Top"/>
                 <Button x:Name="ButtonDeleteSelectedUser" Content="Delete Selected User" HorizontalAlignment="Left" Margin="271,214,0,0" Width="110" Click="ButtonDeleteSelectedUser_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Grid.Row="1" Height="20" VerticalAlignment="Top"/>
                 <DataGrid x:Name="dataGridAccounts" 
                   HorizontalAlignment="Left" Height="220" Margin="10,36,-144,0" VerticalAlignment="Top" Width="880" 
@@ -70,7 +70,7 @@
                         <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding currentlyCheckedOutBy, Mode=OneWay}" Width="135"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Button x:Name="BtnToBookRegistrationWindow" Content="Register New Item" HorizontalAlignment="Left" Margin="10,266,0,0" VerticalAlignment="Top" Width="106" Click="BtnToBookRegistrationWindow_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
+                <Button x:Name="buttonToItemRegistrationWindow" Content="Register New Item" HorizontalAlignment="Left" Margin="10,266,0,0" VerticalAlignment="Top" Width="106" Click="buttonToItemRegistrationWindow_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>
                 <TextBox x:Name="textBoxItemsSearchBy" HorizontalAlignment="Left" Height="23" Margin="245,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" FontFamily="Sylfaen" GotFocus="textBoxItemsSearchBy_GotFocus" TextChanged="textBoxItemsSearchBy_TextChanged"/>
                 <Label x:Name="labelSearchItems" Content="Search for item by: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
                 <ComboBox x:Name="comboBoxItemsSearchByOptions" HorizontalAlignment="Left" Margin="119,13,0,0" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" SelectionChanged="comboBoxItemsSearchByOptions_SelectionChanged">

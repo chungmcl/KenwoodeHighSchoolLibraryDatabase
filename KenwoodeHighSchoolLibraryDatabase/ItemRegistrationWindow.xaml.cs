@@ -62,6 +62,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private string currentlyCheckedOutBy;
         private string previousCheckedOutBy;
         private DateTime dueDate;
+        /// <summary>
+        /// Overload constructor for if the user chooses to edit an item.
+        /// Initialize the contents of objects in the window to the item to be edited.
+        /// </summary>
+        /// <param name="toEdit">The Item that the user would like to edit.</param>
         public ItemRegistrationWindow(Item toEdit)
         {
             InitializeComponent();
@@ -91,6 +96,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         #region Extra Intialization
+        /// <summary>
+        /// Initialize connection to database.
+        /// </summary>
         private void InitializeDatabaseConnection()
         {
             this.c = new OleDbConnection();
@@ -101,6 +109,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.reader = null;
         }
 
+        /// <summary>
+        /// If the user is editing an item, load the rest of the items that cannot be loaded
+        /// through the passed Item (struct) from the MainWindow.
+        /// </summary>
         private void LoadRemainingFields()
         {
             this.c.Open();
@@ -149,6 +161,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.c.Close();
         }
 
+        /// <summary>
+        /// Initialize the genreHundreds (genreClassOne) comboBox with strings.
+        /// Initialize the format comboBox with strings.
+        /// (This allows the code to set the selected value when editing.)
+        /// </summary>
         private void InitializeComboBoxes()
         {
             this.comboBoxGenreHundreds.Items.Add("Computer Science, Information and General Works");
@@ -225,6 +242,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
             return newString;
         }
 
+        /// <summary>
+        /// Call the ConvertToISBNThirteen method to convert
+        /// the ISBN10 code entered to ISBN13.
+        /// Check that the ISBN10 code is in correct format first.
+        /// Trim the ISBN10 code of dashes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
             string isbnTen = this.textBoxISBNTen.Text.Trim();
@@ -240,6 +265,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Load the genre tens comboBox to the current hundreds class selected
+        /// in the comboBoxGenreHundreds comboBox. Data loaded from deweyDecimal table in the database.
+        /// Classes defined by https://www.oclc.org/en/dewey/features/summaries.html
+        /// (OCLC Online Computer Library Center, governing body of Dewey Decimal)
+        /// Selected indexes can be used to generate Dewey Decimal.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void comboBoxGenreHundreds_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.comboBoxGenreHundreds.SelectedIndex < 10)
@@ -277,6 +311,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Load the genre ones comboBox to the current tens class selected
+        /// in the comboBoxGenreTens comboBox. Data loaded from the deweyDecimal table in the database.
+        /// Classes defined by https://www.oclc.org/en/dewey/features/summaries.html
+        /// (OCLC Online Computer Library Center, governing body of Dewey Decimal)
+        /// Selected indexes can be used to generate Dewey Decimal.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void comboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.comboBoxGenreOnes.IsEnabled = true;
@@ -294,6 +337,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Generate deweyDecimal number (or letters) based on 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
         {
             if (this.comboBoxGenreHundreds.SelectedIndex == 10)

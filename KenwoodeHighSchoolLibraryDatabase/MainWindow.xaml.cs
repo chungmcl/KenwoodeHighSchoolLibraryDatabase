@@ -41,6 +41,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
 
+
+        /// <summary>
+        /// Connect to Microsoft Access Database
+        /// Initialize objects for reading data from the database
+        /// </summary>
         private void InitializeDatabaseConnection()
         {
             c = new OleDbConnection();
@@ -52,6 +57,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         #region LoadDataGrids
+        /// <summary>
+        /// Update the fines and overdue books for each user by calling CalculateOverDueAndFines(),
+        /// to ensure that database stays up to date.
+        /// Take in the SQL command to specify what to call from database and to display in datagrids.
+        /// Load specified datagrid with the information called.
+        /// </summary>
+        /// <param name="sqlText">The SQL command to be executed</param>
+        /// <param name="loadAccounts">Load accounts datagrid or items datagrid</param>
         private void LoadDataGrid(string sqlText, bool loadAccounts)
         {
             CalculateOverdueAndFines();
@@ -73,6 +86,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             c.Close();
         }
 
+        /// <summary>
+        /// Load every called entry from the accounts table within the database.
+        /// </summary>
+        /// <param name="reader">The OleDbDataReader to read each entry from the databse</param>
         private void LoadAccountsDataGrid(OleDbDataReader reader)
         {
             while (reader.Read())
@@ -91,6 +108,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Load every called entry from the items table within the database.
+        /// </summary>
+        /// <param name="reader">The OleDbDataReader to read each entry from the databse</param>
         private void LoadItemsDataGrid(OleDbDataReader reader)
         {
             while (reader.Read())
@@ -103,7 +124,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newItem.title = reader["title"].ToString();
                 string authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
                     $"{reader["authorMiddleName"].ToString()}";
-                if (authorName.Length > 1) // not working?
+                if (authorName.Length > 1)
                 {
 
                     newItem.authorName = authorName;
@@ -119,6 +140,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region Calculations
+        /// <summary>
+        /// Calculate the number of overdue items and fines for each account.
+        /// Save updates to database.
+        /// </summary>
         private void CalculateOverdueAndFines()
         {
             List<string[]> userIDs = new List<string[]>();
@@ -146,7 +171,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     {
                         overDue++;
                         fines = fines + (DateTime.Today - dueDate.AddSeconds(1)).TotalDays * double.Parse(finePerDay);
-                        // Add one second because books are due at 11:59:59 of the due date, so charge fines day after
+                        // Add one second because books are due at 11:59:59 of the due date, so charge fines day after.
                     }
                 }
                 reader.Close();
@@ -162,6 +187,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion Calculations
 
         #region Select Item or User
+        /// <summary>
+        /// Set the selected user to the row that the user double-clicked.
+        /// Display error message if user double-clicks something other than a user
+        /// in the accounts DataGrid.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
@@ -179,6 +211,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Set the selected item to the row that the item double-clicked.
+        /// Display error message if user double-clicks something other than an item
+        /// in the items DataGrid.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGridItems_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
@@ -197,6 +236,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region DataGrid Queries
+        /// <summary>
+        /// Save the column that user would like to query from.
+        /// Display hint text to show the purpose of the textBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void comboBoxAccountsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string setTextBoxTo = comboBoxAccountsSearchByOptions.SelectedValue.ToString().Substring(37);
@@ -207,6 +252,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Save the colum that the user would like to query from.
+        /// Display hint text to show the purpose of the textBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void comboBoxItemsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string setTextBoxTo = comboBoxItemsSearchByOptions.SelectedValue.ToString().Substring(37);
@@ -222,6 +273,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Query all items with similar text in the textBox in the column that user
+        /// specified with the comboBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxAccountsSearchBy_TextChanged(object sender, TextChangedEventArgs e)
         {
             string currentText = textBoxAccountsSearchBy.Text;
@@ -253,7 +310,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-
+        /// <summary>
+        /// Query all items with similar text in the textBox in the column that user
+        /// specified with the comboBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxItemsSearchBy_TextChanged(object sender, TextChangedEventArgs e)
         {
             string currentText = textBoxItemsSearchBy.Text;
@@ -277,7 +339,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         queryColumn = "title";
                         break;
                     case 3:
-                        queryColumn = "authorLastName"; // need to include full name
+                        queryColumn = "authorLastName";
                         break;
                     case 4:
                         queryColumn = "genreClassOne";
@@ -293,12 +355,22 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Delete hint text when user enters query textBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxAccountsSearchBy_GotFocus(object sender, RoutedEventArgs e)
         {
             textBoxAccountsSearchBy.Text = "";
         }
 
+        /// <summary>
+        /// Delete hint text when user enters query textBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxItemsSearchBy_GotFocus(object sender, RoutedEventArgs e)
         {
             textBoxItemsSearchBy.Text = "";
@@ -306,7 +378,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region Window Openers
-        private void BtnToBookRegistrationWindow_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Open ItemRegistrationWindow.
+        /// If new item is registered, reload items DataGrid.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonToItemRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
             ItemRegistrationWindow x = new ItemRegistrationWindow();
             x.Owner = this;
@@ -319,7 +397,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void BtnToUserRegistrationWindow_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Open UserRegistrationWindow.
+        /// If new user is registered, reload accounts DataGrid.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonToUserRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
             UserRegistrationWindow w = new UserRegistrationWindow();
             w.Owner = this;
@@ -329,9 +413,41 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 LoadDataGrid("SELECT * FROM accounts", true);
             }
         }
+
+        /// <summary>
+        /// Open the PrintUpcomingDueWindow.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonPrintUpcomingItems_Click(object sender, RoutedEventArgs e)
+        {
+            PrintUpcomingDueWindow w = new PrintUpcomingDueWindow();
+            w.Show();
+        }
+
+        /// <summary>
+        /// Open the PrintFinesWindow.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonPrintFinedUsers_Click(object sender, RoutedEventArgs e)
+        {
+            PrintFinesWindow w = new PrintFinesWindow();
+            w.Show();
+        }
         #endregion
 
         #region Checkout Item to Selected User
+        /// <summary>
+        /// Checkout selected book to select user.
+        /// Display an error message with MessageBox if:
+        /// Either an item or a user is not selected.
+        /// The selected item is already checked out to the selected user.
+        /// The selected item is already checked out to another user.
+        /// The selected user is at his/her item limit.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnToCheckout_Click(object sender, RoutedEventArgs e)
         {
             if (userSelected && itemSelected)
@@ -439,6 +555,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Return the selected item to the library.
+        /// Display error message if the selected item is checked out to no one or if an item is
+        /// not selected.
+        /// Delete the item's log of currentlyCheckedOutBy and set previousCheckedOutBy to the user who
+        /// the item was checked out to.
+        /// Remove the dueDate from the item.
+        /// Subtract the user's number of checked out items by one.
+        /// (Fines and overdue will be recalculated when the DataGrid is reloaded).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonReturnSelectedItem_Click(object sender, RoutedEventArgs e)
         {
             if (itemSelected)
@@ -470,16 +598,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         "Confirm Return", 
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        // UpdateColumn("currentlyCheckedOutBy", this.textBoxCurrentlyCheckedOutBy.Text);
                         command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{selectedItem.itemID}'";
                         command.ExecuteNonQuery();
-                        // UpdateColumn("previousCheckedOutBy", this.currentlyCheckedOutBy);
                         command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{selectedItem.currentlyCheckedOutBy}' WHERE [itemID] = '{selectedItem.itemID}'";
                         command.ExecuteNonQuery();
-                        // UpdateColumn("dueDate", "");
                         command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{selectedItem.itemID}'";
                         command.ExecuteNonQuery();
-                        command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " + //lowercase o second
+                        command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
                             $"WHERE [userID] = '{selectedItem.currentlyCheckedOutBy}'";
                         command.ExecuteNonQuery();
                         c.Close();
@@ -504,6 +629,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region Deletion
+        /// <summary>
+        /// Delete the selected Item from the Data Base.
+        /// Display error message if an item is not selected.
+        /// Lower the user's number of checked out items by one (if item is checked out to a user)
+        /// (User's number of overdue items and fines will be recalculated when dataGrid is loaded.)
+        /// Set the selected item to an empty item.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonDeleteSelectedItem_Click(object sender, RoutedEventArgs e)
         {
             if (itemSelected)
@@ -536,6 +670,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Delete the selected user from the Database.
+        /// Display error message if user is not selected.
+        /// Clear checkedOutBy, dueDate, and set previousCheckedOutBy to the user being deleted.
+        /// Set the currently selected user to an empty user.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonDeleteSelectedUser_Click(object sender, RoutedEventArgs e)
         {
             if (userSelected)
@@ -543,7 +685,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 if (MessageBox.Show("Delete Selected User?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     c.Open();
-                    command.CommandText = "UPDATE items SET [currentlyCheckedOutBy] = ''" +
+                    command.CommandText = "UPDATE items " +
+                        "SET [currentlyCheckedOutBy] = '', " +
+                        $"[previousCheckedOutBy] = '{selectedUser.userID}', " +
+                        "[dueDate] = '' " +
                         $"WHERE [currentlyCheckedOutBy] = '{selectedUser.userID}'";
                     command.ExecuteNonQuery();
 
@@ -566,23 +711,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 MessageBox.Show("Please double-click a user to select it for deletion.");
             }
-            
         }
         #endregion
-
-        private void buttonPrintUpcomingItems_Click(object sender, RoutedEventArgs e)
-        {
-            PrintUpcomingDueWindow w = new PrintUpcomingDueWindow();
-            w.Show();
-        }
-
-        private void buttonPrintFinedUsers_Click(object sender, RoutedEventArgs e)
-        {
-            PrintFinesWindow w = new PrintFinesWindow();
-            w.Show();
-        }
     }
 
+    /// <summary>
+    /// User to be displayed within the accounts dataGrid.
+    /// Can be used to load information about the user in the database.
+    /// </summary>
     public struct User
     {
         public string firstName { get; set; }
@@ -596,6 +732,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public string fines { get; set; }
     }
 
+    /// <summary>
+    /// Item to be displayed within the items dataGrid.
+    /// Can be used to load information about the item in the database.
+    /// </summary>
     public struct Item
     {
         public string itemID { get; set; }
