@@ -59,6 +59,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             reader.Read();
             this.toEditUserFinePerDay = double.Parse(reader[0].ToString());
             c.Close();
+            
+            comboBoxUserTypeRegister.Items.Add("Student");
+            comboBoxUserTypeRegister.Items.Add("Teacher");
 
             textBoxFirstNameRegister.Text = toEditUser.firstName;
             textBoxSurnameRegister.Text = toEditUser.lastName;
