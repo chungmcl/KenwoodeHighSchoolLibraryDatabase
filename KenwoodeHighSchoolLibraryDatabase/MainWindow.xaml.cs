@@ -43,8 +43,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
 
         /// <summary>
-        /// Connect to Microsoft Access Database
-        /// Initialize objects for reading data from the database
+        /// Connect to Microsoft Access Database.
+        /// Initialize objects for reading data from the database.
         /// </summary>
         private void InitializeDatabaseConnection()
         {

@@ -44,7 +44,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         User toEditUser;
         private double toEditUserFinePerDay;
-        public UserRegistrationWindow(User user)
+        /// <summary>
+        /// Overload constructor for editing a user.
+        /// </summary>
+        /// <param name="user">User to edit.</param>
+        public UserRegistrationWindow(User user) // User as defined in MainWindow (struct)
         {
             InitializeComponent();
             InitializeDatabaseConnection();
@@ -60,6 +64,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.toEditUserFinePerDay = double.Parse(reader[0].ToString());
             c.Close();
 
+            comboBoxUserTypeRegister.Items.Add("Student");
+            comboBoxUserTypeRegister.Items.Add("Teacher");
+
             textBoxFirstNameRegister.Text = toEditUser.firstName;
             textBoxSurnameRegister.Text = toEditUser.lastName;
             textBoxUserIDRegister.Text = toEditUser.userID;
@@ -69,6 +76,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             textBoxFinePerDay.Text = this.toEditUserFinePerDay.ToString();
         }
 
+        /// <summary>
+        /// Connect to Microsoft Access Database.
+        /// Initialize objects for reading data from the database.
+        /// </summary>
         private void InitializeDatabaseConnection()
         {
             c = new OleDbConnection();
@@ -77,9 +88,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command = new OleDbCommand();
             command.Connection = c;
             this.reader = null;
-
         }
 
+        /// <summary>
+        /// Load the current list of userIDs so that the program can check
+        /// if the user is choosing to register an already registered ID.
+        /// (All UserIDs must be unique)
+        /// </summary>
         private void LoadUserIDs()
         {
             List<string[]> userIDs = new List<string[]>();
@@ -125,9 +140,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
             return -1;
         }
 
+        /// <summary>
+        /// Register or edit item depending on constructor initialization.
+        /// Takes in all fields and saves to database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
-            if (toRegister)
+            if (toRegister) // Register new user
             {
                 LoadUserIDs();
                 string errorMessage = CheckRequiredValues();
@@ -151,7 +172,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     MessageBox.Show(errorMessage);
                 }
             }
-            else
+            else // Edit existing user
             {
                 string errorMessage = CheckRequiredValues();
                 if (errorMessage == "")
@@ -193,6 +214,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         }
 
+        /// <summary>
+        /// Check that all required fields are filled out
+        /// correctly in the correct format. 
+        /// </summary>
+        /// <returns>The error message if a field is incorrect, empty string if all are correct</returns>
         public string CheckRequiredValues()
         {
             if (textBoxFirstNameRegister.Text == "")

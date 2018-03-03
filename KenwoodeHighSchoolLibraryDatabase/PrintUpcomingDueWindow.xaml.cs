@@ -39,6 +39,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             labelPageNumber.Content = pageNumber;
         }
 
+        /// <summary>
+        /// Connect to Microsoft Access Database.
+        /// Initialize objects for reading data from the database.
+        /// </summary>
         private void InitializeDatabaseConnection()
         {
             this.c = new OleDbConnection();
@@ -49,6 +53,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.reader = null;
         }
 
+        /// <summary>
+        /// Load all the items due this week from the database to use in the data grids.
+        /// Set the page max so the next page button will not go into infinity.
+        /// </summary>
         private void LoadItemsToDisplay()
         {
             c.Open();
@@ -106,6 +114,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.pageMax = (int)Math.Ceiling(((double)itemsDueThisWeek.Count) / 37); ;
         }
 
+        /// <summary>
+        /// Load the data grid with 37 of the items due this week
+        /// (so it fits on one standard 8 and (1/2) by 11 printer paper)
+        /// </summary>
+        /// <param name="pageNumber">The page to load.</param>
         private void LoadDataGrid(int pageNumber)
         {
             dataGridIssuedBooks.Items.Clear();
@@ -123,6 +136,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Go to next page and reload Data Grid to correct page.
+        /// Disables itself at end of page range. (Min and max page number)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonNextPage_Click(object sender, RoutedEventArgs e)
         {
             buttonPreviousPage.IsEnabled = true;
@@ -135,6 +154,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             labelPageNumber.Content = pageNumber;
         }
 
+        /// <summary>
+        /// Return to previous page and reload Data Grid to correct page.
+        /// Disables itself at end of page range. (Min and max page number)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonPreviousPage_Click(object sender, RoutedEventArgs e)
         {
             buttonNextPage.IsEnabled = true;
@@ -146,7 +171,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             labelPageNumber.Content = pageNumber;
         }
-        
+
+        /// <summary>
+        /// Open the print dialog for printing the current page.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonPrintThisPage_Click(object sender, RoutedEventArgs e)
         {
             PrintDialog printDlg = new PrintDialog();
@@ -154,6 +184,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             printDlg.ShowDialog();
         }
 
+        /// <summary>
+        /// An item that is due this week.
+        /// Used to load into the Data Grid.
+        /// </summary>
         public class ItemDueThisWeek
         {
             public string itemID { get; set; }
