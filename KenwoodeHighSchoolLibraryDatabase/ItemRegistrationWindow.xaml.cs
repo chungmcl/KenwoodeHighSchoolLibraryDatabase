@@ -62,7 +62,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private string currentlyCheckedOutBy;
         private string previousCheckedOutBy;
         private DateTime dueDate;
-        public ItemRegistrationWindow(Item toEdit)
+        /// <summary>
+        /// Overload constructor for if the user chooses to edit an item.
+        /// Initialize the contents of objects in the window to the item to be edited.
+        /// </summary>
+        /// <param name="toEdit">The Item that the user would like to edit.</param>
+        public ItemRegistrationWindow(Item toEdit) // Item as defined in MainWindow (struct)
         {
             InitializeComponent();
             InitializeDatabaseConnection();
@@ -91,6 +96,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         #region Extra Intialization
+        /// <summary>
+        /// Connect to Microsoft Access Database.
+        /// Initialize objects for reading data from the database.
+        /// </summary>
         private void InitializeDatabaseConnection()
         {
             this.c = new OleDbConnection();
@@ -101,6 +110,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.reader = null;
         }
 
+        /// <summary>
+        /// If the user is editing an item, load the rest of the items that cannot be loaded
+        /// through the passed Item (struct) from the MainWindow.
+        /// </summary>
         private void LoadRemainingFields()
         {
             this.c.Open();
@@ -149,6 +162,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.c.Close();
         }
 
+        /// <summary>
+        /// Initialize the genreHundreds (genreClassOne) comboBox with strings.
+        /// Initialize the format comboBox with strings.
+        /// (This allows the code to set the selected value when editing.)
+        /// </summary>
         private void InitializeComboBoxes()
         {
             this.comboBoxGenreHundreds.Items.Add("Computer Science, Information and General Works");
@@ -225,6 +243,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
             return newString;
         }
 
+        /// <summary>
+        /// Call the ConvertToISBNThirteen method to convert
+        /// the ISBN10 code entered to ISBN13.
+        /// Check that the ISBN10 code is in correct format first.
+        /// Trim the ISBN10 code of dashes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
             string isbnTen = this.textBoxISBNTen.Text.Trim();
@@ -240,6 +266,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Load the genre tens comboBox to the current hundreds class selected
+        /// in the comboBoxGenreHundreds comboBox. Data loaded from deweyDecimal table in the database.
+        /// Classes defined by https://www.oclc.org/en/dewey/features/summaries.html
+        /// (OCLC Online Computer Library Center, governing body of Dewey Decimal)
+        /// Selected indexes can be used to generate Dewey Decimal.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void comboBoxGenreHundreds_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.comboBoxGenreHundreds.SelectedIndex < 10)
@@ -277,6 +312,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Load the genre ones comboBox to the current tens class selected
+        /// in the comboBoxGenreTens comboBox. Data loaded from the deweyDecimal table in the database.
+        /// Classes defined by https://www.oclc.org/en/dewey/features/summaries.html
+        /// (OCLC Online Computer Library Center, governing body of Dewey Decimal)
+        /// Selected indexes can be used to generate Dewey Decimal.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void comboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.comboBoxGenreOnes.IsEnabled = true;
@@ -294,6 +338,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Generate Dewey Decimal number (or letters) based on selected genre comboBox indexes.
+        /// Generate author based Dewey Decimal if selected hundreds class is fiction.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
         {
             if (this.comboBoxGenreHundreds.SelectedIndex == 10)
@@ -330,6 +380,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Check that all required fields are filled out in correct formatting.
+        /// Return error message to display in MessageBox if all required fields are
+        /// not filled out in correct formatting. If all required fields are correct
+        /// and in correct formatting, return empty string.
+        /// </summary>
+        /// <returns>Error message, empty string if all filled out correctly</returns>
         private string CheckRequiredItemsFilledOut()
         {
 
@@ -360,6 +417,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
             return "";
         }
 
+        /// <summary>
+        /// Generates the copyID for an item (the number of copies of the same item)
+        /// Unique item IDs are based on the ISXX (ISBN13, etc) number and a suffix that is equivalent
+        /// to the copy number. This method generates a unique suffix so that all items have a
+        /// unique ID. If an item is deleted, this method will fill in the copy number the next time
+        /// a book of the same ISXX number is passed in. Returns the suffix to be used in ID.
+        /// </summary>
+        /// <param name="isxx">The ISXX number to generate a copyID and suffix for.</param>
+        /// <returns></returns>
         private int GenerateCopyID(string isxx)
         {
             isxx = this.textBoxISXX.Text;
@@ -402,6 +468,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             return copyID; // Also suffix of ItemID
         }
 
+        /// <summary>
+        /// Display ISBN13 and leave ISBN10 enabled if the item is a book.
+        /// If not, then display ISXX as the label - Other International Standard
+        /// numbers exist for specific format types.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void comboBoxFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.comboBoxFormat.SelectedIndex == 1)
@@ -423,6 +496,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion Register
 
         #region Save Changes (Register AND Edit/Update)
+        /// <summary>
+        /// Leads to the correct save method depending on if the user is registering
+        /// an item or if the user is editing an item. Boolean "toRegister" intialized in the
+        /// constructor.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
         {
             if (toRegister)
@@ -435,6 +515,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Save the new item to the database and close the window and load data grids.
+        /// If all required items are not filled out correctly and in the correct format,
+        /// display error message in a MessageBox.
+        /// </summary>
         private void Register()
         {
             string message = CheckRequiredItemsFilledOut();
@@ -461,7 +546,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 MessageBox.Show(message);
             }
         }
+        #endregion
 
+        #region Editing and Viewing Item
+        /// <summary>
+        /// Ask the user to confirm to save changes.
+        /// Check that all fields are correctly input, then save to database.
+        /// Display error message in MessageBox if any fields are incorrectly entered.
+        /// </summary>
         private void EditAndUpdate()
         {
             if (MessageBox.Show("Save Changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -480,9 +572,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 }
             }
         }
-        #endregion
 
-        #region Editing and Viewing Item
+        /// <summary>
+        /// Remove the checked out user to the current item.
+        /// Place the checked out user into previousCheckedOutBy in the window and in
+        /// the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonCheckout_Click(object sender, RoutedEventArgs e)
         {
             if (textBoxCurrentlyCheckedOutBy.Text != "")
@@ -496,6 +593,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// If a field is changed, update it in the database.
+        /// Performs other calculations as necessary.
+        /// (For example, a changed ISXX).
+        /// </summary>
         private void UpdateItemTable()
         {
             if (this.textBoxTitle.Text != this.toEditItem.title)
@@ -575,13 +677,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 UpdateColumn("dueDate", "");
                 this.datePickerDueDate.SelectedDate = null;
                 c.Open();
-                //command.CommandText = $"SELECT [numberofCheckedoutItems] FROM accounts WHERE [userID] = '{this.currentlyCheckedOutBy}'";
-                //reader = command.ExecuteReader();
-                //reader.Read();
-                //int numberOfCheckedOutItems = int.Parse(reader[0].ToString());
-                //reader.Close();
-                //if (numberOfCheckedOutItems != 0)
-                command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " + //lowercase o second
+                command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
                     $"WHERE [userID] = '{this.currentlyCheckedOutBy}'";
                 command.ExecuteNonQuery();
                 c.Close();
@@ -608,6 +704,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Updates the current item in the items table within the database
+        /// in the specified column with the new value. 
+        /// </summary>
+        /// <param name="column">Column to modify in database</param>
+        /// <param name="newValue">New value to update in the column</param>
         private void UpdateColumn(string column, string newValue)
         {
             this.c.Open();
