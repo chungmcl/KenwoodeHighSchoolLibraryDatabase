@@ -473,7 +473,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         {
                             MessageBox.Show("This user has reached his/her item limit!");
                         }
-                        
                     }
                     else
                     {
@@ -491,6 +490,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
+        /// <summary>
+        /// Needs a darn comment!
+        /// </summary>
+        /// <param name="dueDate"></param>
         private void CheckoutDatabaseUpdate(DateTime dueDate)
         {
             string userID = selectedUser.userID.ToString();
@@ -503,6 +506,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             command.CommandText = $"UPDATE accounts SET [numberOfCheckedoutItems] = {checkedOut} WHERE userID = '{userID}'";
             command.ExecuteNonQuery();
             c.Close();
+
             LoadDataGrid("SELECT * FROM accounts", true);
             LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
             "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
@@ -607,13 +611,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
                             $"WHERE [userID] = '{selectedItem.currentlyCheckedOutBy}'";
                         command.ExecuteNonQuery();
-                        c.Close();
+                        c.Close(); // Needs to close before LoadDataGrid on account of reopening in CheckoutDatabaseUpdate
 
-                        LoadDataGrid("SELECT * FROM accounts", true);
+                      LoadDataGrid("SELECT * FROM accounts", true);
                         LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
                                 "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
                                 "FROM [items] ORDER BY [ISXX], [copyID]", false);
                     }
+                    c.Close(); // Close in case if statement is false 
                 }
                 else
                 {
