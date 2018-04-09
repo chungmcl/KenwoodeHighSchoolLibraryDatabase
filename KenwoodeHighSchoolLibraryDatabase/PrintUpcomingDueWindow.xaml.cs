@@ -34,6 +34,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             pageNumber = 1;
             pageMax = 1;
             buttonPreviousPage.IsEnabled = false;
+            buttonNextPage.IsEnabled = false;
             LoadItemsToDisplay();
             LoadDataGrid(pageNumber);
             labelPageNumber.Content = pageNumber;
@@ -111,7 +112,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             reader.Close();
 
-            this.pageMax = (int)Math.Ceiling(((double)itemsDueThisWeek.Count) / 37); ;
+            this.pageMax = (int)Math.Ceiling(((double)itemsDueThisWeek.Count) / 37);
+
+            if (this.pageMax > 1)
+            {
+                buttonNextPage.IsEnabled = true;
+            }
         }
 
         /// <summary>

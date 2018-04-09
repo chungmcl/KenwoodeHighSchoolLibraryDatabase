@@ -35,6 +35,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             LoadAccountsWithFines();
             LoadDataGrid(1);
             buttonPreviousPage.IsEnabled = false;
+            buttonNextPage.IsEnabled = false;
             labelPageNumber.Content = pageNumber;
         }
 
@@ -75,6 +76,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 accountsWithFines.Add(awf);
             }
             this.pageMax = (int)Math.Ceiling(((double)accountsWithFines.Count) / 37);
+
+            if (this.pageMax > 1)
+            {
+                buttonNextPage.IsEnabled = true;
+            }
         }
 
         /// <summary>
