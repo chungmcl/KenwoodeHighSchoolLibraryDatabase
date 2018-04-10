@@ -129,11 +129,26 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                     newItem.authorName = authorName;
                 }
-                else
+                else // this isn't working yet
                 {
                     newItem.authorName = "";
                 }
-                newItem.currentlyCheckedOutBy = reader["currentlyCheckedOutBy"].ToString();
+                string currentlyCheckedOutBy = reader["currentlyCheckedOutBy"].ToString();
+                reader.Close();
+                command.CommandText = $"SELECT [firstName], [lastName] FROM [accounts] WHERE [userID] = '{currentlyCheckedOutBy}'";
+                reader = command.ExecuteReader();
+                reader.Read();
+                try // more efficient way to deal with this issue? (If an item isn't registered to anyone yet)
+                {
+                    string firstName = reader["firstName"].ToString();
+                    string lastName = reader["lastName"].ToString();
+                    newItem.currentlyCheckedOutBy = currentlyCheckedOutBy + $"({lastName}, {firstName})";
+                }
+                catch
+                {
+                    newItem.currentlyCheckedOutBy = currentlyCheckedOutBy;
+                }
+
                 dataGridItems.Items.Add(newItem);
             }
         }
