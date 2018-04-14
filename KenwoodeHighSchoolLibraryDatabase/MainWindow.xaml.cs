@@ -31,6 +31,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         Item selectedItem;
         bool userSelected;
         bool itemSelected;
+        List<Item> itemsToAdd = new List<Item>();
         public MainWindow()
         {
             InitializeComponent();
@@ -108,7 +109,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        List<Item> itemsToAdd = new List<Item>();
         /// <summary>
         /// Load every called entry from the items table within the database.
         /// </summary>
@@ -151,11 +151,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     string lastName = reader["lastName"].ToString();
                     this.itemsToAdd[i].currentlyCheckedOutBy = currentlyCheckedOutBy + $"({lastName}, {firstName})";
                 }
-                catch
+                catch // specify catch?
                 {
                     this.itemsToAdd[i].currentlyCheckedOutBy = currentlyCheckedOutBy;
                 }
+                this.dataGridItems.Items.Add(itemsToAdd[i]);
             }
+            itemsToAdd.Clear();
         }
         #endregion
 
