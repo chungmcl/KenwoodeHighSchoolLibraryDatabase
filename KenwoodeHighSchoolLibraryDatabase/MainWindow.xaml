@@ -84,7 +84,7 @@
                 </ComboBox>
                 <Button x:Name="buttonEditItem" Content="Edit/View Selected Item" HorizontalAlignment="Left" Margin="121,266,0,0" VerticalAlignment="Top" Width="132" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonEditItem_Click" />
                 <Button x:Name="buttonDeleteSelectedItem" Content="Delete Selected Item" HorizontalAlignment="Left" Margin="258,266,0,0" VerticalAlignment="Top" Width="121" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonDeleteSelectedItem_Click" />
-                <CheckBox x:Name="checkBoxShowUser" Content="Show User Lent To" HorizontalAlignment="Left" Margin="742,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,0.506"/>
+                <CheckBox x:Name="checkBoxShowUser" Content="Show User Lent To" HorizontalAlignment="Left" Margin="742,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,0.506" Checked="checkBoxShowUser_Checked" Unchecked="checkBoxShowUser_Unchecked"/>
             </Grid>
         </GroupBox>
         <Button x:Name="buttonReturnSelectedItem" Content="Return Selected Item" HorizontalAlignment="Left" Margin="935,538,0,0" VerticalAlignment="Top" Width="150" Click="buttonReturnSelectedItem_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>

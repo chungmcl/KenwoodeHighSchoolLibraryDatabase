@@ -236,8 +236,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
             if (textBoxUserIDRegister.Text == "")
             {
-                
+
                 return "A User ID is required. (School/Employee ID)";
+            }
+            else if (textBoxUserIDRegister.Text.Contains('~')) // check for bugs
+            {
+                return "A User ID cannot contain the '~' chracter";
             }
             else
             {

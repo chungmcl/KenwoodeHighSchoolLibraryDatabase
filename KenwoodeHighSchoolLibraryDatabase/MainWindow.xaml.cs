@@ -125,7 +125,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newItem.title = reader["title"].ToString();
                 string authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
                     $"{reader["authorMiddleName"].ToString()}";
-                if (authorName.Length > 1)
+                if (authorName.Length > 3)
                 {
 
                     newItem.authorName = authorName;
@@ -149,7 +149,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 {
                     string firstName = reader["firstName"].ToString();
                     string lastName = reader["lastName"].ToString();
-                    this.itemsToAdd[i].currentlyCheckedOutBy = currentlyCheckedOutBy + $"({lastName}, {firstName})";
+                    this.itemsToAdd[i].currentlyCheckedOutBy = currentlyCheckedOutBy + $"~({lastName}, {firstName})";
+                    // '~' character to be used as check character when program needs to read currentlyCheckedOutBy (ID only)
+                    // Prevent operator from registering userID with '~'
                 }
                 catch // specify catch?
                 {
@@ -744,6 +746,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
+        #region CheckBoxes
         private void checkBoxShowItems_Checked(object sender, RoutedEventArgs e)
         {
             if (this.userSelected)
@@ -768,7 +771,30 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.textBoxItemsSearchBy.Text = "";
             }
         }
+
+        private void checkBoxShowUser_Checked(object sender, RoutedEventArgs e)
+        {
+            if (this.itemSelected)
+            {
+                this.checkBoxShowItems.IsEnabled = false;
+                this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
+                string selectedItemUserID = this.selectedItem.currentlyCheckedOutBy.Trim('~'); // Why is this not working?
+                this.textBoxAccountsSearchBy.Text = selectedItemUserID;
+                // Use a 'check' character and restrict registration of userID with that character
+            }
+        }
+
+        private void checkBoxShowUser_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (this.itemSelected)
+            {
+                this.checkBoxShowUser.IsEnabled = true;
+                this.comboBoxAccountsSearchByOptions.SelectedIndex = -1;
+                this.textBoxAccountsSearchBy.Text = "";
+            }
+        }
     }
+    #endregion
 
     /// <summary>
     /// User to be displayed within the accounts dataGrid.
