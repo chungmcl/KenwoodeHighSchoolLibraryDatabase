@@ -826,8 +826,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.textBoxAccountsSearchBy.Text = "";
             }
         }
+        #endregion
     }
-    #endregion
 
     /// <summary>
     /// User to be displayed within the accounts dataGrid.
