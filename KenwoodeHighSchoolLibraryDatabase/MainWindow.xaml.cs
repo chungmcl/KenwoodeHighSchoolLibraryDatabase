@@ -407,7 +407,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 }
             }
         }
-        
+
         /// <summary>
         /// Delete hint text when user enters query textBox.
         /// </summary>
@@ -650,8 +650,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     if (MessageBox.Show($"Confirm Return of '{this.selectedItem.title}' - \n" +
                         $"Lent to {this.selectedItem.currentlyCheckedOutBy}\n" +
                         $"Overdue by {overdueBy} days.\n" +
-                        $"Fines owed for this item = USD ${totalFinesForItem}", 
-                        "Confirm Return", 
+                        $"Fines owed for this item = USD ${totalFinesForItem}",
+                        "Confirm Return",
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         this.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{this.selectedItem.itemID}'";
@@ -665,7 +665,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         this.command.ExecuteNonQuery();
                         this.c.Close(); // Needs to close before LoadDataGrid on account of reopening in CheckoutDatabaseUpdate
 
-                      LoadDataGrid("SELECT * FROM accounts", true);
+                        LoadDataGrid("SELECT * FROM accounts", true);
                         LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
                                 "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
                                 "FROM [items] ORDER BY [ISXX], [copyID]", false);
@@ -695,7 +695,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void  buttonDeleteSelectedItem_Click(object sender, RoutedEventArgs e)
+        private void buttonDeleteSelectedItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.itemSelected)
             {
