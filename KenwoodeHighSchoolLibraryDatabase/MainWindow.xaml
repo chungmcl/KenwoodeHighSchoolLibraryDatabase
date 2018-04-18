@@ -5,28 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="Kenwoode HS Library Database" Height="770.2" Width="1368.5" ResizeMode="CanMinimize">
-    <Grid x:Name="GridMain" Background="White" Margin="0,0,3.2,0.8">
-        <Image Margin="553,10,490.2,667" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="316"/>
-        
-        <Label x:Name="labelSelectedItem" Content="(Select an Item)" 
-               HorizontalAlignment="Left" Margin="85,42,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontStyle="Italic"/>
-        
-        <Label x:Name="labelSelectedUser" Content="(Select a User)" 
-               HorizontalAlignment="Left" Margin="85,10,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontStyle="Italic"/>
-        
-        <Label x:Name="labelDesSelectedUser" Content="Selected User: " 
-               HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontWeight="Bold"/>
-        
-        <Label x:Name="labelDesSelectedItem" Content="Selected Item:" 
-               HorizontalAlignment="Left" Margin="0,42,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontWeight="Bold"/>
-        
+        Title="Kenwoode HS Library Database" Height="805" Width="1456.1" ResizeMode="CanMinimize">
+    <Grid x:Name="GridMain" Background="White" Margin="0,0,3.4,0.8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Image Margin="498,27,607.4,683.4" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="341"/>
+
         <GroupBox x:Name="groupBoxCheckout" Header="Checkout" 
-                  HorizontalAlignment="Left" Height="153" Margin="930,380,0,0" VerticalAlignment="Top" Width="323" 
+                  HorizontalAlignment="Left" Height="153" Margin="935,418,0,0" VerticalAlignment="Top" Width="323" 
                   FontFamily="Sylfaen">
             <Grid x:Name="gridCheckout" HorizontalAlignment="Left" Height="124" Margin="4,0,-3.4,0" VerticalAlignment="Top" Width="309">
                 <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" 
@@ -44,9 +31,9 @@
                        FontWeight="Bold" FontFamily="Sylfaen"/>
             </Grid>
         </GroupBox>
-        
+
         <GroupBox x:Name="groupBoxAccounts" Header="Accounts" 
-                  HorizontalAlignment="Left" Height="302" Margin="10,73,0,0" VerticalAlignment="Top" Width="920" 
+                  HorizontalAlignment="Left" Height="302" Margin="10,111,0,0" VerticalAlignment="Top" Width="920" 
                   FontFamily="Sylfaen">
             <Grid x:Name="gridAccounts" 
                   HorizontalAlignment="Left" Height="282" Margin="0,0,-1.8,-2" VerticalAlignment="Top" Width="909">
@@ -96,7 +83,7 @@
                           Checked="checkBoxShowItems_Checked" Unchecked="checkBoxShowItems_Unchecked"/>
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="groupBoxItems" Header="Items" HorizontalAlignment="Left" Height="321" Margin="10,380,0,0" VerticalAlignment="Top" Width="920" FontFamily="Sylfaen">
+        <GroupBox x:Name="groupBoxItems" Header="Items" HorizontalAlignment="Left" Height="321" Margin="10,418,0,0" VerticalAlignment="Top" Width="920" FontFamily="Sylfaen">
             <Grid HorizontalAlignment="Left" Height="293" Margin="0,10,-2,-4.6" VerticalAlignment="Top" Width="910">
                 <DataGrid x:Name="dataGridItems" 
                   HorizontalAlignment="Left" Height="220" Margin="10,41,0,0" VerticalAlignment="Top" Width="880" 
@@ -146,11 +133,11 @@
             </Grid>
         </GroupBox>
         <Button x:Name="buttonReturnSelectedItem" Content="Return Selected Item" 
-                HorizontalAlignment="Left" Margin="935,538,0,0" VerticalAlignment="Top" Width="150" 
+                HorizontalAlignment="Left" Margin="935,576,0,0" VerticalAlignment="Top" Width="150" 
                 Click="buttonReturnSelectedItem_Click" Height="20"  
-                Background="#FFD33E3E" FontFamily="Sylfaen"/>
+                Background="#FFD33E3E" FontFamily="Sylfaen" RenderTransformOrigin="0.442,-1.83"/>
         <GroupBox x:Name="groupBoxPrint" Header="Print" 
-                  HorizontalAlignment="Left" Height="115" Margin="935,73,0,0" VerticalAlignment="Top" Width="268" 
+                  HorizontalAlignment="Left" Height="115" Margin="932,111,0,0" VerticalAlignment="Top" Width="268" 
                   FontFamily="Sylfaen">
             <Grid x:Name="gridPrint" 
                   HorizontalAlignment="Left" Height="89" Margin="10,0,0,0" VerticalAlignment="Top" Width="235">
@@ -164,5 +151,24 @@
                         FontFamily="Sylfaen" Background="#FFD33E3E"/>
             </Grid>
         </GroupBox>
+        <Menu Margin="0,0,0.4,747.4">
+            <MenuItem x:Name="menuItemFile" Header="_File">
+                <MenuItem Header="_Backup" />
+            </MenuItem>
+        </Menu>
+        <Grid x:Name="gridSelectedUserAndItem" HorizontalAlignment="Left" Height="64" Margin="10,47,0,0" VerticalAlignment="Top" Width="197">
+            <Label x:Name="labelDesSelectedUser" Content="Selected User: " 
+               HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" 
+               FontFamily="Sylfaen" FontWeight="Bold"/>
+            <Label x:Name="labelSelectedUser" Content="(Select a User)" 
+               HorizontalAlignment="Left" Margin="101,10,0,0" VerticalAlignment="Top" 
+               FontFamily="Sylfaen" FontStyle="Italic"/>
+            <Label x:Name="labelDesSelectedItem" Content="Selected Item:" 
+               HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" 
+               FontFamily="Sylfaen" FontWeight="Bold"/>
+            <Label x:Name="labelSelectedItem" Content="(Select an Item)" 
+               HorizontalAlignment="Left" Margin="101,32,0,0" VerticalAlignment="Top" 
+               FontFamily="Sylfaen" FontStyle="Italic"/>
+        </Grid>
     </Grid>
 </Window>
