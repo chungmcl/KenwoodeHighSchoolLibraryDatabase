@@ -52,7 +52,11 @@
                 <Label x:Name="labelSearchUser" Content="Search for user by: " HorizontalAlignment="Left" Margin="11,7,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" FontFamily="Sylfaen"/>
                 <TextBox x:Name="textBoxAccountsSearchBy" HorizontalAlignment="Left" Height="23" Margin="246,9,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontFamily="Sylfaen" TextChanged="textBoxAccountsSearchBy_TextChanged" GotFocus="textBoxAccountsSearchBy_GotFocus"/>
                 <Button x:Name="BtnToUserEditWindow" Content="Edit/View Selected User" HorizontalAlignment="Left" Width="145" Margin="121,214,0,0" Click="BtnToUserEditWindow_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Grid.Row="1" Height="20" VerticalAlignment="Top"/>
-                <CheckBox x:Name="checkBoxShowItems" Content="Show Checked Out Items" HorizontalAlignment="Left" Margin="742,13,0,0" VerticalAlignment="Top" Checked="checkBoxShowItems_Checked" Unchecked="checkBoxShowItems_Unchecked"/>
+                <CheckBox x:Name="checkBoxShowItems" 
+                          Content="Show Checked Out Items" 
+                          HorizontalAlignment="Left" Margin="742,13,0,0" VerticalAlignment="Top"
+                          Checked="checkBoxShowItems_Checked"
+                          Unchecked="checkBoxShowItems_Unchecked"/>
             </Grid>
         </GroupBox>
         <GroupBox x:Name="groupBoxItems" Header="Items" HorizontalAlignment="Left" Height="321" Margin="10,380,0,0" VerticalAlignment="Top" Width="920" FontFamily="Sylfaen">
@@ -84,7 +88,11 @@
                 </ComboBox>
                 <Button x:Name="buttonEditItem" Content="Edit/View Selected Item" HorizontalAlignment="Left" Margin="121,266,0,0" VerticalAlignment="Top" Width="132" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonEditItem_Click" />
                 <Button x:Name="buttonDeleteSelectedItem" Content="Delete Selected Item" HorizontalAlignment="Left" Margin="258,266,0,0" VerticalAlignment="Top" Width="121" Height="20" Background="#FFD33E3E" FontFamily="Sylfaen" Click="buttonDeleteSelectedItem_Click" />
-                <CheckBox x:Name="checkBoxShowUser" Content="Show User Lent To" HorizontalAlignment="Left" Margin="742,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,0.506" Checked="checkBoxShowUser_Checked" Unchecked="checkBoxShowUser_Unchecked"/>
+                <CheckBox x:Name="checkBoxShowUser" 
+                          Content="Show User Lent To" 
+                          HorizontalAlignment="Left" Margin="742,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,0.506"
+                          Checked="checkBoxShowUser_Checked"
+                          Unchecked="checkBoxShowUser_Unchecked"/>
             </Grid>
         </GroupBox>
         <Button x:Name="buttonReturnSelectedItem" Content="Return Selected Item" HorizontalAlignment="Left" Margin="935,538,0,0" VerticalAlignment="Top" Width="150" Click="buttonReturnSelectedItem_Click" Height="20"  Background="#FFD33E3E" FontFamily="Sylfaen"/>

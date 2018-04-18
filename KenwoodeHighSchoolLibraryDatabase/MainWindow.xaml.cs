@@ -42,7 +42,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
 
-
         /// <summary>
         /// Connect to Microsoft Access Database.
         /// Initialize objects for reading data from the database.
@@ -130,7 +129,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                     newItem.authorName = authorName;
                 }
-                else // this isn't working yet
+                else // it should work now - double check for bugs
                 {
                     newItem.authorName = "";
                 }
@@ -228,10 +227,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.labelCheckoutSelectedUser.Content = selectedUserInfo;
                 this.labelSelectedUser.Content = selectedUserInfo;
                 this.userSelected = true;
+
+                if (checkBoxShowItems.IsChecked == true) // had to compare to true; .IsChecked is type bool? (nullable)
+                {
+                    this.checkBoxShowUser.IsEnabled = false;
+                    this.comboBoxItemsSearchByOptions.SelectedIndex = 5;
+                    this.textBoxItemsSearchBy.Text = this.selectedUser.userID;
+                }
             }
-            catch
+            catch // specify catch?
             {
                 MessageBox.Show("Please double-click a row to select a user.");
+                this.checkBoxShowItems.IsChecked = false;
             }
         }
 
@@ -251,12 +258,27 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.labelCheckoutSelectedItemTitle.Content = selectedItemInfo;
                 this.labelSelectedItem.Content = selectedItemInfo;
                 this.itemSelected = true;
+
+                if (checkBoxShowUser.IsChecked == true)
+                {
+                    this.checkBoxShowItems.IsEnabled = false;
+                    this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
+                    string selectedItemUserID = this.selectedItem.currentlyCheckedOutBy;
+                    if (selectedItemUserID.Length > 0)
+                    {
+                        selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf('~'));
+                        this.textBoxAccountsSearchBy.Text = selectedItemUserID;
+                    }
+                }
             }
             catch
             {
                 MessageBox.Show("Please double-click a row to select an item.");
+                this.checkBoxShowUser.IsChecked = false;
             }
         }
+
+
         #endregion
 
         #region DataGrid Queries
@@ -268,11 +290,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void comboBoxAccountsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string setTextBoxTo = this.comboBoxAccountsSearchByOptions.SelectedValue.ToString().Substring(37);
-            if (setTextBoxTo.Count() > 0)
+            if (this.comboBoxAccountsSearchByOptions.SelectedIndex != -1)
             {
-                this.textBoxAccountsSearchBy.Text = $"Enter a {setTextBoxTo}...";
-                LoadDataGrid("SELECT * FROM accounts", true);
+                string setTextBoxTo = this.comboBoxAccountsSearchByOptions.SelectedValue.ToString().Substring(37);
+                if (setTextBoxTo.Count() > 0)
+                {
+                    this.textBoxAccountsSearchBy.Text = $"Enter a {setTextBoxTo}...";
+                    LoadDataGrid("SELECT * FROM accounts", true);
+                }
             }
         }
 
@@ -290,12 +315,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 if (setTextBoxTo.Count() > 0)
                 {
                     this.textBoxItemsSearchBy.Text = $"Enter a(n) {setTextBoxTo}...";
-                    LoadDataGrid("SELECT * FROM items", false);
+                    LoadDataGrid("SELECT * FROM items", false); // Factor out?
                 }
                 if (setTextBoxTo == "Lent To")
                 {
                     this.textBoxItemsSearchBy.Text = $"Enter who {setTextBoxTo}...";
-                    LoadDataGrid("SELECT * FROM items", false);
+                    LoadDataGrid("SELECT * FROM items", false); // Factor out?
                 }
             }
         }
@@ -747,7 +772,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region CheckBoxes
-        private void checkBoxShowItems_Checked(object sender, RoutedEventArgs e)
+        private void checkBoxShowItems_Checked(object sender, RoutedEventArgs e) // Can I factor out code? (Look in select user/items)
         {
             if (this.userSelected)
             {
@@ -772,15 +797,23 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void checkBoxShowUser_Checked(object sender, RoutedEventArgs e)
+        private void checkBoxShowUser_Checked(object sender, RoutedEventArgs e) // Can I factor out code? (Look in select user/items)
         {
             if (this.itemSelected)
             {
                 this.checkBoxShowItems.IsEnabled = false;
                 this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
-                string selectedItemUserID = this.selectedItem.currentlyCheckedOutBy.Trim('~'); // Why is this not working?
-                this.textBoxAccountsSearchBy.Text = selectedItemUserID;
-                // Use a 'check' character and restrict registration of userID with that character
+                string selectedItemUserID = this.selectedItem.currentlyCheckedOutBy;
+                if (selectedItemUserID.Length > 0)
+                {
+                    selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf('~'));
+                    this.textBoxAccountsSearchBy.Text = selectedItemUserID;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please double click to select an item."); // double check text format - does it follow the rest of the program?
+                this.checkBoxShowUser.IsChecked = false;
             }
         }
 
@@ -788,7 +821,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (this.itemSelected)
             {
-                this.checkBoxShowUser.IsEnabled = true;
+                this.checkBoxShowItems.IsEnabled = true;
                 this.comboBoxAccountsSearchByOptions.SelectedIndex = -1;
                 this.textBoxAccountsSearchBy.Text = "";
             }
