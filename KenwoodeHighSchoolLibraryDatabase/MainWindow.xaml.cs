@@ -1,21 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Data.OleDb;
-using System.Data;
-using System.Drawing;
-using System.Printing;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -156,9 +145,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 {
                     this.itemsToAdd[i].currentlyCheckedOutBy = currentlyCheckedOutBy;
                 }
-                this.dataGridItems.Items.Add(itemsToAdd[i]);
+                this.dataGridItems.Items.Add(this.itemsToAdd[i]);
             }
-            itemsToAdd.Clear();
+            this.itemsToAdd.Clear();
         }
         #endregion
 
@@ -228,7 +217,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.labelSelectedUser.Content = selectedUserInfo;
                 this.userSelected = true;
 
-                if (checkBoxShowItems.IsChecked == true) // had to compare to true; .IsChecked is type bool? (nullable)
+                if (this.checkBoxShowItems.IsChecked == true) // had to compare to true; .IsChecked is type bool? (nullable)
                 {
                     this.checkBoxShowUser.IsEnabled = false;
                     this.comboBoxItemsSearchByOptions.SelectedIndex = 5;
@@ -259,7 +248,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.labelSelectedItem.Content = selectedItemInfo;
                 this.itemSelected = true;
 
-                if (checkBoxShowUser.IsChecked == true)
+                if (this.checkBoxShowUser.IsChecked == true)
                 {
                     this.checkBoxShowItems.IsEnabled = false;
                     this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;

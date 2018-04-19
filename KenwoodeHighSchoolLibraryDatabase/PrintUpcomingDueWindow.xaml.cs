@@ -1,16 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Data.OleDb;
 
 namespace KenwoodeHighSchoolLibraryDatabase
@@ -30,14 +21,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             InitializeComponent();
             InitializeDatabaseConnection();
-            itemsDueThisWeek = new List<ItemDueThisWeek>();
-            pageNumber = 1;
-            pageMax = 1;
-            buttonPreviousPage.IsEnabled = false;
-            buttonNextPage.IsEnabled = false;
+            this.itemsDueThisWeek = new List<ItemDueThisWeek>();
+            this.pageNumber = 1;
+            this.pageMax = 1;
+            this.buttonPreviousPage.IsEnabled = false;
+            this.buttonNextPage.IsEnabled = false;
             LoadItemsToDisplay();
-            LoadDataGrid(pageNumber);
-            labelPageNumber.Content = pageNumber;
+            LoadDataGrid(this.pageNumber);
+            this.labelPageNumber.Content = this.pageNumber;
         }
 
         /// <summary>
@@ -60,13 +51,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         private void LoadItemsToDisplay()
         {
-            c.Open();
+            this.c.Open();
             DateTime aWeekFromToday = DateTime.Today.AddDays(7).AddHours(23.99999);
-            command.CommandText = $"SELECT * FROM items";
-            reader = command.ExecuteReader();
-            while (reader.Read())
+            this.command.CommandText = $"SELECT * FROM items";
+            this.reader = this.command.ExecuteReader();
+            while (this.reader.Read())
             {
-                string stringDueDate = reader["dueDate"].ToString();
+                string stringDueDate = this.reader["dueDate"].ToString();
                 DateTime dueDate;
                 try
                 {
@@ -81,28 +72,28 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     && dueDate >= DateTime.Now)
                 {
                     ItemDueThisWeek item = new ItemDueThisWeek();
-                    item.itemID = reader["itemID"].ToString();
-                    item.lentTo = reader["currentlyCheckedOutBy"].ToString();
-                    item.title = reader["title"].ToString();
+                    item.itemID = this.reader["itemID"].ToString();
+                    item.lentTo = this.reader["currentlyCheckedOutBy"].ToString();
+                    item.title = this.reader["title"].ToString();
                     item.dueDate = stringDueDate.Substring(0, 8);
                     item.daysUntilDueDate = ((dueDate.Date - DateTime.Today)).TotalDays;
-                    itemsDueThisWeek.Add(item);
+                    this.itemsDueThisWeek.Add(item);
                 }
             }
 
-            for (int i = 0; i < itemsDueThisWeek.Count; i++)
+            for (int i = 0; i < this.itemsDueThisWeek.Count; i++)
             {
-                reader.Close();
-                string userID = itemsDueThisWeek[i].lentTo;
-                command.CommandText = "SELECT [firstName], [lastName] FROM accounts " +
+                this.reader.Close();
+                string userID = this.itemsDueThisWeek[i].lentTo;
+                this.command.CommandText = "SELECT [firstName], [lastName] FROM accounts " +
                     $"WHERE [userID] = '{userID}'";
-                reader = command.ExecuteReader();
-                reader.Read();
+                this.reader = this.command.ExecuteReader();
+                this.reader.Read();
                 string name;
                 try
                 {
 
-                    name = $" ({reader[1].ToString()}, {reader[0].ToString()})";
+                    name = $" ({this.reader[1].ToString()}, {this.reader[0].ToString()})";
                 }
                 catch
                 {
@@ -110,13 +101,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 }
                 this.itemsDueThisWeek[i].lentTo = userID + name;
             }
-            reader.Close();
+            this.reader.Close();
 
-            this.pageMax = (int)Math.Ceiling(((double)itemsDueThisWeek.Count) / 37);
+            this.pageMax = (int)Math.Ceiling(((double)this.itemsDueThisWeek.Count) / 37);
 
             if (this.pageMax > 1)
             {
-                buttonNextPage.IsEnabled = true;
+                this.buttonNextPage.IsEnabled = true;
             }
         }
 
@@ -127,17 +118,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="pageNumber">The page to load.</param>
         private void LoadDataGrid(int pageNumber)
         {
-            dataGridIssuedBooks.Items.Clear();
-            if (itemsDueThisWeek.Count > 0)
+            this.dataGridIssuedBooks.Items.Clear();
+            if (this.itemsDueThisWeek.Count > 0)
             {
                 int startIndex = 0;
                 if (pageNumber != 1)
                 {
                     startIndex = ((pageNumber * 37) - 37);
                 }
-                for (int i = startIndex; i < itemsDueThisWeek.Count && i < (pageNumber * 37); i++)
+                for (int i = startIndex; i < this.itemsDueThisWeek.Count && i < (pageNumber * 37); i++)
                 {
-                    dataGridIssuedBooks.Items.Add(itemsDueThisWeek[i]);
+                    this.dataGridIssuedBooks.Items.Add(this.itemsDueThisWeek[i]);
                 }
             }
         }
@@ -150,14 +141,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void buttonNextPage_Click(object sender, RoutedEventArgs e)
         {
-            buttonPreviousPage.IsEnabled = true;
-            pageNumber++;
-            LoadDataGrid(pageNumber);
-            if (pageNumber >= pageMax)
+            this.buttonPreviousPage.IsEnabled = true;
+            this.pageNumber++;
+            LoadDataGrid(this.pageNumber);
+            if (this.pageNumber >= this.pageMax)
             {
-                buttonNextPage.IsEnabled = false;
+                this.buttonNextPage.IsEnabled = false;
             }
-            labelPageNumber.Content = pageNumber;
+            this.labelPageNumber.Content = this.pageNumber;
         }
 
         /// <summary>
@@ -168,14 +159,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void buttonPreviousPage_Click(object sender, RoutedEventArgs e)
         {
-            buttonNextPage.IsEnabled = true;
-            pageNumber--;
-            LoadDataGrid(pageNumber);
-            if (pageNumber == 1)
+            this.buttonNextPage.IsEnabled = true;
+            this.pageNumber--;
+            LoadDataGrid(this.pageNumber);
+            if (this.pageNumber == 1)
             {
-                buttonPreviousPage.IsEnabled = false;
+                this.buttonPreviousPage.IsEnabled = false;
             }
-            labelPageNumber.Content = pageNumber;
+            this.labelPageNumber.Content = this.pageNumber;
         }
 
         /// <summary>
@@ -186,7 +177,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void buttonPrintThisPage_Click(object sender, RoutedEventArgs e)
         {
             PrintDialog printDlg = new PrintDialog();
-            printDlg.PrintVisual(dataGridIssuedBooks, "Upcoming Due Dates");
+            printDlg.PrintVisual(this.dataGridIssuedBooks, "Upcoming Due Dates");
             printDlg.ShowDialog();
         }
 

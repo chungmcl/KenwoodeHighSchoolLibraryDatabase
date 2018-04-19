@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Collections.Generic;
 using System.Data.OleDb;
+using System.Linq;
+using System.Windows;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -36,10 +26,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             InitializeComponent();
             InitializeDatabaseConnection();
-            comboBoxUserTypeRegister.Items.Add("Student");
-            comboBoxUserTypeRegister.Items.Add("Teacher");
+            this.comboBoxUserTypeRegister.Items.Add("Student");
+            this.comboBoxUserTypeRegister.Items.Add("Teacher");
             LoadUserIDs();
-            toRegister = true;
+            this.toRegister = true;
         }
 
         User toEditUser;
@@ -52,31 +42,31 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             InitializeComponent();
             InitializeDatabaseConnection();
-            toRegister = false;
-            labelTitle.Content = "Edit Account";
-            buttonRegister.Content = "Save Changes";
+            this.toRegister = false;
+            this.labelTitle.Content = "Edit Account";
+            this.buttonRegister.Content = "Save Changes";
             this.toEditUser = user;
 
-            c.Open();
-            command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = '{user.userID}'";
-            reader = command.ExecuteReader();
-            reader.Read();
-            this.toEditUserFinePerDay = double.Parse(reader[0].ToString());
-            c.Close();
-            
-            comboBoxUserTypeRegister.Items.Add("Student");
-            comboBoxUserTypeRegister.Items.Add("Teacher");
+            this.c.Open();
+            this.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = '{user.userID}'";
+            this.reader = this.command.ExecuteReader();
+            this.reader.Read();
+            this.toEditUserFinePerDay = double.Parse(this.reader[0].ToString());
+            this.c.Close();
 
-            comboBoxUserTypeRegister.Items.Add("Student");
-            comboBoxUserTypeRegister.Items.Add("Teacher");
+            this.comboBoxUserTypeRegister.Items.Add("Student");
+            this.comboBoxUserTypeRegister.Items.Add("Teacher");
 
-            textBoxFirstNameRegister.Text = toEditUser.firstName;
-            textBoxSurnameRegister.Text = toEditUser.lastName;
-            textBoxUserIDRegister.Text = toEditUser.userID;
-            comboBoxUserTypeRegister.SelectedValue = toEditUser.userType;
-            textBoxItemLimit.Text = toEditUser.itemLimit;
-            textBoxDateLimit.Text = toEditUser.dateLimit;
-            textBoxFinePerDay.Text = this.toEditUserFinePerDay.ToString();
+            this.comboBoxUserTypeRegister.Items.Add("Student");
+            this.comboBoxUserTypeRegister.Items.Add("Teacher");
+
+            this.textBoxFirstNameRegister.Text = this.toEditUser.firstName;
+            this.textBoxSurnameRegister.Text = this.toEditUser.lastName;
+            this.textBoxUserIDRegister.Text = this.toEditUser.userID;
+            this.comboBoxUserTypeRegister.SelectedValue = this.toEditUser.userType;
+            this.textBoxItemLimit.Text = this.toEditUser.itemLimit;
+            this.textBoxDateLimit.Text = this.toEditUser.dateLimit;
+            this.textBoxFinePerDay.Text = this.toEditUserFinePerDay.ToString();
         }
 
         /// <summary>
@@ -85,11 +75,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         private void InitializeDatabaseConnection()
         {
-            c = new OleDbConnection();
-            c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
+            this.c = new OleDbConnection();
+            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
                 "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            command = new OleDbCommand();
-            command.Connection = c;
+            this.command = new OleDbCommand();
+            this.command.Connection = this.c;
             this.reader = null;
         }
 
@@ -101,25 +91,25 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void LoadUserIDs()
         {
             List<string[]> userIDs = new List<string[]>();
-            c.Open();
-            command.CommandText = "SELECT [userID], [firstName], [lastName] FROM accounts";
-            command.CommandType = System.Data.CommandType.Text;
-            reader = command.ExecuteReader();
-            while (reader.Read())
+            this.c.Open();
+            this.command.CommandText = "SELECT [userID], [firstName], [lastName] FROM accounts";
+            this.command.CommandType = System.Data.CommandType.Text;
+            this.reader = this.command.ExecuteReader();
+            while (this.reader.Read())
             {
                 // Had to set to string and then add to array because
                 // the reader.Read returns a reference type variable
                 string[] userIDAndName = new string[3];
-                string userID = (string)reader[0];
-                string firstName = (string)reader[1];
-                string lastName = (string)reader[2];
+                string userID = (string)this.reader[0];
+                string firstName = (string)this.reader[1];
+                string lastName = (string)this.reader[2];
                 userIDAndName[0] = userID;
                 userIDAndName[1] = firstName;
                 userIDAndName[2] = lastName;
                 userIDs.Add(userIDAndName);
             }
-            reader.Close();
-            c.Close();
+            this.reader.Close();
+            this.c.Close();
             this.userIDs =  userIDs;
         }
 
@@ -133,9 +123,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// Returns -1 if searched for userID is not found</returns>
         private int ContainsUserID(string userID)
         {
-            for (int i = 0; i <= userIDs.Count - 1; i++)
+            for (int i = 0; i <= this.userIDs.Count - 1; i++)
             {
-                if (userIDs[i].Contains(userID))
+                if (this.userIDs[i].Contains(userID))
                 {
                     return i;
                 }
@@ -151,23 +141,23 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
-            if (toRegister) // Register new user
+            if (this.toRegister) // Register new user
             {
                 LoadUserIDs();
                 string errorMessage = CheckRequiredValues();
                 if (errorMessage == "")
                 {
-                    c.Open();
+                    this.c.Open();
                     this.fName = this.textBoxFirstNameRegister.Text.Trim();
                     this.lName = this.textBoxSurnameRegister.Text.Trim();
                     this.uID = this.textBoxUserIDRegister.Text.Trim();
                     this.uType = this.comboBoxUserTypeRegister.SelectedValue.ToString();
 
-                    command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [itemLimit], [dateLimit], [finePerDay]) " +
+                    this.command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [itemLimit], [dateLimit], [finePerDay]) " +
                         $"VALUES ('{this.fName}', '{this.lName}', '{this.uID}', '{this.uType}', {this.itemLimit}, {this.dateLimit}, {this.finePerDay})";
-                    command.ExecuteNonQuery();
+                    this.command.ExecuteNonQuery();
 
-                    c.Close(); // close first
+                    this.c.Close(); // close first
                     this.DialogResult = true;
                 }
                 else
@@ -182,8 +172,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 {
                     if (MessageBox.Show("Save changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        c.Open();
-                        command.CommandText = $"UPDATE accounts SET " +
+                        this.c.Open();
+                        this.command.CommandText = $"UPDATE accounts SET " +
                             $"[firstName] = '{this.textBoxFirstNameRegister.Text}', " +
                             $"[lastName] = '{this.textBoxSurnameRegister.Text}', " +
                             $"[userID] = '{this.textBoxUserIDRegister.Text}', " +
@@ -192,19 +182,19 @@ namespace KenwoodeHighSchoolLibraryDatabase
                             $"[dateLimit] = {this.textBoxDateLimit.Text}, " +
                             $"[finePerDay] = {this.finePerDay} " +
                             $"WHERE [userID] = '{this.toEditUser.userID}'";
-                        command.ExecuteNonQuery();
+                        this.command.ExecuteNonQuery();
 
-                        command.CommandText = $"UPDATE items SET " +
+                        this.command.CommandText = $"UPDATE items SET " +
                             $"[currentlyCheckedOutBy] = '{this.textBoxUserIDRegister.Text}' " +
                             $"WHERE [currentlyCheckedOutBy] = '{this.toEditUser.userID}'";
-                        command.ExecuteNonQuery();
+                        this.command.ExecuteNonQuery();
 
-                        command.CommandText = $"UPDATE items SET " +
+                        this.command.CommandText = $"UPDATE items SET " +
                             $"[previousCheckedOutBy] = '{this.textBoxUserIDRegister}' " +
                             $"WHERE [previousCheckedOutBy] = '{this.toEditUser.userID}'";
-                        command.ExecuteNonQuery();
+                        this.command.ExecuteNonQuery();
 
-                        c.Close();
+                        this.c.Close();
                         this.DialogResult = true;
                     }
                 }
@@ -224,56 +214,56 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <returns>The error message if a field is incorrect, empty string if all are correct</returns>
         public string CheckRequiredValues()
         {
-            if (textBoxFirstNameRegister.Text == "")
+            if (this.textBoxFirstNameRegister.Text == "")
             {
                 return "A first name is required.";
             }
 
-            if (textBoxSurnameRegister.Text == "")
+            if (this.textBoxSurnameRegister.Text == "")
             {
                 return "A surname is required.";
             }
 
-            if (textBoxUserIDRegister.Text == "")
+            if (this.textBoxUserIDRegister.Text == "")
             {
 
                 return "A User ID is required. (School/Employee ID)";
             }
-            else if (textBoxUserIDRegister.Text.Contains('~')) // check for bugs
+            else if (this.textBoxUserIDRegister.Text.Contains('~')) // check for bugs
             {
                 return "A User ID cannot contain the '~' chracter";
             }
             else
             {
                 LoadUserIDs();
-                int checkUserID = ContainsUserID(textBoxUserIDRegister.Text);
+                int checkUserID = ContainsUserID(this.textBoxUserIDRegister.Text);
                 if (checkUserID != -1)
                 {
-                    if (this.userIDs[checkUserID][0] != toEditUser.userID) // User may be editing
+                    if (this.userIDs[checkUserID][0] != this.toEditUser.userID) // User may be editing
                     {
-                        return $"Another student ({userIDs[checkUserID][1]} {userIDs[checkUserID][2]}) already " +
-                                    $"holds this Student/Teacher ID ({userIDs[checkUserID][0]}). Did you enter the wrong ID?";
+                        return $"Another student ({this.userIDs[checkUserID][1]} {this.userIDs[checkUserID][2]}) already " +
+                                    $"holds this Student/Teacher ID ({this.userIDs[checkUserID][0]}). Did you enter the wrong ID?";
                     }
                 }
             }
 
-            if (comboBoxUserTypeRegister.SelectedIndex == -1)
+            if (this.comboBoxUserTypeRegister.SelectedIndex == -1)
             {
                 return "A usertype must be selected.";
             }
 
-            if (textBoxItemLimit.Text == "")
+            if (this.textBoxItemLimit.Text == "")
             {
                 return "An item limit is required in integer format.";
             }
 
-            if (textBoxDateLimit.Text == "")
+            if (this.textBoxDateLimit.Text == "")
             {
                 return "A date limit is required in integer format.\n" +
                     "(Number of days a user can checkout an item.)";
             }
 
-            if (!(int.TryParse(textBoxItemLimit.Text.Trim(), out this.itemLimit)))
+            if (!(int.TryParse(this.textBoxItemLimit.Text.Trim(), out this.itemLimit)))
             {
                 return "User Item Limit must be in integer format."; // need to check for negative integers
             }
@@ -282,7 +272,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 return "User Item Limit must be a positive integer.";
             }
 
-            if (!(int.TryParse(textBoxDateLimit.Text.Trim(), out this.dateLimit)))
+            if (!(int.TryParse(this.textBoxDateLimit.Text.Trim(), out this.dateLimit)))
             {
                 return "User Date Limit must be in integer format."; // need to check for negative integers
             }
@@ -291,7 +281,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 return "User Date Limit must be a positive integer.";
             }
 
-            if (!(double.TryParse(textBoxFinePerDay.Text.Trim(), out this.finePerDay)))
+            if (!(double.TryParse(this.textBoxFinePerDay.Text.Trim(), out this.finePerDay)))
             {
                 return "User Fine Per (overdue) Day must be a number."; // need to check for negative numbers
             }

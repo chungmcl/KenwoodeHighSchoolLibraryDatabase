@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Data.OleDb;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -43,7 +35,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
             this.labelWindowTitle.Content = "Register Item";
 
-            toRegister = true;
+            this.toRegister = true;
         }
 
         
@@ -81,18 +73,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.comboBoxFormat.SelectedValue = this.toEditItem.format;
             this.textBoxCurrentlyCheckedOutBy.Text = this.toEditItem.currentlyCheckedOutBy;
             this.labelWindowTitle.Content = "View, Modify, or Checkout Item";
-            if (toEditItem.currentlyCheckedOutBy != "")
+            if (this.toEditItem.currentlyCheckedOutBy != "")
             {
                 this.datePickerDueDate.IsEnabled = true;
             }
             this.buttonRegisterItem.Content = "Save Changes - Edit Item";
             this.LoadRemainingFields();
-            if (toEditItem.currentlyCheckedOutBy != "")
+            if (this.toEditItem.currentlyCheckedOutBy != "")
             {
                 this.datePickerDueDate.IsEnabled = true;
             }
 
-            toRegister = false;
+            this.toRegister = false;
         }
 
         #region Extra Intialization
@@ -148,7 +140,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.description = this.reader["description"].ToString();
             this.textBoxDescription.Text = this.description;
             this.currentlyCheckedOutBy = this.reader["currentlyCheckedOutBy"].ToString();
-            this.textBoxCurrentlyCheckedOutBy.Text = currentlyCheckedOutBy;
+            this.textBoxCurrentlyCheckedOutBy.Text = this.currentlyCheckedOutBy;
             this.previousCheckedOutBy = this.reader["previousCheckedOutBy"].ToString();
             this.textBoxPreviousCheckedOutBy.Text = this.previousCheckedOutBy;
             string dueDateString = this.reader["dueDate"].ToString();
@@ -156,7 +148,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
 
                 this.dueDate = Convert.ToDateTime(this.reader["dueDate"].ToString());
-                this.datePickerDueDate.SelectedDate = dueDate;
+                this.datePickerDueDate.SelectedDate = this.dueDate;
             }
             this.reader.Close();
             this.c.Close();
@@ -505,7 +497,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
         {
-            if (toRegister)
+            if (this.toRegister)
             {
                 Register();
             }
@@ -582,9 +574,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void buttonCheckout_Click(object sender, RoutedEventArgs e)
         {
-            if (textBoxCurrentlyCheckedOutBy.Text != "")
+            if (this.textBoxCurrentlyCheckedOutBy.Text != "")
             {
-                textBoxCurrentlyCheckedOutBy.Text = "";
+                this.textBoxCurrentlyCheckedOutBy.Text = "";
                 this.textBoxPreviousCheckedOutBy.Text = this.currentlyCheckedOutBy;
             }
             else
@@ -676,11 +668,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 UpdateColumn("previousCheckedOutBy", this.currentlyCheckedOutBy);
                 UpdateColumn("dueDate", "");
                 this.datePickerDueDate.SelectedDate = null;
-                c.Open();
-                command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
+                this.c.Open();
+                this.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
                     $"WHERE [userID] = '{this.currentlyCheckedOutBy}'";
-                command.ExecuteNonQuery();
-                c.Close();
+                this.command.ExecuteNonQuery();
+                this.c.Close();
             }
 
             if (this.datePickerDueDate.SelectedDate != this.dueDate)

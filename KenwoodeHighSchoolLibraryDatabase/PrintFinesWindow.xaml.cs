@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.OleDb;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Data.OleDb;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -30,13 +21,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             InitializeComponent();
             InitializeDatabaseConnection();
-            accountsWithFines = new List<AccountWithFine>();
-            pageNumber = 1;
+            this.accountsWithFines = new List<AccountWithFine>();
+            this.pageNumber = 1;
             LoadAccountsWithFines();
             LoadDataGrid(1);
-            buttonPreviousPage.IsEnabled = false;
-            buttonNextPage.IsEnabled = false;
-            labelPageNumber.Content = pageNumber;
+            this.buttonPreviousPage.IsEnabled = false;
+            this.buttonNextPage.IsEnabled = false;
+            this.labelPageNumber.Content = this.pageNumber;
         }
 
         /// <summary>
@@ -59,27 +50,27 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         private void LoadAccountsWithFines()
         {
-            c.Open();
-            command.CommandText = "SELECT " +
+            this.c.Open();
+            this.command.CommandText = "SELECT " +
                 "[userID], [firstName], [lastName], [userType], [overdueItems], [fines] " +
                 "FROM accounts " +
                 "WHERE [fines] > 0";
-            reader = command.ExecuteReader();
-            while (reader.Read())
+            this.reader = this.command.ExecuteReader();
+            while (this.reader.Read())
             {
                 AccountWithFine awf = new AccountWithFine();
-                awf.userID = reader[0].ToString();
-                awf.name = $"{reader[1].ToString()}, {reader[2].ToString()}";
-                awf.userType = reader[3].ToString();
-                awf.overdue = (int)reader[4];
-                awf.fines = (double)reader[5];
-                accountsWithFines.Add(awf);
+                awf.userID = this.reader[0].ToString();
+                awf.name = $"{this.reader[1].ToString()}, {this.reader[2].ToString()}";
+                awf.userType = this.reader[3].ToString();
+                awf.overdue = (int)this.reader[4];
+                awf.fines = (double)this.reader[5];
+                this.accountsWithFines.Add(awf);
             }
-            this.pageMax = (int)Math.Ceiling(((double)accountsWithFines.Count) / 37);
+            this.pageMax = (int)Math.Ceiling(((double)this.accountsWithFines.Count) / 37);
 
             if (this.pageMax > 1)
             {
-                buttonNextPage.IsEnabled = true;
+                this.buttonNextPage.IsEnabled = true;
             }
         }
 
@@ -90,17 +81,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="pageNumber">The page to load.</param>
         private void LoadDataGrid(int pageNumber)
         {
-            dataGridFinedUsers.Items.Clear();
-            if (accountsWithFines.Count > 0)
+            this.dataGridFinedUsers.Items.Clear();
+            if (this.accountsWithFines.Count > 0)
             {
                 int startIndex = 0;
                 if (pageNumber != 1)
                 {
                     startIndex = ((pageNumber * 37) - 37);
                 }
-                for (int i = startIndex; i < accountsWithFines.Count && i < (pageNumber * 37); i++)
+                for (int i = startIndex; i < this.accountsWithFines.Count && i < (pageNumber * 37); i++)
                 {
-                    dataGridFinedUsers.Items.Add(accountsWithFines[i]);
+                    this.dataGridFinedUsers.Items.Add(this.accountsWithFines[i]);
                 }
             }
         }
@@ -113,14 +104,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void buttonNextPage_Click(object sender, RoutedEventArgs e)
         {
-            buttonPreviousPage.IsEnabled = true;
-            pageNumber++;
-            LoadDataGrid(pageNumber);
-            if (pageNumber >= pageMax)
+            this.buttonPreviousPage.IsEnabled = true;
+            this.pageNumber++;
+            LoadDataGrid(this.pageNumber);
+            if (this.pageNumber >= this.pageMax)
             {
-                buttonNextPage.IsEnabled = false;
+                this.buttonNextPage.IsEnabled = false;
             }
-            labelPageNumber.Content = pageNumber;
+            this.labelPageNumber.Content = this.pageNumber;
         }
 
         /// <summary>
@@ -131,14 +122,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void buttonPreviousPage_Click(object sender, RoutedEventArgs e)
         {
-            buttonNextPage.IsEnabled = true;
-            pageNumber--;
-            LoadDataGrid(pageNumber);
-            if (pageNumber == 1)
+            this.buttonNextPage.IsEnabled = true;
+            this.pageNumber--;
+            LoadDataGrid(this.pageNumber);
+            if (this.pageNumber == 1)
             {
-                buttonPreviousPage.IsEnabled = false;
+                this.buttonPreviousPage.IsEnabled = false;
             }
-            labelPageNumber.Content = pageNumber;
+            this.labelPageNumber.Content = this.pageNumber;
         }
 
         /// <summary>
@@ -149,7 +140,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void buttonPrintThisPage_Click(object sender, RoutedEventArgs e)
         {
             PrintDialog printDlg = new PrintDialog();
-            printDlg.PrintVisual(dataGridFinedUsers, "Fined Users");
+            printDlg.PrintVisual(this.dataGridFinedUsers, "Fined Users");
             printDlg.ShowDialog();
         }
 
