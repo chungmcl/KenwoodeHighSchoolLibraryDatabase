@@ -823,12 +823,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #region Backup
         private void Backup_Click(object sender, RoutedEventArgs e)
         {
-            string backupFilePath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseBackup.mdb";
-            if (File.Exists(backupFilePath))
-            {
-                File.Delete(backupFilePath);
-            }
-            File.Copy("LibraryDatabase.mdb", "LibraryDatabaseBackup.mdb");
+            File.Copy("LibraryDatabase.mdb", "LibraryDatabaseBackup.mdb", true);
             MessageBox.Show("Database created in program folder.\nBackup database file named 'LibraryDatabaseBackup.mdb'");
         }
 

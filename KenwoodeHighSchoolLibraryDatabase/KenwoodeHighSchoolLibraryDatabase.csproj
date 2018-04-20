@@ -143,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.png" />
+    <Content Include="Backups\text.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="LibraryDatabase.mdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
