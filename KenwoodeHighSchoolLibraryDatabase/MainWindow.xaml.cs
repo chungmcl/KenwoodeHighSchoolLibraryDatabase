@@ -819,29 +819,27 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
+        #region Menu
+        #region Backup
         private void Backup_Click(object sender, RoutedEventArgs e)
         {
-            try
+            string backupFilePath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseBackup.mdb";
+            if (File.Exists(backupFilePath))
             {
-                File.Copy("LibraryDatabase.mdb", "LibraryDatabaseBackup.mdb");
-                MessageBox.Show("Database created in program folder.\nBackup database file named 'LibraryDatabaseBackup.mdb'");
+                File.Delete(backupFilePath);
             }
-            catch (IOException error)
-            {
-                if (error.Message == "The file 'LibraryDatabaseBackup.mdb' already exists.")
-                {
-                    MessageBox.Show("A backup already exists.");
-                }
-            }
+            File.Copy("LibraryDatabase.mdb", "LibraryDatabaseBackup.mdb");
+            MessageBox.Show("Database created in program folder.\nBackup database file named 'LibraryDatabaseBackup.mdb'");
         }
 
         private void Restore_Click(object sender, RoutedEventArgs e)
         {
             if (File.Exists(Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseBackup.mdb"))
             {
-                if (File.Exists(Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseCorrupt.mdb"))
+                string corruptFilePath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseCorrupt.mdb";
+                if (File.Exists(corruptFilePath))
                 {
-                    File.Delete(Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseCorrupt.mdb");
+                    File.Delete(corruptFilePath);
                 }
                 File.Move("LibraryDatabase.mdb", "LibraryDatabaseCorrupt.mdb");
                 File.Move("LibraryDatabaseBackup.mdb", "LibraryDatabase.mdb");
@@ -853,6 +851,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 MessageBox.Show("A backup does not exist.\n(Did you rename the file from 'LibraryDatabaseBackup.mdb'?");
             }
         }
+        #endregion
+        #endregion
     }
 
     /// <summary>
