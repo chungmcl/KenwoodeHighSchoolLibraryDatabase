@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.IO;
+using System.Reflection;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -816,6 +818,41 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
         #endregion
+
+        private void Backup_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                File.Copy("LibraryDatabase.mdb", "LibraryDatabaseBackup.mdb");
+                MessageBox.Show("Database created in program folder.\nBackup database file named 'LibraryDatabaseBackup.mdb'");
+            }
+            catch (IOException error)
+            {
+                if (error.Message == "The file 'LibraryDatabaseBackup.mdb' already exists.")
+                {
+                    MessageBox.Show("A backup already exists.");
+                }
+            }
+        }
+
+        private void Restore_Click(object sender, RoutedEventArgs e)
+        {
+            if (File.Exists(Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseBackup.mdb"))
+            {
+                if (File.Exists(Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseCorrupt.mdb"))
+                {
+                    File.Delete(Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseCorrupt.mdb");
+                }
+                File.Move("LibraryDatabase.mdb", "LibraryDatabaseCorrupt.mdb");
+                File.Move("LibraryDatabaseBackup.mdb", "LibraryDatabase.mdb");
+                File.Copy("LibraryDatabase.mdb", "LibraryDatabaseBackup.mdb");
+                MessageBox.Show("Database restored from backup.\nCreated new backup, old database file named as 'LibraryDatabaseCorrupt.mdb'.");
+            }
+            else
+            {
+                MessageBox.Show("A backup does not exist.\n(Did you rename the file from 'LibraryDatabaseBackup.mdb'?");
+            }
+        }
     }
 
     /// <summary>

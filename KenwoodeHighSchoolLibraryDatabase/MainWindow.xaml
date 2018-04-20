@@ -153,7 +153,10 @@
         </GroupBox>
         <Menu Margin="0,0,0.4,747.4">
             <MenuItem x:Name="menuItemFile" Header="_File">
-                <MenuItem Header="_Backup" />
+                <MenuItem x:Name="Backup" Header="_Backup"
+                          Click="Backup_Click"/>
+                <MenuItem x:Name="Restore" Header="_Restore From Backup"
+                          Click="Restore_Click"/>
             </MenuItem>
         </Menu>
         <Grid x:Name="gridSelectedUserAndItem" HorizontalAlignment="Left" Height="64" Margin="10,47,0,0" VerticalAlignment="Top" Width="197">
