@@ -15,14 +15,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class MainWindow : Window
     {
-        OleDbConnection c;
-        OleDbDataReader reader;
-        OleDbCommand command;
-        User selectedUser;
-        Item selectedItem;
-        bool userSelected;
-        bool itemSelected;
-        List<Item> itemsToAdd = new List<Item>();
+        private OleDbConnection c;
+        private OleDbDataReader reader;
+        private OleDbCommand command;
+        private User selectedUser;
+        private Item selectedItem;
+        private bool userSelected;
+        private bool itemSelected;
+        private string currentFolderPath;
+        private List<Item> itemsToAdd = new List<Item>();
         public MainWindow()
         {
             InitializeComponent();
@@ -31,6 +32,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
                     "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
                     "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
+
+            this.currentFolderPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
+            Directory.CreateDirectory(this.currentFolderPath + "\\Backups");
         }
 
         /// <summary>
@@ -823,27 +827,59 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #region Backup
         private void Backup_Click(object sender, RoutedEventArgs e)
         {
-            File.Copy("LibraryDatabase.mdb", "LibraryDatabaseBackup.mdb", true);
-            MessageBox.Show("Database created in program folder.\nBackup database file named 'LibraryDatabaseBackup.mdb'");
+            string dateTime = DateTime.Now.ToString();
+            dateTime = dateTime.Replace("/", "_");
+            dateTime = dateTime.Replace(":", "_");
+            string backupFileName = "Backup-" + dateTime;
+
+            File.Copy("LibraryDatabase.mdb", backupFileName + ".mdb", true);
+            
+            string parentFolderPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
+            File.Move(backupFileName + ".mdb", this.currentFolderPath + "\\Backups\\" + backupFileName + ".mdb");
+
+            MessageBox.Show($"Backup database file created in:\n\n{this.currentFolderPath}\\Backups.\n\nBackup database file named '{backupFileName}.mdb'");
         }
 
         private void Restore_Click(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseBackup.mdb"))
+            
+            if (Directory.Exists(this.currentFolderPath + "\\Backups"))
             {
-                string corruptFilePath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString() + "\\LibraryDatabaseCorrupt.mdb";
-                if (File.Exists(corruptFilePath))
+                System.Windows.Forms.OpenFileDialog browserDialog = new System.Windows.Forms.OpenFileDialog();
+                browserDialog.InitialDirectory = this.currentFolderPath + "\\Backups";
+                browserDialog.Title = "Select Backup File to Restore From";
+
+                string selectedFile;
+                if (browserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    File.Delete(corruptFilePath);
+                    selectedFile = browserDialog.FileName;
+                    if (selectedFile.Contains(this.currentFolderPath + "\\Backups"))
+                    {
+                        Directory.CreateDirectory(this.currentFolderPath + "\\Corrupt");
+                        string dateTime = DateTime.Now.ToString();
+                        dateTime = dateTime.Replace("/", "_");
+                        dateTime = dateTime.Replace(":", "_");
+                        string corruptFileName = "CorruptDB-" + dateTime;
+                        File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb");
+                        File.Copy(selectedFile, this.currentFolderPath + "\\LibraryDatabase.mdb");
+
+                        MessageBox.Show($"Restored database file from selected file:\n'{browserDialog.SafeFileName}'");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select a file from the 'Backups' folder." +
+                            "\n(To select a file outside of the 'Backups' folder, move file inside and try again.)" +
+                            "\n\nRestore aborted. Running on previous save of database file.");
+                    }
                 }
-                File.Move("LibraryDatabase.mdb", "LibraryDatabaseCorrupt.mdb");
-                File.Move("LibraryDatabaseBackup.mdb", "LibraryDatabase.mdb");
-                File.Copy("LibraryDatabase.mdb", "LibraryDatabaseBackup.mdb");
-                MessageBox.Show("Database restored from backup.\nCreated new backup, old database file named as 'LibraryDatabaseCorrupt.mdb'.");
+                else
+                {
+                    MessageBox.Show("Restore aborted. Running on previous save of database file.");
+                }
             }
             else
             {
-                MessageBox.Show("A backup does not exist.\n(Did you rename the file from 'LibraryDatabaseBackup.mdb'?");
+                MessageBox.Show("'Backup' folder does not exist.\n(Is the folder 'Backups' in the program folder?)");
             }
         }
         #endregion
