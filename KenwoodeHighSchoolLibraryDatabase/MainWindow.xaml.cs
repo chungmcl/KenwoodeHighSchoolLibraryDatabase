@@ -930,45 +930,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 MessageBox.Show("'Backup' folder does not exist.\n(Is the folder 'Backups' in the program folder?)");
             }
         }
-
-        private string RestoreFromFile(string selectedFilePath, string selectedFileName)
-        {
-            try
-            {
-                Directory.CreateDirectory(this.currentFolderPath + "\\Corrupt");
-                string dateTime = DateTime.Now.ToString();
-                dateTime = dateTime.Replace("/", "_");
-                dateTime = dateTime.Replace(":", "_");
-                string corruptFileName = "CorruptDB-" + dateTime;
-
-                string corruptDatabasePath = this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb";
-                File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb");
-                File.Copy(selectedFilePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
-
-                LoadDataGrid("SELECT * FROM accounts", true);
-                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                        "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
-
-                MessageBox.Show($"Restored database file from selected file:\n'{selectedFileName}'");
-
-                return corruptDatabasePath;
-            }
-            catch (Exception exception)
-            {
-                if (this.c.State == System.Data.ConnectionState.Open) // In case exception is thrown outside of SQL query
-                {
-                    this.c.Close();
-                }
-                MessageBox.Show("Database could not be restored with the selected file." +
-                    "\nPlease select a new file and try again." +
-                    $"\n\nERROR MESSAGE: \"{exception.Message}\"");
-
-                File.Delete(this.currentFolderPath + "\\LibraryDatabase.mdb");
-
-                return "";
-            }
-        }
         #endregion
         #endregion
     }
