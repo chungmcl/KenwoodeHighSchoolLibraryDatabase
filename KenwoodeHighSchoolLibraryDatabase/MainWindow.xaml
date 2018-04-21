@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="Kenwoode HS Library Database" Height="805" Width="1456.1" ResizeMode="CanMinimize">
+        Title="Kenwoode HS Library Database" Height="805" Width="1284.5" ResizeMode="CanMinimize">
     <Grid x:Name="GridMain" Background="White" Margin="0,0,3.4,0.8">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Image Margin="498,27,607.4,683.4" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="341"/>
+        <Image Margin="499,27,435.2,683.4" Source="logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="341"/>
 
         <GroupBox x:Name="groupBoxCheckout" Header="Checkout" 
                   HorizontalAlignment="Left" Height="153" Margin="935,418,0,0" VerticalAlignment="Top" Width="323" 

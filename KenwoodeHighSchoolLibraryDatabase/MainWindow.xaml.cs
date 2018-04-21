@@ -26,15 +26,27 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private List<Item> itemsToAdd = new List<Item>();
         public MainWindow()
         {
-            InitializeComponent();
-            InitializeDatabaseConnection();
-            LoadDataGrid("SELECT * FROM accounts", true);
-            LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                    "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                    "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
+            try
+            {
+                InitializeDatabaseConnection();
+                InitializeComponent();
+                LoadDataGrid("SELECT * FROM accounts", true);
+                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                        "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
 
-            this.currentFolderPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
-            Directory.CreateDirectory(this.currentFolderPath + "\\Backups");
+                this.currentFolderPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
+                Directory.CreateDirectory(this.currentFolderPath + "\\Backups");
+            }
+            catch
+            {
+                MessageBox.Show("ERROR: Database could not be loaded." +
+                    "\nPlease ensure following files are in the same folder as this program and named exactly the same:" +
+                    "\nLibraryDatabase.mdb" +
+                    "\n\nKenwoodeHighSchoolLibraryDatabase.pdb" +
+                    "\nKenwoodeHighSchoolLibraryDatabase.exe.config");
+                System.Windows.Application.Current.Shutdown();
+            }
         }
 
         /// <summary>
