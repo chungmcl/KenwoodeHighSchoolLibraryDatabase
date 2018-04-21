@@ -849,37 +849,124 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 browserDialog.InitialDirectory = this.currentFolderPath + "\\Backups";
                 browserDialog.Title = "Select Backup File to Restore From";
 
-                string selectedFile;
-                if (browserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                bool selectedDBFunctions = false;
+                while (!selectedDBFunctions)
                 {
-                    selectedFile = browserDialog.FileName;
-                    if (selectedFile.Contains(this.currentFolderPath + "\\Backups"))
+                    string corruptDatabasePath = "";
+                    if (browserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        Directory.CreateDirectory(this.currentFolderPath + "\\Corrupt");
-                        string dateTime = DateTime.Now.ToString();
-                        dateTime = dateTime.Replace("/", "_");
-                        dateTime = dateTime.Replace(":", "_");
-                        string corruptFileName = "CorruptDB-" + dateTime;
-                        File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb");
-                        File.Copy(selectedFile, this.currentFolderPath + "\\LibraryDatabase.mdb");
+                        string selectedFilePath = browserDialog.FileName;
+                        string selectedFileName = browserDialog.SafeFileName;
+                        if (selectedFileName.Substring(selectedFileName.IndexOf('.')) == ".mdb")
+                        {
+                            try
+                            {
+                                Directory.CreateDirectory(this.currentFolderPath + "\\Corrupt");
+                                string dateTime = DateTime.Now.ToString();
+                                dateTime = dateTime.Replace("/", "_");
+                                dateTime = dateTime.Replace(":", "_");
+                                string corruptFileName = "CorruptDB-" + dateTime;
 
-                        MessageBox.Show($"Restored database file from selected file:\n'{browserDialog.SafeFileName}'");
+                                corruptDatabasePath = this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb";
+                                File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb");
+                                File.Copy(selectedFilePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
+
+                                LoadDataGrid("SELECT * FROM accounts", true);
+                                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+                                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                                        "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
+
+                                MessageBox.Show($"Restored database file from selected file:\n'{selectedFileName}'");
+
+                                selectedDBFunctions = true;
+                            }
+                            catch (Exception exception)
+                            {
+                                if (this.c.State == System.Data.ConnectionState.Open) // In case exception is thrown outside of SQL query
+                                {
+                                    this.c.Close();
+                                }
+                                MessageBox.Show("Database could not be restored with the selected file." +
+                                    "\nPlease select a new file and try again." +
+                                    $"\n\nERROR MESSAGE: \"{exception.Message}\"");
+
+                                File.Delete(this.currentFolderPath + "\\LibraryDatabase.mdb");
+                                File.Move(corruptDatabasePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
+
+                                selectedDBFunctions = false;
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Please select a .mdb database file for restoration.");
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("Please select a file from the 'Backups' folder." +
-                            "\n(To select a file outside of the 'Backups' folder, move file inside and try again.)" +
-                            "\n\nRestore aborted. Running on previous save of database file.");
+                        try // In case moving LibraryDatabase.mdb to 'Corrupt' folder fails
+                        {
+                            if (corruptDatabasePath != "")
+                            {
+                                File.Delete(this.currentFolderPath + "\\LibraryDatabase.mdb");
+                                File.Move(corruptDatabasePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
+                            }
+                            MessageBox.Show("Restore aborted. Running on previous save of database file.");
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Restore aborted. Previous database cannot be found." +
+                                "\nProgram is incapable of functioning." +
+                                "\nPlease move functional database file into the folder that contains this program, and rename it" +
+                                "to 'LibraryDatabase.mdb'." +
+                                $"\nProgram folder is located at {this.currentFolderPath}");
+                        }
+
+                        selectedDBFunctions = true;
                     }
-                }
-                else
-                {
-                    MessageBox.Show("Restore aborted. Running on previous save of database file.");
                 }
             }
             else
             {
                 MessageBox.Show("'Backup' folder does not exist.\n(Is the folder 'Backups' in the program folder?)");
+            }
+        }
+
+        private string RestoreFromFile(string selectedFilePath, string selectedFileName)
+        {
+            try
+            {
+                Directory.CreateDirectory(this.currentFolderPath + "\\Corrupt");
+                string dateTime = DateTime.Now.ToString();
+                dateTime = dateTime.Replace("/", "_");
+                dateTime = dateTime.Replace(":", "_");
+                string corruptFileName = "CorruptDB-" + dateTime;
+
+                string corruptDatabasePath = this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb";
+                File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb");
+                File.Copy(selectedFilePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
+
+                LoadDataGrid("SELECT * FROM accounts", true);
+                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                        "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
+
+                MessageBox.Show($"Restored database file from selected file:\n'{selectedFileName}'");
+
+                return corruptDatabasePath;
+            }
+            catch (Exception exception)
+            {
+                if (this.c.State == System.Data.ConnectionState.Open) // In case exception is thrown outside of SQL query
+                {
+                    this.c.Close();
+                }
+                MessageBox.Show("Database could not be restored with the selected file." +
+                    "\nPlease select a new file and try again." +
+                    $"\n\nERROR MESSAGE: \"{exception.Message}\"");
+
+                File.Delete(this.currentFolderPath + "\\LibraryDatabase.mdb");
+
+                return "";
             }
         }
         #endregion
