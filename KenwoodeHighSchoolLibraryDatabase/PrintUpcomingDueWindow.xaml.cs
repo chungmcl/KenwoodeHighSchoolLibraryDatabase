@@ -192,7 +192,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             public string title { get; set; }
             public string dueDate { get; set; }
             public double daysUntilDueDate { get; set; }
-
         }
     }
 }

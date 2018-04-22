@@ -224,7 +224,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
+        private void DataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
             {
@@ -256,7 +256,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dataGridItems_DoubleClick(object sender, MouseButtonEventArgs e)
+        private void DataGridItems_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
             {
@@ -295,7 +295,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBoxAccountsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBoxAccountsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.comboBoxAccountsSearchByOptions.SelectedIndex != -1)
             {
@@ -314,7 +314,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBoxItemsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBoxItemsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.comboBoxItemsSearchByOptions.SelectedIndex != -1) // If check box is unchecked
             {
@@ -338,7 +338,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void textBoxAccountsSearchBy_TextChanged(object sender, TextChangedEventArgs e)
+        private void TextBoxAccountsSearchBy_TextChanged(object sender, TextChangedEventArgs e)
         {
             string currentText = this.textBoxAccountsSearchBy.Text;
             if (currentText == "")
@@ -375,7 +375,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void textBoxItemsSearchBy_TextChanged(object sender, TextChangedEventArgs e)
+        private void TextBoxItemsSearchBy_TextChanged(object sender, TextChangedEventArgs e)
         {
             string currentText = this.textBoxItemsSearchBy.Text;
             if (currentText == "")
@@ -420,7 +420,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void textBoxAccountsSearchBy_GotFocus(object sender, RoutedEventArgs e)
+        private void TextBoxAccountsSearchBy_GotFocus(object sender, RoutedEventArgs e)
         {
             this.textBoxAccountsSearchBy.Text = "";
         }
@@ -430,7 +430,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void textBoxItemsSearchBy_GotFocus(object sender, RoutedEventArgs e)
+        private void TextBoxItemsSearchBy_GotFocus(object sender, RoutedEventArgs e)
         {
             this.textBoxItemsSearchBy.Text = "";
         }
@@ -443,7 +443,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonToItemRegistrationWindow_Click(object sender, RoutedEventArgs e)
+        private void ButtonToItemRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
             ItemRegistrationWindow x = new ItemRegistrationWindow();
             x.Owner = this;
@@ -462,7 +462,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonToUserRegistrationWindow_Click(object sender, RoutedEventArgs e)
+        private void ButtonToUserRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
             UserRegistrationWindow w = new UserRegistrationWindow();
             w.Owner = this;
@@ -478,7 +478,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonPrintUpcomingItems_Click(object sender, RoutedEventArgs e)
+        private void ButtonPrintUpcomingItems_Click(object sender, RoutedEventArgs e)
         {
             PrintUpcomingDueWindow w = new PrintUpcomingDueWindow();
             w.Show();
@@ -489,7 +489,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonPrintFinedUsers_Click(object sender, RoutedEventArgs e)
+        private void ButtonPrintFinedUsers_Click(object sender, RoutedEventArgs e)
         {
             PrintFinesWindow w = new PrintFinesWindow();
             w.Show();
@@ -574,7 +574,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region Editing Objects (Users and Items)
-        private void buttonEditItem_Click(object sender, RoutedEventArgs e)
+        private void ButtonEditItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.itemSelected)
             {
@@ -630,7 +630,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonReturnSelectedItem_Click(object sender, RoutedEventArgs e)
+        private void ButtonReturnSelectedItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.itemSelected)
             {
@@ -702,7 +702,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonDeleteSelectedItem_Click(object sender, RoutedEventArgs e)
+        private void ButtonDeleteSelectedItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.itemSelected)
             {
@@ -779,7 +779,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region CheckBoxes
-        private void checkBoxShowItems_Checked(object sender, RoutedEventArgs e) // Can I factor out code? (Look in select user/items)
+        private void CheckBoxShowItems_Checked(object sender, RoutedEventArgs e) // Can I factor out code? (Look in select user/items)
         {
             if (this.userSelected)
             {
@@ -794,7 +794,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void checkBoxShowItems_Unchecked(object sender, RoutedEventArgs e)
+        private void CheckBoxShowItems_Unchecked(object sender, RoutedEventArgs e)
         {
             if (this.userSelected)
             {
@@ -804,7 +804,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void checkBoxShowUser_Checked(object sender, RoutedEventArgs e) // Can I factor out code? (Look in select user/items)
+        private void CheckBoxShowUser_Checked(object sender, RoutedEventArgs e) // Can I factor out code? (Look in select user/items)
         {
             if (this.itemSelected)
             {
@@ -824,7 +824,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void checkBoxShowUser_Unchecked(object sender, RoutedEventArgs e)
+        private void CheckBoxShowUser_Unchecked(object sender, RoutedEventArgs e)
         {
             if (this.itemSelected)
             {
