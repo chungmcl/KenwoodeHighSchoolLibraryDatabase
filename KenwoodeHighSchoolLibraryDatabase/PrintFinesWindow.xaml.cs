@@ -149,11 +149,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         public class AccountWithFine
         {
-            public double fines { get; set; }
-            public int overdue { get; set; }
-            public string userID { get; set; }
-            public string name { get; set; }
-            public string userType { get; set; }
+            public object fines { get; set; }
+            public object overdue { get; set; }
+            public object userID { get; set; }
+            public object name { get; set; }
+            public object userType { get; set; }
         }
     }
 }

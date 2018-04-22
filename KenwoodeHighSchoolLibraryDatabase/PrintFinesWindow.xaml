@@ -22,5 +22,14 @@
         <Button x:Name="buttonPrintThisPage" Content="Print This Page" HorizontalAlignment="Left" Margin="746,217,0,0" VerticalAlignment="Top" Width="122" Click="buttonPrintThisPage_Click" FontFamily="Sylfaen"/>
         <Label x:Name="labelPageNumber" Content="" HorizontalAlignment="Left" Margin="746,118,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
         <Label x:Name="labelTitle" Content="Print User Fines" HorizontalAlignment="Left" Margin="732,10,0,0" VerticalAlignment="Top" Width="212" FontFamily="Sylfaen" FontWeight="Bold"/>
+        <Grid x:Name="gridSelectColumns" HorizontalAlignment="Left" Height="500" Margin="732,260,0,0" VerticalAlignment="Top" Width="246">
+            <CheckBox x:Name="checkBoxHeaderFines" Content="Fines" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" IsChecked="True" IsEnabled="False"/>
+            <CheckBox x:Name="checkBoxHeaderUserID" Content="User ID" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" IsChecked="True" IsEnabled="False"/>
+            <Label x:Name="labelCustomizeData" Content="Customize Data (Columns)" HorizontalAlignment="Center" Margin="52,10,43,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" FontFamily="Sylfaen"/>
+            <Label x:Name="labelRequired" Content="(Fines and User ID are required.)&#xD;&#xA;Three other columns may be displayed at once." HorizontalAlignment="Left" Margin="0,89,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
+            <CheckBox x:Name="checkBoxName" Content="Name" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top"/>
+            <CheckBox x:Name="checkBoxUserType" Content="User Type" HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top"/>
+            <CheckBox x:Name="checkBoxNumberOfOverdueItems" Content="# of Overdue Items" HorizontalAlignment="Left" Margin="10,171,0,0" VerticalAlignment="Top"/>
+        </Grid>
     </Grid>
 </Window>

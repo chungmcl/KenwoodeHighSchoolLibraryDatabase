@@ -22,5 +22,15 @@
         <Button x:Name="buttonPrintThisPage" Content="Print This Page" HorizontalAlignment="Left" Margin="746,217,0,0" VerticalAlignment="Top" Width="122" Click="buttonPrintThisPage_Click" FontFamily="Sylfaen"/>
         <Label x:Name="labelPageNumber" Content="" HorizontalAlignment="Left" Margin="746,118,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
         <Label x:Name="labelTitle" Content="Print Upcoming Due Items This Week" HorizontalAlignment="Left" Margin="732,10,0,0" VerticalAlignment="Top" Width="212" FontFamily="Sylfaen" FontWeight="Bold"/>
+        <Grid x:Name="gridSelectColumns" HorizontalAlignment="Left" Height="500" Margin="732,260,0,0" VerticalAlignment="Top" Width="246">
+            <CheckBox x:Name="checkBoxHeaderItemID" Content="Item ID" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" IsChecked="True" IsEnabled="False"/>
+            <Label x:Name="labelCustomizeData" Content="Customize Data (Columns)" HorizontalAlignment="Center" Margin="52,10,43,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" FontFamily="Sylfaen"/>
+            <Label x:Name="labelRequired" Content="(Item ID is required.)" HorizontalAlignment="Left" Margin="0,68,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
+            <CheckBox x:Name="checkBoxTitle" Content="Title" HorizontalAlignment="Left" Margin="10,99,0,0" VerticalAlignment="Top"/>
+            <CheckBox x:Name="checkBoxUserType" Content="(User) Lent To" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top"/>
+            <CheckBox x:Name="checkBoxDueDate" Content="Due Date" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top"/>
+            <CheckBox x:Name="checkBoxDaysUntilDueDate" Content="Days Until Due Date" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top"/>
+            <CheckBox x:Name="checkBoxDeweyDecimal" Content="Dewey Decimal" HorizontalAlignment="Left" Margin="10,179,0,0" VerticalAlignment="Top"/>
+        </Grid>
     </Grid>
 </Window>

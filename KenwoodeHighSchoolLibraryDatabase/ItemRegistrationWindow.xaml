@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Item Registration/ViewEdit" Height="823.133" Width="738.195" ResizeMode="CanMinimize">
     <Grid Margin="0,0,0.2,0.2">
-        <Label x:Name="labelWindowTitle" Margin="252,0,279.8,0" VerticalAlignment="Top" Height="30" FontWeight="Bold" RenderTransformOrigin="0.592,0.507"/>
+        <Label x:Name="labelWindowTitle" Margin="262,9,269.8,0" VerticalAlignment="Top" Height="30" FontWeight="Bold" RenderTransformOrigin="0.508,0.493" HorizontalAlignment="Center"/>
         <Grid x:Name="gridBookRegistrationInput" HorizontalAlignment="Left" Height="739" Margin="45,44,0,0" VerticalAlignment="Top" Width="677">
             <StackPanel x:Name="stackPanelLabels" HorizontalAlignment="Left" Height="700" Margin="10,0,0,0" VerticalAlignment="Top" Width="101">
                 <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" FontFamily="Sylfaen"/>
