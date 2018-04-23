@@ -26,7 +26,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private List<Item> itemsToAdd = new List<Item>();
         public MainWindow()
         {
-            try
+            try // Attempt to load database, if anything fails, it's likely fault of missing required files
             {
                 InitializeDatabaseConnection();
                 InitializeComponent();
@@ -38,7 +38,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.currentFolderPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
                 Directory.CreateDirectory(this.currentFolderPath + "\\Backups");
             }
-            catch
+            catch // Display error message and close program
             {
                 MessageBox.Show("ERROR: Database could not be loaded." +
                     "\nPlease ensure following files are in the same folder as this program and named exactly the same:" +
@@ -74,17 +74,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="loadAccounts">Load accounts datagrid or items datagrid</param>
         private void LoadDataGrid(string sqlText, bool loadAccounts)
         {
-            CalculateOverdueAndFines();
+            CalculateOverdueAndFines(); // Calculate overdue items and fines everytime datagrid is loaded - ensures dynamic loading of data
             this.c.Open();
             this.command.CommandText = sqlText;
             this.command.CommandType = System.Data.CommandType.Text;
             this.reader = this.command.ExecuteReader();
-            if (loadAccounts)
+            if (loadAccounts) // if users specifies to load accounts datagrid
             {
                 this.dataGridAccounts.Items.Clear();
                 LoadAccountsDataGrid(this.reader);
             }
-            else
+            else // Otherwise load accounts datagrid
             {
                 this.dataGridItems.Items.Clear();
                 LoadItemsDataGrid(this.reader);
@@ -855,91 +855,87 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void Restore_Click(object sender, RoutedEventArgs e)
         {
             
-            if (Directory.Exists(this.currentFolderPath + "\\Backups"))
+            
+            System.Windows.Forms.OpenFileDialog browserDialog = new System.Windows.Forms.OpenFileDialog();
+            browserDialog.Title = "Select Backup File to Restore From";
+            if (Directory.Exists(this.currentFolderPath + "\\Backups")) // Start select file window in backups folder if it exists
             {
-                System.Windows.Forms.OpenFileDialog browserDialog = new System.Windows.Forms.OpenFileDialog();
                 browserDialog.InitialDirectory = this.currentFolderPath + "\\Backups";
-                browserDialog.Title = "Select Backup File to Restore From";
-
-                bool selectedDBFunctions = false;
-                while (!selectedDBFunctions)
+            }
+            bool selectedDBFunctions = false;
+            while (!selectedDBFunctions) // While the user has not selected a functional database (user can break out of loop and return to pre-restore database if needed)
+            {
+                string corruptDatabasePath = ""; // The path of the current database the user wishes to switch out of
+                if (browserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    string corruptDatabasePath = "";
-                    if (browserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    string selectedFilePath = browserDialog.FileName;
+                    string selectedFileName = browserDialog.SafeFileName;
+                    if (selectedFileName.Substring(selectedFileName.IndexOf('.')) == ".mdb")
                     {
-                        string selectedFilePath = browserDialog.FileName;
-                        string selectedFileName = browserDialog.SafeFileName;
-                        if (selectedFileName.Substring(selectedFileName.IndexOf('.')) == ".mdb")
+                        try
                         {
-                            try
-                            {
-                                Directory.CreateDirectory(this.currentFolderPath + "\\Corrupt");
-                                string dateTime = DateTime.Now.ToString();
-                                dateTime = dateTime.Replace("/", "_");
-                                dateTime = dateTime.Replace(":", "_");
-                                string corruptFileName = "CorruptDB-" + dateTime;
+                            Directory.CreateDirectory(this.currentFolderPath + "\\Corrupt"); // Create a folder for 'throw away' databases if one does not exist
+                            string dateTime = DateTime.Now.ToString();
+                            dateTime = dateTime.Replace("/", "_"); // Set markers in DateTime to be underscores, '/' and ':' are not permitted in file names
+                            dateTime = dateTime.Replace(":", "_");
+                            string corruptFileName = "CorruptDB-" + dateTime; // Rename database to 'CorruptDB-{Current date and time}'
 
-                                corruptDatabasePath = this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb";
-                                File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb");
-                                File.Copy(selectedFilePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
+                            corruptDatabasePath = this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb";
+                            File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb"); // Renamte and move current database to 'corrupt' folder'
+                            File.Copy(selectedFilePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
 
-                                LoadDataGrid("SELECT * FROM accounts", true);
-                                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                                        "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
+                            LoadDataGrid("SELECT * FROM accounts", true);
+                            LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+                                    "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+                                    "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
 
-                                MessageBox.Show($"Restored database file from selected file:\n'{selectedFileName}'");
+                            MessageBox.Show($"Restored database file from selected file:\n'{selectedFileName}'");
 
-                                selectedDBFunctions = true;
-                            }
-                            catch (Exception exception)
-                            {
-                                if (this.c.State == System.Data.ConnectionState.Open) // In case exception is thrown outside of SQL query
-                                {
-                                    this.c.Close();
-                                }
-                                MessageBox.Show("Database could not be restored with the selected file." +
-                                    "\nPlease select a new file and try again." +
-                                    $"\n\nERROR MESSAGE: \"{exception.Message}\"");
-
-                                File.Delete(this.currentFolderPath + "\\LibraryDatabase.mdb");
-                                File.Move(corruptDatabasePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
-
-                                selectedDBFunctions = false;
-                            }
+                            selectedDBFunctions = true;
                         }
-                        else
+                        catch (Exception exception)
                         {
-                            MessageBox.Show("Please select a .mdb database file for restoration.");
+                            if (this.c.State == System.Data.ConnectionState.Open) // In case exception is thrown outside of SQL query
+                            {
+                                this.c.Close();
+                            }
+                            MessageBox.Show("Database could not be restored with the selected file." +
+                                "\nPlease select a new file and try again." +
+                                $"\n\nERROR MESSAGE: \"{exception.Message}\"");
+
+                            File.Delete(this.currentFolderPath + "\\LibraryDatabase.mdb");
+                            File.Move(corruptDatabasePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
+
+                            selectedDBFunctions = false;
                         }
                     }
                     else
                     {
-                        try // In case moving LibraryDatabase.mdb to 'Corrupt' folder fails
-                        {
-                            if (corruptDatabasePath != "")
-                            {
-                                File.Delete(this.currentFolderPath + "\\LibraryDatabase.mdb");
-                                File.Move(corruptDatabasePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
-                            }
-                            MessageBox.Show("Restore aborted. Running on previous save of database file.");
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Restore aborted. Previous database cannot be found." +
-                                "\nProgram is incapable of functioning." +
-                                "\nPlease move functional database file into the folder that contains this program, and rename it" +
-                                "to 'LibraryDatabase.mdb'." +
-                                $"\nProgram folder is located at {this.currentFolderPath}");
-                        }
-
-                        selectedDBFunctions = true;
+                        MessageBox.Show("Please select a .mdb database file for restoration.");
                     }
                 }
-            }
-            else
-            {
-                MessageBox.Show("'Backup' folder does not exist.\n(Is the folder 'Backups' in the program folder?)");
+                else // Otherwise, if Backups folder does not exist
+                {
+                    try // In case moving LibraryDatabase.mdb to 'Corrupt' folder fails
+                    {
+                        if (corruptDatabasePath != "")
+                        {
+                            File.Delete(this.currentFolderPath + "\\LibraryDatabase.mdb");
+                            File.Move(corruptDatabasePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
+                        }
+                        MessageBox.Show("Restore aborted. Running on previous save of database file.");
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Restore aborted. Previous database cannot be found." +
+                            "\nProgram is incapable of functioning." +
+                            "\nPlease move functional database file into the folder that contains this program, and rename it" +
+                            "to 'LibraryDatabase.mdb'." +
+                            $"\nProgram folder is located at {this.currentFolderPath}");
+                    }
+
+                    selectedDBFunctions = true;
+                }
             }
         }
         #endregion
