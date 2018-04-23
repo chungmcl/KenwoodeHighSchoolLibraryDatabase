@@ -7,29 +7,65 @@
         mc:Ignorable="d"
         Title="PrintFinesWindow" Height="805.296" Width="994.794" ResizeMode="CanMinimize">
     <Grid x:Name="gridMain">
-        <DataGrid x:Name="dataGridFinedUsers" HorizontalAlignment="Left" Height="759" Margin="10,1,0,0" VerticalAlignment="Top" Width="717"
+        <DataGrid x:Name="dataGridFinedUsers" 
+                  HorizontalAlignment="Left" Height="759" Margin="10,1,0,0" VerticalAlignment="Top" Width="717"
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Fines (USD)" IsReadOnly="True" Binding="{Binding fines, Mode=OneWay}" Width="*"/>
                 <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name, Mode=OneWay}" Width="200"/>
-                <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="150"/>
-                <DataGridTextColumn Header="Fines (USD)" IsReadOnly="True" Binding="{Binding fines, Mode=OneWay}" Width="100"/>
-                <DataGridTextColumn Header="# of Overdue Items" IsReadOnly="True" Binding="{Binding overdue, Mode=OneWay}" Width="115"/>
+                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="# of Overdue Items" IsReadOnly="True" Binding="{Binding overdue, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="User Fine Per Overdue Day" IsReadOnly="True" Binding="{Binding finePerDay, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="*" Visibility="Hidden"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button x:Name="buttonPreviousPage" Content="Previous Page" HorizontalAlignment="Left" Margin="746,94,0,0" VerticalAlignment="Top" Width="90" Click="buttonPreviousPage_Click" FontFamily="Sylfaen"/>
-        <Button x:Name="buttonNextPage" Content="Next Page" HorizontalAlignment="Left" Margin="854,94,0,0" VerticalAlignment="Top" Width="90" Click="buttonNextPage_Click" FontFamily="Sylfaen"/>
-        <Button x:Name="buttonPrintThisPage" Content="Print This Page" HorizontalAlignment="Left" Margin="746,217,0,0" VerticalAlignment="Top" Width="122" Click="buttonPrintThisPage_Click" FontFamily="Sylfaen"/>
-        <Label x:Name="labelPageNumber" Content="" HorizontalAlignment="Left" Margin="746,118,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
-        <Label x:Name="labelTitle" Content="Print User Fines" HorizontalAlignment="Left" Margin="732,10,0,0" VerticalAlignment="Top" Width="212" FontFamily="Sylfaen" FontWeight="Bold"/>
-        <Grid x:Name="gridSelectColumns" HorizontalAlignment="Left" Height="500" Margin="732,260,0,0" VerticalAlignment="Top" Width="246">
-            <CheckBox x:Name="checkBoxHeaderFines" Content="Fines" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" IsChecked="True" IsEnabled="False"/>
-            <CheckBox x:Name="checkBoxHeaderUserID" Content="User ID" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" IsChecked="True" IsEnabled="False"/>
-            <Label x:Name="labelCustomizeData" Content="Customize Data (Columns)" HorizontalAlignment="Center" Margin="52,10,43,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" FontFamily="Sylfaen"/>
-            <Label x:Name="labelRequired" Content="(Fines and User ID are required.)&#xD;&#xA;Three other columns may be displayed at once." HorizontalAlignment="Left" Margin="0,89,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
-            <CheckBox x:Name="checkBoxName" Content="Name" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="checkBoxUserType" Content="User Type" HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="checkBoxNumberOfOverdueItems" Content="# of Overdue Items" HorizontalAlignment="Left" Margin="10,171,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="buttonPreviousPage" Content="Previous Page" 
+                HorizontalAlignment="Left" Margin="746,94,0,0" VerticalAlignment="Top" Width="90"
+                FontFamily="Sylfaen"
+                Click="buttonPreviousPage_Click"/>
+        <Button x:Name="buttonNextPage" Content="Next Page" 
+                HorizontalAlignment="Left" Margin="854,94,0,0" VerticalAlignment="Top" Width="90"
+                FontFamily="Sylfaen"
+                Click="buttonNextPage_Click"/>
+        <Button x:Name="buttonPrintThisPage" Content="Print This Page" 
+                HorizontalAlignment="Left" Margin="746,217,0,0" VerticalAlignment="Top" Width="122"
+                FontFamily="Sylfaen"
+                Click="buttonPrintThisPage_Click"/>
+        <Label x:Name="labelPageNumber" Content="" 
+               HorizontalAlignment="Left" Margin="746,118,0,0" VerticalAlignment="Top" 
+               FontFamily="Sylfaen"/>
+        <Label x:Name="labelTitle" Content="Print User Fines" 
+               HorizontalAlignment="Left" Margin="732,10,0,0" VerticalAlignment="Top" Width="212" 
+               FontFamily="Sylfaen" FontWeight="Bold"/>
+        <Grid x:Name="gridSelectColumns" 
+              HorizontalAlignment="Left" Height="500" Margin="732,260,0,0" VerticalAlignment="Top" Width="246">
+            <CheckBox x:Name="checkBoxHeaderFines" Content="Fines" 
+                      HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" 
+                      IsChecked="True" IsEnabled="False"/>
+            <CheckBox x:Name="checkBoxHeaderUserID" Content="User ID" 
+                      HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" 
+                      IsChecked="True" IsEnabled="False"/>
+            <Label x:Name="labelCustomizeData" Content="Customize Info (Columns)" 
+                   HorizontalAlignment="Center" Margin="52,10,43,0" VerticalAlignment="Top" 
+                   FontFamily="Sylfaen"/>
+            <Label x:Name="labelRequired" Content="(Fines and User ID are required.)" 
+                   HorizontalAlignment="Left" Margin="10,89,0,0" VerticalAlignment="Top" 
+                   FontFamily="Sylfaen"/>
+            <CheckBox x:Name="checkBoxName" Content="Name" 
+                      HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"
+                      Checked="CheckBoxName_Checked" Unchecked="CheckBoxName_Unchecked"/>
+            <CheckBox x:Name="checkBoxUserType" Content="User Type" 
+                      HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"
+                      Checked="CheckBoxUserType_Checked" Unchecked="CheckBoxUserType_Unchecked"/>
+            <CheckBox x:Name="checkBoxNumberOfOverdueItems" Content="# of Overdue Items" 
+                      HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" 
+                      FontFamily="Sylfaen"
+                      Checked="CheckBoxNumberOfOverdueItems_Checked" Unchecked="CheckBoxNumberOfOverdueItems_Unchecked"/>
+            <CheckBox x:Name="checkBoxUserFinePerDay" Content="User's Fine Per Overdue Day" 
+                      HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top"
+                      FontFamily="Sylfaen"
+                      Checked="CheckBoxUserFinePerDay_Checked" Unchecked="CheckBoxUserFinePerDay_Unchecked"/>
+            <Label x:Name="labelHint" Content="Columns can be resized &#xA;by dragging left and right &#xA;on the column walls, and also moved&#xA;by dragging the header left and right." HorizontalAlignment="Left" Margin="10,200,0,0" VerticalAlignment="Top" Width="225" FontFamily="Sylfaen"/>
         </Grid>
     </Grid>
 </Window>

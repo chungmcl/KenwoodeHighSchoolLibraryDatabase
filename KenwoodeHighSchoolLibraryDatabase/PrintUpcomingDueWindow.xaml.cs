@@ -75,8 +75,19 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     item.itemID = this.reader["itemID"].ToString();
                     item.lentTo = this.reader["currentlyCheckedOutBy"].ToString();
                     item.title = this.reader["title"].ToString();
-                    item.dueDate = stringDueDate.Substring(0, 8);
+                    item.dueDate = stringDueDate.Substring(0, stringDueDate.IndexOf(' '));
                     item.daysUntilDueDate = ((dueDate.Date - DateTime.Today)).TotalDays;
+                    item.deweyDecimal = this.reader["deweyDecimal"].ToString();
+                    item.isbnTen = this.reader["ISBN10"].ToString();
+                    item.isxx = this.reader["ISXX"].ToString();
+                    item.genre = $"{this.reader["genreClassOne"].ToString()}, " +
+                        $"{this.reader["genreClassTwo"].ToString()}, " +
+                        $"{this.reader["genreClassThree"].ToString()}";
+                    item.edition = this.reader["edition"].ToString();
+                    item.author = $"{this.reader["authorLastName"]}, " +
+                        $"{this.reader["authorMiddleName"]} " +
+                        $"{this.reader["authorFirstName"]}";
+                    item.format = this.reader["format"].ToString();
                     this.itemsDueThisWeek.Add(item);
                 }
             }
@@ -181,6 +192,116 @@ namespace KenwoodeHighSchoolLibraryDatabase
             printDlg.ShowDialog();
         }
 
+        #region CheckBoxEventHandlers
+        private void CheckBoxUserLentTo_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[1].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxUserLentTo_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[1].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxTitle_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[2].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxTitle_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[2].Visibility = System.Windows.Visibility.Hidden;
+        }
+        private void CheckBoxAuthor_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[3].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxAuthor_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[3].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxDeweyDecimal_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[4].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxDeweyDecimal_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[4].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxISBNTen_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[5].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxISBNTen_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[5].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxISXX_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[6].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxISXX_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[6].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxGenre_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[7].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxGenre_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[7].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxEdition_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[8].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxEdition_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[8].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxFormat_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[9].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxFormat_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[9].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxDueDate_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[10].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxDueDate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[10].Visibility = System.Windows.Visibility.Hidden;
+        }
+        private void CheckBoxDaysUntilDueDate_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[11].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxDaysUntilDueDate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridIssuedBooks.Columns[11].Visibility = System.Windows.Visibility.Hidden;
+        }
+        #endregion
+
         /// <summary>
         /// An item that is due this week.
         /// Used to load into the Data Grid.
@@ -192,6 +313,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
             public string title { get; set; }
             public string dueDate { get; set; }
             public double daysUntilDueDate { get; set; }
+            public string deweyDecimal { get; set; }
+            public string isbnTen { get; set; }
+            public string isxx { get; set; }
+            public string genre { get; set; }
+            public string publisher { get; set; }
+            public string edition { get; set; }
+            public string author { get; set; }
+            public string format { get; set; }
         }
     }
 }

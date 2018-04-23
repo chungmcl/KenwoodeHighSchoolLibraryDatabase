@@ -11,26 +11,94 @@
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding lentTo, Mode=OneWay}" Width="150"/>
-                <DataGridTextColumn Header="Title" IsReadOnly="True" Binding="{Binding title, Mode=OneWay}" Width="200"/>
-                <DataGridTextColumn Header="Due Date" IsReadOnly="True" Binding="{Binding dueDate, Mode=OneWay}" Width="100"/>
-                <DataGridTextColumn Header="Days Until Due Date" IsReadOnly="True" Binding="{Binding daysUntilDueDate, Mode=OneWay}" Width="115"/>
+                <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding lentTo, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="Title" IsReadOnly="True" Binding="{Binding title, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="Author" IsReadOnly="True" Binding="{Binding author, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="Dewey Decimal" IsReadOnly="True" Binding="{Binding deweyDecimal, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="ISBN10" IsReadOnly="True" Binding="{Binding isbnTen, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="ISXX" IsReadOnly="True" Binding="{Binding isxx, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="Genre" IsReadOnly="True" Binding="{Binding genre, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="Edition" IsReadOnly="True" Binding="{Binding edition, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="Format" IsReadOnly="True" Binding="{Binding format, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="Due Date" IsReadOnly="True" Binding="{Binding dueDate, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="Days Until Due Date" IsReadOnly="True" Binding="{Binding daysUntilDueDate, Mode=OneWay}" Width="*" Visibility="Hidden"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button x:Name="buttonPreviousPage" Content="Previous Page" HorizontalAlignment="Left" Margin="746,94,0,0" VerticalAlignment="Top" Width="90" Click="buttonPreviousPage_Click" FontFamily="Sylfaen"/>
-        <Button x:Name="buttonNextPage" Content="Next Page" HorizontalAlignment="Left" Margin="854,94,0,0" VerticalAlignment="Top" Width="90" Click="buttonNextPage_Click" FontFamily="Sylfaen"/>
-        <Button x:Name="buttonPrintThisPage" Content="Print This Page" HorizontalAlignment="Left" Margin="746,217,0,0" VerticalAlignment="Top" Width="122" Click="buttonPrintThisPage_Click" FontFamily="Sylfaen"/>
-        <Label x:Name="labelPageNumber" Content="" HorizontalAlignment="Left" Margin="746,118,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
-        <Label x:Name="labelTitle" Content="Print Upcoming Due Items This Week" HorizontalAlignment="Left" Margin="732,10,0,0" VerticalAlignment="Top" Width="212" FontFamily="Sylfaen" FontWeight="Bold"/>
-        <Grid x:Name="gridSelectColumns" HorizontalAlignment="Left" Height="500" Margin="732,260,0,0" VerticalAlignment="Top" Width="246">
-            <CheckBox x:Name="checkBoxHeaderItemID" Content="Item ID" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" IsChecked="True" IsEnabled="False"/>
-            <Label x:Name="labelCustomizeData" Content="Customize Data (Columns)" HorizontalAlignment="Center" Margin="52,10,43,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" FontFamily="Sylfaen"/>
-            <Label x:Name="labelRequired" Content="(Item ID is required.)" HorizontalAlignment="Left" Margin="0,68,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
-            <CheckBox x:Name="checkBoxTitle" Content="Title" HorizontalAlignment="Left" Margin="10,99,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="checkBoxUserType" Content="(User) Lent To" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="checkBoxDueDate" Content="Due Date" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="checkBoxDaysUntilDueDate" Content="Days Until Due Date" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="checkBoxDeweyDecimal" Content="Dewey Decimal" HorizontalAlignment="Left" Margin="10,179,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="buttonPreviousPage" Content="Previous Page" 
+                HorizontalAlignment="Left" Margin="746,94,0,0" VerticalAlignment="Top" Width="90"
+                FontFamily="Sylfaen"
+                Click="buttonPreviousPage_Click"/>
+        <Button x:Name="buttonNextPage" Content="Next Page" 
+                HorizontalAlignment="Left" Margin="854,94,0,0" VerticalAlignment="Top" Width="90"
+                FontFamily="Sylfaen"
+                Click="buttonNextPage_Click"/>
+        <Button x:Name="buttonPrintThisPage" Content="Print This Page" 
+                HorizontalAlignment="Left" Margin="746,217,0,0" VerticalAlignment="Top" Width="122"
+                FontFamily="Sylfaen"
+                Click="buttonPrintThisPage_Click"/>
+        <Label x:Name="labelPageNumber" Content="" 
+               HorizontalAlignment="Left" Margin="746,118,0,0" VerticalAlignment="Top" 
+               FontFamily="Sylfaen"/>
+        <Label x:Name="labelTitle" Content="Print Upcoming Due Items This Week" 
+               HorizontalAlignment="Left" Margin="732,10,0,0" VerticalAlignment="Top" Width="212"
+               FontFamily="Sylfaen" FontWeight="Bold"/>
+        <Grid x:Name="gridSelectColumns" 
+              HorizontalAlignment="Left" Height="500" Margin="732,260,0,0" VerticalAlignment="Top" Width="246">
+            <CheckBox x:Name="checkBoxHeaderItemID" Content="Item ID"
+                      HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" 
+                      IsChecked="True" IsEnabled="False" FontFamily="Sylfaen"/>
+
+            <Label x:Name="labelCustomizeData" Content="Customize Info (Columns)" 
+                   HorizontalAlignment="Center" Margin="52,10,43,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" 
+                   FontFamily="Sylfaen"/>
+            <Label x:Name="labelRequired" Content="(Item ID is required.)" 
+                   HorizontalAlignment="Left" Margin="0,68,0,0" VerticalAlignment="Top" 
+                   FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxTitle" Content="Title" 
+                      HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxTitle_Checked" Unchecked="CheckBoxTitle_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxUserLentTo" Content="(User) Lent To"
+                      HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxUserLentTo_Checked" Unchecked="CheckBoxUserLentTo_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxDueDate" Content="Due Date" 
+                      HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxDueDate_Checked" Unchecked="CheckBoxDueDate_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxDaysUntilDueDate" Content="Days Until Due Date" 
+                      HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxDaysUntilDueDate_Checked" Unchecked="CheckBoxDaysUntilDueDate_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxDeweyDecimal" Content="Dewey Decimal" 
+                      HorizontalAlignment="Left" Margin="10,179,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxDeweyDecimal_Checked" Unchecked="CheckBoxDeweyDecimal_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxISXX" Content="ISXX (ISBN13, ISSN, etc.)" 
+                      HorizontalAlignment="Left" Margin="10,219,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxISXX_Checked" Unchecked="CheckBoxISXX_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxGenre" Content="Genre" 
+                      HorizontalAlignment="Left" Margin="10,239,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxGenre_Checked" Unchecked="CheckBoxGenre_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxFormat" Content="Format"
+                      HorizontalAlignment="Left" Margin="10,259,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxFormat_Checked" Unchecked="CheckBoxFormat_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxISBNTen" Content="ISBN10" 
+                      HorizontalAlignment="Left" Margin="10,199,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxISBNTen_Checked" Unchecked="CheckBoxISBNTen_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxAuthor" Content="Author" 
+                      HorizontalAlignment="Left" Margin="10,299,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxAuthor_Checked" Unchecked="CheckBoxAuthor_Unchecked" FontFamily="Sylfaen"/>
+
+            <CheckBox x:Name="checkBoxEdition" Content="Edition" 
+                      HorizontalAlignment="Left" Margin="10,279,0,0" VerticalAlignment="Top"
+                      Checked="CheckBoxEdition_Checked" Unchecked="CheckBoxEdition_Unchecked" FontFamily="Sylfaen"/>
+            <Label x:Name="labelHint" Content="Columns can be resized &#xD;&#xA;by dragging left and right &#xD;&#xA;on the column walls, and also moved&#xD;&#xA;by dragging the header left and right." HorizontalAlignment="Left" Margin="11,319,0,0" VerticalAlignment="Top" Width="225" FontFamily="Sylfaen"/>
         </Grid>
     </Grid>
 </Window>

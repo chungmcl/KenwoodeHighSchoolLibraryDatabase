@@ -52,7 +52,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             this.c.Open();
             this.command.CommandText = "SELECT " +
-                "[userID], [firstName], [lastName], [userType], [overdueItems], [fines] " +
+                "[userID], [firstName], [lastName], [userType], [overdueItems], [fines], [finePerDay] " +
                 "FROM accounts " +
                 "WHERE [fines] > 0";
             this.reader = this.command.ExecuteReader();
@@ -64,6 +64,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 awf.userType = this.reader[3].ToString();
                 awf.overdue = (int)this.reader[4];
                 awf.fines = (double)this.reader[5];
+                awf.finePerDay = (double)this.reader[6];
                 this.accountsWithFines.Add(awf);
             }
             this.pageMax = (int)Math.Ceiling(((double)this.accountsWithFines.Count) / 37);
@@ -149,11 +150,51 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         public class AccountWithFine
         {
-            public object fines { get; set; }
-            public object overdue { get; set; }
-            public object userID { get; set; }
-            public object name { get; set; }
-            public object userType { get; set; }
+            public double fines { get; set; }
+            public int overdue { get; set; }
+            public string userID { get; set; }
+            public string name { get; set; }
+            public string userType { get; set; }
+            public double finePerDay { get; set; }
+        }
+
+        private void CheckBoxName_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridFinedUsers.Columns[2].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxName_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridFinedUsers.Columns[2].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxNumberOfOverdueItems_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridFinedUsers.Columns[3].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxNumberOfOverdueItems_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridFinedUsers.Columns[3].Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void CheckBoxUserFinePerDay_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridFinedUsers.Columns[4].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxUserFinePerDay_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridFinedUsers.Columns[4].Visibility = System.Windows.Visibility.Hidden;
+        }
+        private void CheckBoxUserType_Checked(object sender, RoutedEventArgs e)
+        {
+            dataGridFinedUsers.Columns[5].Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void CheckBoxUserType_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dataGridFinedUsers.Columns[5].Visibility = System.Windows.Visibility.Hidden;
         }
     }
 }
