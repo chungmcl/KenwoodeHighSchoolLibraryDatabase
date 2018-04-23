@@ -30,10 +30,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 InitializeDatabaseConnection();
                 InitializeComponent();
-                LoadDataGrid("SELECT * FROM accounts", true);
-                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                        "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
+                LoadDataGrid();
 
                 this.currentFolderPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
                 Directory.CreateDirectory(this.currentFolderPath + "\\Backups");
@@ -65,40 +62,29 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         #region LoadDataGrids
         /// <summary>
-        /// Update the fines and overdue books for each user by calling CalculateOverDueAndFines(),
-        /// to ensure that database stays up to date.
-        /// Take in the SQL command to specify what to call from database and to display in datagrids.
-        /// Load specified datagrid with the information called.
+        /// Reload both datagrids with default queries. (Specfic queries can be used by calling each method individually)
         /// </summary>
         /// <param name="sqlText">The SQL command to be executed</param>
         /// <param name="loadAccounts">Load accounts datagrid or items datagrid</param>
-        private void LoadDataGrid(string sqlText, bool loadAccounts)
+        private void LoadDataGrid()
         {
-            CalculateOverdueAndFines(); // Calculate overdue items and fines everytime datagrid is loaded - ensures dynamic loading of data
-            this.c.Open();
-            this.command.CommandText = sqlText;
-            this.command.CommandType = System.Data.CommandType.Text;
-            this.reader = this.command.ExecuteReader();
-            if (loadAccounts) // if users specifies to load accounts datagrid
-            {
-                this.dataGridAccounts.Items.Clear();
-                LoadAccountsDataGrid(this.reader);
-            }
-            else // Otherwise load accounts datagrid
-            {
-                this.dataGridItems.Items.Clear();
-                LoadItemsDataGrid(this.reader);
-            }
-            this.reader.Close();
-            this.c.Close();
+            LoadAccountsDataGrid("SELECT * FROM accounts");
+            LoadItemsDataGrid("SELECT * FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]");
         }
 
         /// <summary>
         /// Load every called entry from the accounts table within the database.
         /// </summary>
         /// <param name="reader">The OleDbDataReader to read each entry from the databse</param>
-        private void LoadAccountsDataGrid(OleDbDataReader reader)
+        private void LoadAccountsDataGrid(string sqlCommand)
         {
+            CalculateOverdueAndFines(); // Calculate overdue items and fines everytime datagrid is loaded - ensures dynamic loading of data
+
+            this.c.Open();
+            this.command.CommandText = sqlCommand;
+            this.command.CommandType = System.Data.CommandType.Text;
+            this.reader = this.command.ExecuteReader();
+            this.dataGridAccounts.Items.Clear();
             while (reader.Read())
             {
                 User newUser = new User();
@@ -113,14 +99,23 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newUser.fines = reader["fines"].ToString();
                 this.dataGridAccounts.Items.Add(newUser);
             }
+            this.reader.Close();
+            this.c.Close();
         }
 
         /// <summary>
         /// Load every called entry from the items table within the database.
         /// </summary>
         /// <param name="reader">The OleDbDataReader to read each entry from the databse</param>
-        private void LoadItemsDataGrid(OleDbDataReader reader)
+        private void LoadItemsDataGrid(string sqlCommand)
         {
+            CalculateOverdueAndFines(); // Calculate overdue items and fines everytime datagrid is loaded - ensures dynamic loading of data
+            
+            this.c.Open();
+            this.command.CommandText = sqlCommand;
+            this.command.CommandType = System.Data.CommandType.Text;
+            this.reader = this.command.ExecuteReader();
+            this.dataGridItems.Items.Clear();
             while (reader.Read())
             {
                 Item newItem = new Item();
@@ -166,6 +161,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.dataGridItems.Items.Add(this.itemsToAdd[i]);
             }
             this.itemsToAdd.Clear();
+            this.reader.Close();
+            this.c.Close();
         }
         #endregion
 
@@ -303,7 +300,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 if (setTextBoxTo.Count() > 0)
                 {
                     this.textBoxAccountsSearchBy.Text = $"Enter a {setTextBoxTo}...";
-                    LoadDataGrid("SELECT * FROM accounts", true);
+                    LoadDataGrid();
                 }
             }
         }
@@ -316,19 +313,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void ComboBoxItemsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.comboBoxItemsSearchByOptions.SelectedIndex != -1) // If check box is unchecked
+            if (this.comboBoxItemsSearchByOptions.SelectedIndex != -1) // If comboBox value is selected
             {
                 string setTextBoxTo = this.comboBoxItemsSearchByOptions.SelectedValue.ToString().Substring(37);
                 if (setTextBoxTo.Count() > 0)
                 {
                     this.textBoxItemsSearchBy.Text = $"Enter a(n) {setTextBoxTo}...";
-                    LoadDataGrid("SELECT * FROM items", false); // Factor out?
                 }
                 if (setTextBoxTo == "Lent To")
                 {
                     this.textBoxItemsSearchBy.Text = $"Enter who {setTextBoxTo}...";
-                    LoadDataGrid("SELECT * FROM items", false); // Factor out?
                 }
+                LoadDataGrid();
             }
         }
 
@@ -343,7 +339,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string currentText = this.textBoxAccountsSearchBy.Text;
             if (currentText == "")
             {
-                LoadDataGrid("SELECT * FROM accounts", true);
+                LoadDataGrid();
             }
             else
             {
@@ -364,7 +360,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 if (queryColumn != "")
                 {
-                    LoadDataGrid($"SELECT * FROM accounts WHERE [{queryColumn}] LIKE '%{currentText}%'", true);
+                    LoadAccountsDataGrid($"SELECT * FROM accounts WHERE [{queryColumn}] LIKE '%{currentText}%'");
                 }
             }
         }
@@ -380,7 +376,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string currentText = this.textBoxItemsSearchBy.Text;
             if (currentText == "")
             {
-                LoadDataGrid("SELECT * FROM items", false);
+                LoadDataGrid();
             }
             else
             {
@@ -410,7 +406,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 if (queryColumn != "")
                 {
-                    LoadDataGrid($"SELECT * FROM items WHERE [{queryColumn}] LIKE '%{currentText}%'", false);
+                    LoadItemsDataGrid($"SELECT * FROM [items] WHERE [{queryColumn}] LIKE '%{currentText}%'");
                 }
             }
         }
@@ -450,9 +446,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             bool? receive = x.ShowDialog();
             if (receive == true)
             {
-                LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                    "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                    "FROM [items] ORDER BY [ISXX], [copyID]", false);
+                LoadDataGrid();
             }
         }
 
@@ -469,7 +463,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             bool? receive = w.ShowDialog();
             if (receive == true)
             {
-                LoadDataGrid("SELECT * FROM accounts", true);
+                LoadDataGrid();
             }
         }
 
@@ -566,10 +560,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.command.ExecuteNonQuery();
             this.c.Close();
 
-            LoadDataGrid("SELECT * FROM accounts", true);
-            LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-            "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-            "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
+            LoadDataGrid();
+            //LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
+            //"[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
+            //"FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
         #endregion
 
@@ -583,10 +577,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 bool? receive = w.ShowDialog();
                 if (receive == true)
                 {
-                    LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                        "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                        "FROM [items] ORDER BY [ISXX], [copyID]", false);
-                    LoadDataGrid("SELECT * FROM accounts", true);
+                    LoadDataGrid();
                     Item check = (Item)this.dataGridItems.Items[0];
                     this.selectedItem = (Item)this.dataGridItems.Items[0];
                     this.labelCheckoutSelectedItemTitle.Content = this.selectedItem.title;
@@ -606,10 +597,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 bool? receive = w.ShowDialog();
                 if (receive == true)
                 {
-                    LoadDataGrid("SELECT * FROM accounts", true);
-                    LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                            "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                            "FROM [items] ORDER BY [ISXX], [copyID]", false);
+                    LoadDataGrid();
                 }
             }
             else
@@ -672,10 +660,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         this.command.ExecuteNonQuery();
                         this.c.Close(); // Needs to close before LoadDataGrid on account of reopening in CheckoutDatabaseUpdate
 
-                        LoadDataGrid("SELECT * FROM accounts", true);
-                        LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                                "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                                "FROM [items] ORDER BY [ISXX], [copyID]", false);
+                        LoadDataGrid();
                     }
                     this.c.Close(); // Close in case if statement is false 
                 }
@@ -717,10 +702,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     this.command.ExecuteNonQuery();
                     this.c.Close();
 
-                    LoadDataGrid("SELECT * FROM accounts", true);
-                    LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                            "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                            "FROM [items] ORDER BY [ISXX], [copyID]", false);
+                    LoadDataGrid();
 
                     this.itemSelected = false;
                     this.selectedItem = new Item();
@@ -760,10 +742,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     this.command.ExecuteNonQuery();
                     this.c.Close();
 
-                    LoadDataGrid("SELECT * FROM accounts", true);
-                    LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                            "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                            "FROM [items] ORDER BY [ISXX], [copyID]", false);
+                    LoadDataGrid();
 
                     this.userSelected = false;
                     this.selectedUser = new User();
@@ -884,10 +863,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                             File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb"); // Renamte and move current database to 'corrupt' folder'
                             File.Copy(selectedFilePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
 
-                            LoadDataGrid("SELECT * FROM accounts", true);
-                            LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-                                    "[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-                                    "FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
+                            LoadDataGrid();
 
                             MessageBox.Show($"Restored database file from selected file:\n'{selectedFileName}'");
 
