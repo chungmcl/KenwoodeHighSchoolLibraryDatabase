@@ -150,7 +150,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonNextPage_Click(object sender, RoutedEventArgs e)
+        private void ButtonNextPage_Click(object sender, RoutedEventArgs e)
         {
             this.buttonPreviousPage.IsEnabled = true;
             this.pageNumber++;
@@ -168,7 +168,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonPreviousPage_Click(object sender, RoutedEventArgs e)
+        private void ButtonPreviousPage_Click(object sender, RoutedEventArgs e)
         {
             this.buttonNextPage.IsEnabled = true;
             this.pageNumber--;
@@ -185,14 +185,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonPrintThisPage_Click(object sender, RoutedEventArgs e)
+        private void ButtonPrintThisPage_Click(object sender, RoutedEventArgs e)
         {
             PrintDialog printDlg = new PrintDialog();
             printDlg.PrintVisual(this.dataGridIssuedBooks, "Upcoming Due Dates");
             printDlg.ShowDialog();
         }
 
-        #region CheckBoxEventHandlers
+        /// <summary>
+        /// Event handlers for checking and unchecking the column customization checkboxes.
+        /// (Displays and hides the columns according to check and uncheck)
+        /// </summary>
+        #region CheckBox Event Handlers
         private void CheckBoxUserLentTo_Checked(object sender, RoutedEventArgs e)
         {
             dataGridIssuedBooks.Columns[1].Visibility = System.Windows.Visibility.Visible;

@@ -38,7 +38,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             catch // Display error message and close program
             {
                 MessageBox.Show("ERROR: Database could not be loaded." +
-                    "\nPlease ensure following files are in the same folder as this program and named exactly the same:" +
+                    "\nPlease ensure the following files are in the same folder as this program and named exactly the same:" +
                     "\nLibraryDatabase.mdb" +
                     "\n\nKenwoodeHighSchoolLibraryDatabase.pdb" +
                     "\nKenwoodeHighSchoolLibraryDatabase.exe.config");
@@ -64,18 +64,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <summary>
         /// Reload both datagrids with default queries. (Specfic queries can be used by calling each method individually)
         /// </summary>
-        /// <param name="sqlText">The SQL command to be executed</param>
-        /// <param name="loadAccounts">Load accounts datagrid or items datagrid</param>
         private void LoadDataGrid()
         {
             LoadAccountsDataGrid("SELECT * FROM accounts");
             LoadItemsDataGrid("SELECT * FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]");
-        }
+    }
 
         /// <summary>
         /// Load every called entry from the accounts table within the database.
         /// </summary>
-        /// <param name="reader">The OleDbDataReader to read each entry from the databse</param>
+        /// <param name="sqlCommand">The SQL Query to perform to load datagrid.</param>
         private void LoadAccountsDataGrid(string sqlCommand)
         {
             CalculateOverdueAndFines(); // Calculate overdue items and fines everytime datagrid is loaded - ensures dynamic loading of data
@@ -106,7 +104,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <summary>
         /// Load every called entry from the items table within the database.
         /// </summary>
-        /// <param name="reader">The OleDbDataReader to read each entry from the databse</param>
+        /// <param name="sqlCommand">The SQL Query to perform to load datagrid.</param>
         private void LoadItemsDataGrid(string sqlCommand)
         {
             CalculateOverdueAndFines(); // Calculate overdue items and fines everytime datagrid is loaded - ensures dynamic loading of data
@@ -126,36 +124,34 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 newItem.title = reader["title"].ToString();
                 string authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
                     $"{reader["authorMiddleName"].ToString()}";
-                if (authorName.Length > 3)
+                if (authorName.Length > 3) // If author name is not empty (3 because of comma and empty space) 
                 {
                     newItem.authorName = authorName;
                 }
-                else
+                else // else, author name is empty
                 {
-                    newItem.authorName = "";
+                    newItem.authorName = ""; // Remove comma and empty space
                 }
                 newItem.currentlyCheckedOutBy = reader["currentlyCheckedOutBy"].ToString();
-                this.itemsToAdd.Add(newItem);
+                this.itemsToAdd.Add(newItem); // Add to list of items to be loaded to datagrid
             }
 
-            for (int i = 0; i < this.itemsToAdd.Count; i++)
+            for (int i = 0; i < this.itemsToAdd.Count; i++) // For every item to be added to datagrid
             {
-                reader.Close();
+                reader.Close(); // Close reader from previous use
                 string currentlyCheckedOutBy = this.itemsToAdd[i].currentlyCheckedOutBy;
                 this.command.CommandText = $"SELECT [firstName], [lastName] FROM [accounts] WHERE [userID] = '{currentlyCheckedOutBy}'";
                 reader = this.command.ExecuteReader();
                 reader.Read();
-                try // more efficient way to deal with this issue? (If an item isn't registered to anyone yet)
+                try // add first and last name to currently checked out by column of datagrid - throws error if firstName or lastName is empty
                 {
                     string firstName = reader["firstName"].ToString();
                     string lastName = reader["lastName"].ToString();
-                    this.itemsToAdd[i].currentlyCheckedOutBy = currentlyCheckedOutBy + $"~({lastName}, {firstName})";
-                    // '~' character to be used as check character when program needs to read currentlyCheckedOutBy (ID only)
-                    // Prevent operator from registering userID with '~'
+                    this.itemsToAdd[i].currentlyCheckedOutBy = currentlyCheckedOutBy + $" ({lastName}, {firstName})";
                 }
-                catch // specify catch?
+                catch // try requires catch - otherwise set itself to what it was before (just empty)
                 {
-                    this.itemsToAdd[i].currentlyCheckedOutBy = currentlyCheckedOutBy;
+                    this.itemsToAdd[i].currentlyCheckedOutBy = ""; //currentlyCheckedOutBy;
                 }
                 this.dataGridItems.Items.Add(this.itemsToAdd[i]);
             }
@@ -238,7 +234,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     this.textBoxItemsSearchBy.Text = this.selectedUser.userID;
                 }
             }
-            catch // specify catch?
+            catch
             {
                 MessageBox.Show("Please double-click a row to select a user.");
                 this.checkBoxShowItems.IsChecked = false;
@@ -269,8 +265,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     string selectedItemUserID = this.selectedItem.currentlyCheckedOutBy;
                     if (selectedItemUserID.Length > 0)
                     {
-                        selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf('~'));
+                        selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf(' '));
                         this.textBoxAccountsSearchBy.Text = selectedItemUserID;
+                    }
+                    else // If this.selectedItem.currentlyCheckedOutBy is empty, the toolbar will not be changed - need to set to empty space
+                    {
+                        this.textBoxAccountsSearchBy.Text = " ";
                     }
                 }
             }
@@ -543,9 +543,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         /// <summary>
-        /// Needs a darn comment!
+        /// Update database after checking out item to user
         /// </summary>
-        /// <param name="dueDate"></param>
+        /// <param name="dueDate">Due date of the item for the user</param>
         private void CheckoutDatabaseUpdate(DateTime dueDate)
         {
             string userID = this.selectedUser.userID.ToString();
@@ -560,9 +560,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.c.Close();
 
             LoadDataGrid();
-            //LoadDataGrid("SELECT [itemID], [copyID], [ISXX], [deweyDecimal], [format], [genreClassOne], [title], " +
-            //"[authorLastName], [authorFirstName], [authorMiddleName], [currentlyCheckedOutBy] " +
-            //"FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]", false);
         }
         #endregion
 
@@ -621,10 +618,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (this.itemSelected)
             {
-                if (this.selectedItem.currentlyCheckedOutBy != "")
+                string userCheckedOutTo = this.selectedItem.currentlyCheckedOutBy;
+                if (userCheckedOutTo != "")
                 {
+                    string userCheckedOutToID = userCheckedOutTo.Substring(0, userCheckedOutTo.IndexOf(' '));
+
                     this.c.Open();
-                    this.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{this.selectedItem.currentlyCheckedOutBy}'";
+                    this.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{userCheckedOutToID}'";
                     this.reader = this.command.ExecuteReader();
                     this.reader.Read();
                     DateTime dueDate = Convert.ToDateTime(this.reader[0].ToString());
@@ -635,7 +635,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         overdueBy = 0;
                     }
                     this.reader.Close();
-                    this.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE [userID] = '{this.selectedItem.currentlyCheckedOutBy}'";
+                    this.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE [userID] = '{userCheckedOutToID}'";
                     this.reader = this.command.ExecuteReader();
                     this.reader.Read();
                     double totalFinesForItem = ((double)this.reader[0]) * overdueBy;
@@ -650,12 +650,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     {
                         this.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{this.selectedItem.itemID}'";
                         this.command.ExecuteNonQuery();
-                        this.command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{this.selectedItem.currentlyCheckedOutBy}' WHERE [itemID] = '{this.selectedItem.itemID}'";
+                        this.command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{userCheckedOutToID}' WHERE [itemID] = '{this.selectedItem.itemID}'";
                         this.command.ExecuteNonQuery();
                         this.command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{this.selectedItem.itemID}'";
                         this.command.ExecuteNonQuery();
                         this.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
-                            $"WHERE [userID] = '{this.selectedItem.currentlyCheckedOutBy}'";
+                            $"WHERE [userID] = '{userCheckedOutToID}'";
                         this.command.ExecuteNonQuery();
                         this.c.Close(); // Needs to close before LoadDataGrid on account of reopening in CheckoutDatabaseUpdate
 
@@ -757,7 +757,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region CheckBoxes
-        private void CheckBoxShowItems_Checked(object sender, RoutedEventArgs e) // Can I factor out code? (Look in select user/items)
+        private void CheckBoxShowItems_Checked(object sender, RoutedEventArgs e)
         {
             if (this.userSelected)
             {
@@ -767,7 +767,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             else
             {
-                MessageBox.Show("Please double click to select a user."); // double check text format - does it follow the rest of the program?
+                MessageBox.Show("Please double-click to select a user.");
                 this.checkBoxShowItems.IsChecked = false;
             }
         }
@@ -782,7 +782,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        private void CheckBoxShowUser_Checked(object sender, RoutedEventArgs e) // Can I factor out code? (Look in select user/items)
+        private void CheckBoxShowUser_Checked(object sender, RoutedEventArgs e)
         {
             if (this.itemSelected)
             {
@@ -791,13 +791,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 string selectedItemUserID = this.selectedItem.currentlyCheckedOutBy;
                 if (selectedItemUserID.Length > 0)
                 {
-                    selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf('~'));
+                    selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf(' '));
                     this.textBoxAccountsSearchBy.Text = selectedItemUserID;
+                }
+                else // If this.selectedItem.currentlyCheckedOutBy is empty, the toolbar will not be changed - need to set to empty space
+                {
+                    this.textBoxAccountsSearchBy.Text = " ";
                 }
             }
             else
             {
-                MessageBox.Show("Please double click to select an item."); // double check text format - does it follow the rest of the program?
+                MessageBox.Show("Please double-click to select an item.");
                 this.checkBoxShowUser.IsChecked = false;
             }
         }
@@ -818,7 +822,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void Backup_Click(object sender, RoutedEventArgs e)
         {
             string dateTime = DateTime.Now.ToString();
-            dateTime = dateTime.Replace("/", "_");
+            dateTime = dateTime.Replace("/", "_"); // Set markers in DateTime to be underscores, '/' and ':' are not permitted in file names
             dateTime = dateTime.Replace(":", "_");
             string backupFileName = "Backup-" + dateTime;
 

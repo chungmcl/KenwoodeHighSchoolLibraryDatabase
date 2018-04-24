@@ -170,19 +170,19 @@
                           Click="Restore_Click"/>
             </MenuItem>
         </Menu>
-        <Grid x:Name="gridSelectedUserAndItem" HorizontalAlignment="Left" Height="64" Margin="10,47,0,0" VerticalAlignment="Top" Width="197">
+        <Grid x:Name="gridSelectedUserAndItem" HorizontalAlignment="Left" Height="64" Margin="10,47,0,0" VerticalAlignment="Top" Width="310">
             <Label x:Name="labelDesSelectedUser" Content="Selected User: " 
                HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" 
                FontFamily="Sylfaen" FontWeight="Bold"/>
             <Label x:Name="labelSelectedUser" Content="(Select a User)" 
                HorizontalAlignment="Left" Margin="101,10,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontStyle="Italic"/>
+               FontFamily="Sylfaen" FontStyle="Italic" Width="199"/>
             <Label x:Name="labelDesSelectedItem" Content="Selected Item:" 
                HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" 
                FontFamily="Sylfaen" FontWeight="Bold"/>
             <Label x:Name="labelSelectedItem" Content="(Select an Item)" 
                HorizontalAlignment="Left" Margin="101,32,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontStyle="Italic"/>
+               FontFamily="Sylfaen" FontStyle="Italic" Width="199"/>
         </Grid>
     </Grid>
 </Window>

@@ -139,7 +139,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonRegister_Click(object sender, RoutedEventArgs e)
+        private void ButtonRegister_Click(object sender, RoutedEventArgs e)
         {
             if (this.toRegister) // Register new user
             {
@@ -229,10 +229,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 return "A User ID is required. (School/Employee ID)";
             }
-            else if (this.textBoxUserIDRegister.Text.Contains('~')) // check for bugs
-            {
-                return "A User ID cannot contain the '~' chracter";
-            }
             else
             {
                 LoadUserIDs();
@@ -265,7 +261,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
             if (!(int.TryParse(this.textBoxItemLimit.Text.Trim(), out this.itemLimit)))
             {
-                return "User Item Limit must be in integer format."; // need to check for negative integers
+                return "User Item Limit must be in integer format.";
             }
             else if (this.itemLimit < 0)
             {
@@ -274,7 +270,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
             if (!(int.TryParse(this.textBoxDateLimit.Text.Trim(), out this.dateLimit)))
             {
-                return "User Date Limit must be in integer format."; // need to check for negative integers
+                return "User Date Limit must be in integer format.";
             }
             else if (this.dateLimit < 0)
             {
@@ -283,7 +279,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
             if (!(double.TryParse(this.textBoxFinePerDay.Text.Trim(), out this.finePerDay)))
             {
-                return "User Fine Per (overdue) Day must be a number."; // need to check for negative numbers
+                return "User Fine Per (overdue) Day must be a number.";
             }
             else if (this.finePerDay < 0)
             {

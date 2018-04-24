@@ -243,7 +243,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonConvertToISBN13_Click(object sender, RoutedEventArgs e)
+        private void ButtonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
             string isbnTen = this.textBoxISBNTen.Text.Trim();
             isbnTen = AgressiveTrim(isbnTen);
@@ -267,7 +267,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBoxGenreHundreds_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBoxGenreHundreds_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.comboBoxGenreHundreds.SelectedIndex < 10)
             {
@@ -313,7 +313,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.comboBoxGenreOnes.IsEnabled = true;
             this.comboBoxGenreOnes.Items.Clear();
@@ -336,7 +336,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
+        private void ButtonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
         {
             if (this.comboBoxGenreHundreds.SelectedIndex == 10)
             {
@@ -467,7 +467,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBoxFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBoxFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.comboBoxFormat.SelectedIndex == 1)
             {
@@ -495,7 +495,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonRegisterItem_Click(object sender, RoutedEventArgs e)
+        private void ButtonRegisterItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.toRegister)
             {
@@ -572,7 +572,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonCheckout_Click(object sender, RoutedEventArgs e)
+        private void ButtonCheckout_Click(object sender, RoutedEventArgs e)
         {
             if (this.textBoxCurrentlyCheckedOutBy.Text != "")
             {

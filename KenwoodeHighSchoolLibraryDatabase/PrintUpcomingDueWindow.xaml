@@ -27,21 +27,26 @@
         <Button x:Name="buttonPreviousPage" Content="Previous Page" 
                 HorizontalAlignment="Left" Margin="746,94,0,0" VerticalAlignment="Top" Width="90"
                 FontFamily="Sylfaen"
-                Click="buttonPreviousPage_Click"/>
+                Click="ButtonPreviousPage_Click"/>
+        
         <Button x:Name="buttonNextPage" Content="Next Page" 
                 HorizontalAlignment="Left" Margin="854,94,0,0" VerticalAlignment="Top" Width="90"
                 FontFamily="Sylfaen"
-                Click="buttonNextPage_Click"/>
+                Click="ButtonNextPage_Click"/>
+        
         <Button x:Name="buttonPrintThisPage" Content="Print This Page" 
                 HorizontalAlignment="Left" Margin="746,217,0,0" VerticalAlignment="Top" Width="122"
                 FontFamily="Sylfaen"
-                Click="buttonPrintThisPage_Click"/>
+                Click="ButtonPrintThisPage_Click"/>
+        
         <Label x:Name="labelPageNumber" Content="" 
                HorizontalAlignment="Left" Margin="746,118,0,0" VerticalAlignment="Top" 
                FontFamily="Sylfaen"/>
+        
         <Label x:Name="labelTitle" Content="Print Upcoming Due Items This Week" 
                HorizontalAlignment="Left" Margin="732,10,0,0" VerticalAlignment="Top" Width="212"
                FontFamily="Sylfaen" FontWeight="Bold"/>
+        
         <Grid x:Name="gridSelectColumns" 
               HorizontalAlignment="Left" Height="500" Margin="732,260,0,0" VerticalAlignment="Top" Width="246">
             <CheckBox x:Name="checkBoxHeaderItemID" Content="Item ID"
@@ -49,7 +54,7 @@
                       IsChecked="True" IsEnabled="False" FontFamily="Sylfaen"/>
 
             <Label x:Name="labelCustomizeData" Content="Customize Info (Columns)" 
-                   HorizontalAlignment="Center" Margin="52,10,43,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" 
+                   HorizontalAlignment="Center" Margin="52,10,43,0" VerticalAlignment="Top"
                    FontFamily="Sylfaen"/>
             <Label x:Name="labelRequired" Content="(Item ID is required.)" 
                    HorizontalAlignment="Left" Margin="0,68,0,0" VerticalAlignment="Top" 

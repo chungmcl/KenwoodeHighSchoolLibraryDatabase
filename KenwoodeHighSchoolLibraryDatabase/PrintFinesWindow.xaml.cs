@@ -103,7 +103,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonNextPage_Click(object sender, RoutedEventArgs e)
+        private void ButtonNextPage_Click(object sender, RoutedEventArgs e)
         {
             this.buttonPreviousPage.IsEnabled = true;
             this.pageNumber++;
@@ -121,7 +121,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonPreviousPage_Click(object sender, RoutedEventArgs e)
+        private void ButtonPreviousPage_Click(object sender, RoutedEventArgs e)
         {
             this.buttonNextPage.IsEnabled = true;
             this.pageNumber--;
@@ -138,7 +138,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonPrintThisPage_Click(object sender, RoutedEventArgs e)
+        private void ButtonPrintThisPage_Click(object sender, RoutedEventArgs e)
         {
             PrintDialog printDlg = new PrintDialog();
             printDlg.PrintVisual(this.dataGridFinedUsers, "Fined Users");
@@ -146,18 +146,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         /// <summary>
-        /// The acount with fine to be displayed in the Data Grid.
+        /// Event handlers for checking and unchecking the column customization checkboxes.
+        /// (Displays and hides the columns according to check and uncheck)
         /// </summary>
-        public class AccountWithFine
-        {
-            public double fines { get; set; }
-            public int overdue { get; set; }
-            public string userID { get; set; }
-            public string name { get; set; }
-            public string userType { get; set; }
-            public double finePerDay { get; set; }
-        }
-
+        #region CheckBox Event Handlers
         private void CheckBoxName_Checked(object sender, RoutedEventArgs e)
         {
             dataGridFinedUsers.Columns[2].Visibility = System.Windows.Visibility.Visible;
@@ -195,6 +187,20 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void CheckBoxUserType_Unchecked(object sender, RoutedEventArgs e)
         {
             dataGridFinedUsers.Columns[5].Visibility = System.Windows.Visibility.Hidden;
+        }
+        #endregion
+
+        /// <summary>
+        /// The acount with fine to be displayed in the Data Grid.
+        /// </summary>
+        public class AccountWithFine
+        {
+            public double fines { get; set; }
+            public int overdue { get; set; }
+            public string userID { get; set; }
+            public string name { get; set; }
+            public string userType { get; set; }
+            public double finePerDay { get; set; }
         }
     }
 }
