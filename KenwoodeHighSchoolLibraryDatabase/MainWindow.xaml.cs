@@ -220,7 +220,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void DataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            try
+            try // attempt to set selected user double clicked to this.selectedUser
             {
                 this.selectedUser = (User)this.dataGridAccounts.SelectedItem;
                 string selectedUserInfo = $"({this.selectedUser.userID}) " +
@@ -238,7 +238,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     this.textBoxItemsSearchBy.Text = this.selectedUser.userID;
                 }
             }
-            catch
+            catch // if thing double-clicked is not a row that represents user, show error message
             {
                 MessageBox.Show("Please double-click a row to select a user.");
                 this.checkBoxShowItems.IsChecked = false;
@@ -254,7 +254,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void DataGridItems_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            try
+            try // attempt to set selected user double clicked to this.selectedItem
             {
                 this.selectedItem = (Item)this.dataGridItems.SelectedItem;
                 string selectedItemInfo = $"{this.selectedItem.title} ({this.selectedItem.itemID})";
@@ -264,12 +264,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 if (this.checkBoxShowUser.IsChecked == true)
                 {
+                    // If check box to show user currently checked out by for selected item is checked,
+                    // show user checked out to when item is double clicked
                     this.checkBoxShowItems.IsEnabled = false;
                     this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
                     string selectedItemUserID = this.selectedItem.currentlyCheckedOutBy;
-                    if (selectedItemUserID.Length > 0)
+                    if (selectedItemUserID.Length > 0) // if the item is checked out to someone (selectedItemUserID will be empty if not checked out)
                     {
-                        selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf(' '));
+                        selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf(' ')); // remove name from selectedItemUserID
                         this.textBoxAccountsSearchBy.Text = selectedItemUserID;
                     }
                     else // If this.selectedItem.currentlyCheckedOutBy is empty, the toolbar will not be changed - need to set to empty space
@@ -278,7 +280,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     }
                 }
             }
-            catch
+            catch // if thing double-clicked is not a row that represents user, show error message
             {
                 MessageBox.Show("Please double-click a row to select an item.");
                 this.checkBoxShowUser.IsChecked = false;
@@ -297,10 +299,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void ComboBoxAccountsSearchByOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.comboBoxAccountsSearchByOptions.SelectedIndex != -1)
+            if (this.comboBoxAccountsSearchByOptions.SelectedIndex != -1) // if combo box to set filter is not empty (.SelectedIndex !=-1)
             {
-                string setTextBoxTo = this.comboBoxAccountsSearchByOptions.SelectedValue.ToString().Substring(37);
-                if (setTextBoxTo.Count() > 0)
+                string setTextBoxTo = this.comboBoxAccountsSearchByOptions.SelectedValue.ToString().Substring(37); // Substring because returns with ListBox tag
+                if (setTextBoxTo.Count() > 0) // Is this really necessary?
                 {
                     this.textBoxAccountsSearchBy.Text = $"Enter a {setTextBoxTo}...";
                     LoadDataGrid();
