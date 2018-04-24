@@ -66,6 +66,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         private void LoadDataGrid()
         {
+            // Calculate overdue items and fines everytime full datagrids are loaded - ensures dynamic loading of data
+            CalculateOverdueAndFines();
             LoadAccountsDataGrid("SELECT * FROM accounts");
             LoadItemsDataGrid("SELECT * FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]");
     }
@@ -76,8 +78,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="sqlCommand">The SQL Query to perform to load datagrid.</param>
         private void LoadAccountsDataGrid(string sqlCommand)
         {
-            CalculateOverdueAndFines(); // Calculate overdue items and fines everytime datagrid is loaded - ensures dynamic loading of data
-
             this.c.Open();
             this.command.CommandText = sqlCommand;
             this.command.CommandType = System.Data.CommandType.Text;
@@ -107,8 +107,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="sqlCommand">The SQL Query to perform to load datagrid.</param>
         private void LoadItemsDataGrid(string sqlCommand)
         {
-            CalculateOverdueAndFines(); // Calculate overdue items and fines everytime datagrid is loaded - ensures dynamic loading of data
-            
             this.c.Open();
             this.command.CommandText = sqlCommand;
             this.command.CommandType = System.Data.CommandType.Text;
@@ -151,7 +149,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 }
                 catch // try requires catch - otherwise set itself to what it was before (just empty)
                 {
-                    this.itemsToAdd[i].currentlyCheckedOutBy = ""; //currentlyCheckedOutBy;
+                    this.itemsToAdd[i].currentlyCheckedOutBy = "";
                 }
                 this.dataGridItems.Items.Add(this.itemsToAdd[i]);
             }
@@ -172,22 +170,25 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.c.Open();
             this.command.CommandText = "SELECT [userID], [finePerDay] FROM accounts";
             this.reader = this.command.ExecuteReader();
-            while (this.reader.Read())
+            while (this.reader.Read()) // Load all the users and their fine rate (fine per day) into a list
             {
                 string[] toAdd = new string[] { this.reader[0].ToString(), this.reader[1].ToString() };
                 userIDs.Add(toAdd);
             }
             this.reader.Close();
-            for (int i = 0; i < userIDs.Count; i++)
+            for (int i = 0; i < userIDs.Count; i++) // For each user, calculate number of overdue and the amount of fines
             {
                 int overDue = 0;
                 double fines = 0;
                 string currentUserID = userIDs[i][0];
                 string finePerDay = userIDs[i][1];
                 this.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{currentUserID}'";
+                // Select all items that are currently checked out by this user
                 this.reader = this.command.ExecuteReader();
                 while (this.reader.Read())
                 {
+                    // Every time an item that is checked out by the user is calculated to be overdue, add one
+                    // Also calculate the fines - multiply overdue days by the user's fine rate (fine per day)
                     DateTime dueDate = Convert.ToDateTime(this.reader[0].ToString());
                     if (DateTime.Now >= dueDate)
                     {
@@ -201,6 +202,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     $"[overDueItems] = {overDue}, " +
                     $"[fines] = {fines} " +
                     $"WHERE [userID] = '{currentUserID}'";
+                // Save data to secondary storage - database
                 this.command.ExecuteNonQuery();
             }
             this.c.Close();
@@ -229,6 +231,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 if (this.checkBoxShowItems.IsChecked == true) // had to compare to true; .IsChecked is type bool? (nullable)
                 {
+                    // If check box to show items for selected user is checked,
+                    // show items checked out to user when user is double clicked
                     this.checkBoxShowUser.IsEnabled = false;
                     this.comboBoxItemsSearchByOptions.SelectedIndex = 5;
                     this.textBoxItemsSearchBy.Text = this.selectedUser.userID;
