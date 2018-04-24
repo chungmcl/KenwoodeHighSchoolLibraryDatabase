@@ -128,10 +128,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     $"{reader["authorMiddleName"].ToString()}";
                 if (authorName.Length > 3)
                 {
-
                     newItem.authorName = authorName;
                 }
-                else // it should work now - double check for bugs
+                else
                 {
                     newItem.authorName = "";
                 }
