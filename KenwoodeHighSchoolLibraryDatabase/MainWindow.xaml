@@ -76,7 +76,7 @@
                        HorizontalAlignment="Left" Margin="11,7,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" 
                        FontFamily="Sylfaen"/>
                 <TextBox x:Name="textBoxAccountsSearchBy" TextWrapping="Wrap"
-                         HorizontalAlignment="Left" Height="23" Margin="246,9,0,0" VerticalAlignment="Top" Width="120" 
+                         HorizontalAlignment="Left" Height="23" Margin="246,9,0,0" VerticalAlignment="Top" Width="213" 
                          FontFamily="Sylfaen" 
                          TextChanged="TextBoxAccountsSearchBy_TextChanged" GotFocus="TextBoxAccountsSearchBy_GotFocus"/>
                 <Button x:Name="BtnToUserEditWindow" Content="Edit/View Selected User" 

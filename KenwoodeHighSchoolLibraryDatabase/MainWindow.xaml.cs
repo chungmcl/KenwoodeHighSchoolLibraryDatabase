@@ -69,7 +69,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             // Calculate overdue items and fines everytime full datagrids are loaded - ensures dynamic loading of data
             CalculateOverdueAndFines();
             LoadAccountsDataGrid("SELECT * FROM accounts");
-            LoadItemsDataGrid("SELECT * FROM [items] ORDER BY [authorLastName], [ISXX], [copyID]");
+            LoadItemsDataGrid("SELECT * FROM items ORDER BY [authorLastName], [ISXX], [copyID]");
     }
 
         /// <summary>
@@ -302,8 +302,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (this.comboBoxAccountsSearchByOptions.SelectedIndex != -1) // if combo box to set filter is not empty (.SelectedIndex !=-1)
             {
                 string setTextBoxTo = this.comboBoxAccountsSearchByOptions.SelectedValue.ToString().Substring(37); // Substring because returns with ListBox tag
-                this.textBoxAccountsSearchBy.Text = $"Enter a {setTextBoxTo}...";
-                LoadDataGrid();
+                this.textBoxAccountsSearchBy.Text = $"Enter a(n) {setTextBoxTo}...";
+                LoadAccountsDataGrid("SELECT * FROM accounts");
             }
         }
 
@@ -317,16 +317,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (this.comboBoxItemsSearchByOptions.SelectedIndex != -1) // If comboBox value is selected
             {
-                string setTextBoxTo = this.comboBoxItemsSearchByOptions.SelectedValue.ToString().Substring(37);
-                if (setTextBoxTo.Count() > 0)
-                {
-                    this.textBoxItemsSearchBy.Text = $"Enter a(n) {setTextBoxTo}...";
-                }
-                if (setTextBoxTo == "Lent To")
+                string setTextBoxTo = this.comboBoxItemsSearchByOptions.SelectedValue.ToString().Substring(37); // Substring because returns with ListBox tag
+                if (setTextBoxTo == "Lent To") // different case due to difference in use of English grammar for this specific case
                 {
                     this.textBoxItemsSearchBy.Text = $"Enter who {setTextBoxTo}...";
                 }
-                LoadDataGrid();
+                else
+                {
+                    this.textBoxItemsSearchBy.Text = $"Enter a(n) {setTextBoxTo}...";
+                }
+                LoadItemsDataGrid("SELECT * FROM items ORDER BY[authorLastName], [ISXX], [copyID]");
             }
         }
 
@@ -339,11 +339,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void TextBoxAccountsSearchBy_TextChanged(object sender, TextChangedEventArgs e)
         {
             string currentText = this.textBoxAccountsSearchBy.Text;
-            if (currentText == "")
+            if (currentText == "") // If user sets textbox to be empty, then load all values to both datagrids
             {
-                LoadDataGrid();
+                LoadAccountsDataGrid("SELECT * FROM accounts");
             }
-            else
+            else // else, load a
             {
                 int searchType = this.comboBoxAccountsSearchByOptions.SelectedIndex;
                 string queryColumn = "";

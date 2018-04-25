@@ -181,20 +181,20 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #region Register Item
         /// <summary>
         /// Converts older books' ISBN10 numbers to the more modern ISBN13 format. 
-        /// Can also function for related standards such as ISMN 
-        /// According to the International ISBN Agency's 2012 manual,
-        /// the method of conversion is to:
-        /// -Append 978 to the ISBN10 number
-        /// -Replace the old ISBN10 checksum (last digit in the sequence) with a newly calculated ISBN13 checksum
-        /// The ISBN13 checksum can be calculated by taking the ISBN10 number with the 978 prefix
-        /// and inputting it into this equation: checkSum = (10 - (x1 + 3x2 + x3 + 3x4 + ... + x11 + 3x12) mod 10)
-        /// (See the ISBN users manual for more information)
-        /// Manual: https://www.isbn-international.org/sites/default/files/ISBN%20Manual%202012%20-corr.pdf
+        /// Can also function for related standards such as ISMN
         /// </summary>
         /// <param name="isbnTen">The ISBN10 number to be converted</param>
         /// <returns>The ISBN13 number equivalent to the ISBN10 number input</returns>
         private string ConvertToISBNThirteen(string isbnTen)
         {
+            // According to the International ISBN Agency's 2012 manual,
+            // the method of conversion is to:
+            // -Append 978 to the ISBN10 number
+            // -Replace the old ISBN10 checksum (last digit in the sequence) with a newly calculated ISBN13 checksum
+            // The ISBN13 checksum can be calculated by taking the ISBN10 number with the 978 prefix
+            // and inputting it into this equation: checkSum = (10 - (x1 + 3x2 + x3 + 3x4 + ... + x11 + 3x12) mod 10)
+            // (See the ISBN users manual for more information)
+            // Manual: https://www.isbn-international.org/sites/default/files/ISBN%20Manual%202012%20-corr.pdf
             // Assert isbnTen is exactly 10 ints in string form (checked in event handler)
             // Append 978 as prefix and calculate ISBN13 Checksum to append as suffix
             string isbnThirteen = "978" + isbnTen; // initialize with 978 to calculate new checksum
@@ -216,7 +216,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
             return isbnThirteen;
         }
 
-        // Strictly trims all chracters except for numerical values
+        /// <summary>
+        /// Strictly trims all chracters except for numerical values
+        /// </summary>
         private string AgressiveTrim(string check)
         {
             List<char> newStringCharList = new List<char>();
