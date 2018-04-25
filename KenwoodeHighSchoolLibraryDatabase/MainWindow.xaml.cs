@@ -302,11 +302,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (this.comboBoxAccountsSearchByOptions.SelectedIndex != -1) // if combo box to set filter is not empty (.SelectedIndex !=-1)
             {
                 string setTextBoxTo = this.comboBoxAccountsSearchByOptions.SelectedValue.ToString().Substring(37); // Substring because returns with ListBox tag
-                if (setTextBoxTo.Count() > 0) // Is this really necessary?
-                {
-                    this.textBoxAccountsSearchBy.Text = $"Enter a {setTextBoxTo}...";
-                    LoadDataGrid();
-                }
+                this.textBoxAccountsSearchBy.Text = $"Enter a {setTextBoxTo}...";
+                LoadDataGrid();
             }
         }
 

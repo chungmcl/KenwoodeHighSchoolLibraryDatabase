@@ -195,24 +195,22 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <returns>The ISBN13 number equivalent to the ISBN10 number input</returns>
         private string ConvertToISBNThirteen(string isbnTen)
         {
+            // Assert isbnTen is exactly 10 ints in string form (checked in event handler)
             // Append 978 as prefix and calculate ISBN13 Checksum to append as suffix
             string isbnThirteen = "978" + isbnTen; // initialize with 978 to calculate new checksum
-            int evenSum = 0;
-            int oddSum = 0;
-            int totalSum;
+            int totalSum = 0;
             for (int i = 0; i < 12; i++) // Run through all 12 ints (13 is the checksum)
             {
-                if ((i % 2) == 0)
+                if ((i % 2) != 0)
                 {
-                    evenSum = evenSum + int.Parse(isbnThirteen[i].ToString());
+                    totalSum = totalSum + (3 * int.Parse(isbnThirteen[i].ToString()));
                 }
-                if ((i % 2) == 1)
+                else
                 {
-                    oddSum = oddSum + (3 * int.Parse(isbnThirteen[i].ToString()));
+                    totalSum = totalSum + (int.Parse(isbnThirteen[i].ToString()));
                 }
             }
-            totalSum = evenSum + oddSum;
-            // checkSum = (10 - (x1 + 3x2 + x3 + 3x4 + ... + x11 + 3x12) mod 10)
+            // checkSum = (10 - (a1 + 3 * a2 + a3 + 3 * a4 + ... + a11 + 3 * a12) mod 10)
             int checkSum = 10 - (totalSum % 10);
             isbnThirteen = isbnThirteen.Substring(0, 12) + checkSum;
             return isbnThirteen;
