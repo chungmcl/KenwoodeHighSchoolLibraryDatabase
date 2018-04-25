@@ -343,11 +343,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 LoadAccountsDataGrid("SELECT * FROM accounts");
             }
-            else // else, load a
+            else // else, load datagrid according to user specfied query
             {
                 int searchType = this.comboBoxAccountsSearchByOptions.SelectedIndex;
                 string queryColumn = "";
-                switch (searchType)
+                switch (searchType) // set query column according to the comboBox item the user selects
                 {
                     case 0:
                         queryColumn = "firstName";
@@ -360,9 +360,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         break;
                 }
 
-                if (queryColumn != "")
+                if (queryColumn != "") // If a comboBox value is selected (filter)
                 {
                     LoadAccountsDataGrid($"SELECT * FROM accounts WHERE [{queryColumn}] LIKE '%{currentText}%'");
+                    // Load account datagrid with values that are similar or are same to the values the user specifies
                 }
             }
         }
@@ -378,13 +379,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string currentText = this.textBoxItemsSearchBy.Text;
             if (currentText == "")
             {
-                LoadDataGrid();
+                LoadItemsDataGrid("SELECT * FROM items ORDER BY[authorLastName], [ISXX], [copyID]");
             }
-            else
+            else // set query column according to the comboBox item the user selects
             {
                 int searchType = this.comboBoxItemsSearchByOptions.SelectedIndex;
                 string queryColumn = "";
-                switch (searchType)
+                switch (searchType) // set query column according to the comboBox item the user selects
                 {
                     case 0:
                         queryColumn = "deweyDecimal";
@@ -406,9 +407,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         break;
                 }
 
-                if (queryColumn != "")
+                if (queryColumn != "") // If a comboBox value is selected (filter)
                 {
                     LoadItemsDataGrid($"SELECT * FROM [items] WHERE [{queryColumn}] LIKE '%{currentText}%'");
+                    // Load account datagrid with values that are similar or are same to the values the user specifies
                 }
             }
         }
@@ -445,7 +447,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             ItemRegistrationWindow x = new ItemRegistrationWindow();
             x.Owner = this;
-            bool? receive = x.ShowDialog();
+            bool? receive = x.ShowDialog(); // bool returned when ItemRegistrationWindow is closed
             if (receive == true)
             {
                 LoadDataGrid();
@@ -462,7 +464,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             UserRegistrationWindow w = new UserRegistrationWindow();
             w.Owner = this;
-            bool? receive = w.ShowDialog();
+            bool? receive = w.ShowDialog(); // bool returned when ItemRegistrationWindow is closed
             if (receive == true)
             {
                 LoadDataGrid();
@@ -495,16 +497,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #region Checkout Item to Selected User
         /// <summary>
         /// Checkout selected book to select user.
-        /// Display an error message with MessageBox if:
-        /// Either an item or a user is not selected.
-        /// The selected item is already checked out to the selected user.
-        /// The selected item is already checked out to another user.
-        /// The selected user is at his/her item limit.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnToCheckout_Click(object sender, RoutedEventArgs e)
         {
+            /// Display an error message with MessageBox if:
+            /// Either an item or a user is not selected.
+            /// The selected item is already checked out to the selected user.
+            /// The selected item is already checked out to another user.
+            /// The selected user is at his/her item limit.
             if (this.userSelected && this.itemSelected)
             {
                 if (this.selectedItem.currentlyCheckedOutBy != this.selectedUser.userID)
@@ -519,7 +521,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                                 $"Check out item: {this.selectedItem.title}\n" +
                                 $"To user: ({this.selectedUser.userID}) {this.selectedUser.lastName}, {this.selectedUser.firstName}\n" +
                                 $"For {this.selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
-                                , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                                , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK) // If user clicks OK to confirm checkout
                             {
                                 CheckoutDatabaseUpdate(dueDate);
                             }
@@ -546,11 +548,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         /// <summary>
-        /// Update database after checking out item to user
+        /// Update database after checking out item to user.
         /// </summary>
         /// <param name="dueDate">Due date of the item for the user</param>
         private void CheckoutDatabaseUpdate(DateTime dueDate)
         {
+            // Take necessary information from selectedItem and selectedUser to put into SQL UPDATE command
             string userID = this.selectedUser.userID.ToString();
             string stringDueDate = dueDate.ToString();
             string itemID = this.selectedItem.itemID.ToString();
@@ -562,19 +565,19 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.command.ExecuteNonQuery();
             this.c.Close();
 
-            LoadDataGrid();
+            LoadDataGrid(); // Reload datagrids after item is checked out
         }
         #endregion
 
         #region Editing Objects (Users and Items)
         private void ButtonEditItem_Click(object sender, RoutedEventArgs e)
         {
-            if (this.itemSelected)
+            if (this.itemSelected) // if an item is selected
             {
                 ItemRegistrationWindow w = new ItemRegistrationWindow(this.selectedItem);
                 w.Owner = this;
-                bool? receive = w.ShowDialog();
-                if (receive == true)
+                bool? receive = w.ShowDialog(); // Load datagrids if specified by window when edit/view window is closed
+                if (receive == true) // nullable bool - needs to be compared directly
                 {
                     LoadDataGrid();
                     Item check = (Item)this.dataGridItems.Items[0];
@@ -582,24 +585,32 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     this.labelCheckoutSelectedItemTitle.Content = this.selectedItem.title;
                 }
             }
-            else
+            else // else, notify user that an item has not been selected
             {
                 MessageBox.Show("Please double-click an item to select it for editing.");
             }
         }
 
+        /// <summary>
+        /// Open the edit window and pass the selectedItem to be edited,
+        /// or for the item to be viewed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnToUserEditWindow_Click(object sender, RoutedEventArgs e)
         {
-            if (this.userSelected)
+            if (this.userSelected) // if the a user is selected
             {
+                // Registration window has an overload constructor - if passed an item,
+                // it becomes an edit/view page
                 UserRegistrationWindow w = new UserRegistrationWindow(this.selectedUser);
-                bool? receive = w.ShowDialog();
-                if (receive == true)
+                bool? receive = w.ShowDialog(); // Load datagrids if specified by window when edit/view window is closed
+                if (receive == true) // nullable bool - needs to be compared directly
                 {
                     LoadDataGrid();
                 }
             }
-            else
+            else // else, notify user that an item has not been selected
             {
                 MessageBox.Show("Please double-click a user to select it for editing.");
             }
@@ -607,13 +618,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         /// <summary>
         /// Return the selected item to the library.
-        /// Display error message if the selected item is checked out to no one or if an item is
-        /// not selected.
-        /// Delete the item's log of currentlyCheckedOutBy and set previousCheckedOutBy to the user who
-        /// the item was checked out to.
-        /// Remove the dueDate from the item.
-        /// Subtract the user's number of checked out items by one.
-        /// (Fines and overdue will be recalculated when the DataGrid is reloaded).
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -621,9 +625,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (this.itemSelected)
             {
+                // get the ID AND name of the user that selectedItem is currently checked to
                 string userCheckedOutTo = this.selectedItem.currentlyCheckedOutBy;
                 if (userCheckedOutTo != "")
                 {
+                    // get ONLY the ID of the user that selectedItem is currently checked out to
+                    // (ID comes before a space and before the name) 
                     string userCheckedOutToID = userCheckedOutTo.Substring(0, userCheckedOutTo.IndexOf(' '));
 
                     this.c.Open();
@@ -649,31 +656,39 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         $"Overdue by {overdueBy} days.\n" +
                         $"Fines owed for this item = USD ${totalFinesForItem}",
                         "Confirm Return",
-                        MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user clicks OK to confirm return of item to library from user
                     {
+                        // Set the item's log of user currently checked out by to empty to indicate checked out by no one
                         this.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{this.selectedItem.itemID}'";
                         this.command.ExecuteNonQuery();
+
+                        // Delete the item's log of currentlyCheckedOutBy and set previousCheckedOutBy to the user who the item was checked out to.
                         this.command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{userCheckedOutToID}' WHERE [itemID] = '{this.selectedItem.itemID}'";
                         this.command.ExecuteNonQuery();
+
+                        // Remove the dueDate from the item.
                         this.command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{this.selectedItem.itemID}'";
                         this.command.ExecuteNonQuery();
+
+                        // Subtract the user's number of checked out items by one.
                         this.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
                             $"WHERE [userID] = '{userCheckedOutToID}'";
+
                         this.command.ExecuteNonQuery();
                         this.c.Close(); // Needs to close before LoadDataGrid on account of reopening in CheckoutDatabaseUpdate
 
-                        LoadDataGrid();
+                        LoadDataGrid(); // (Fines and number of overdue will be recalculated for users when the DataGrid is reloaded).
                     }
                     this.c.Close(); // Close in case if statement is false 
                 }
                 else
                 {
-                    MessageBox.Show("This item is not checked out to any user.");
+                    MessageBox.Show("This item is not checked out to any user.");// Display error message if the selected item is checked out to no one 
                 }
             }
             else
             {
-                MessageBox.Show("Please double-click an item to select for returning.");
+                MessageBox.Show("Please double-click an item to select for returning.");// Display error message an item is not selected.
             }
         }
 
