@@ -26,6 +26,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private List<Item> itemsToAdd = new List<Item>();
         public MainWindow()
         {
+            //
             try // Attempt to load database, if anything fails, it's likely fault of missing required files
             {
                 InitializeDatabaseConnection();
