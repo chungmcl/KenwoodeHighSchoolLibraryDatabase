@@ -634,6 +634,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     string userCheckedOutToID = userCheckedOutTo.Substring(0, userCheckedOutTo.IndexOf(' '));
 
                     this.c.Open();
+                    // 
                     this.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{userCheckedOutToID}'";
                     this.reader = this.command.ExecuteReader();
                     this.reader.Read();
