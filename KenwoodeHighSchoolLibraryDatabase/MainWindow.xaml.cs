@@ -502,28 +502,31 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void BtnToCheckout_Click(object sender, RoutedEventArgs e)
         {
-            /// Display an error message with MessageBox if:
-            /// Either an item or a user is not selected.
-            /// The selected item is already checked out to the selected user.
-            /// The selected item is already checked out to another user.
-            /// The selected user is at his/her item limit.
+            // Display an error message with MessageBox if...
+
+            // ...either an item or a user is not selected.
             if (this.userSelected && this.itemSelected)
             {
+                // ...the selected item is already checked out to the selected user.
                 if (this.selectedItem.currentlyCheckedOutBy != this.selectedUser.userID)
                 {
+                    // ...the selected item is already checked out to another user.
                     if (this.selectedItem.currentlyCheckedOutBy == "")
                     {
+                        // ...the selected user is at his/her item limit.
                         if (int.Parse(this.selectedUser.checkedOut) < int.Parse(this.selectedUser.itemLimit))
                         {
                             DateTime dueDate = (DateTime.Today.AddDays(double.Parse(this.selectedUser.dateLimit)).AddHours(23.9999));
+                            // Due at end of day so add 23.9999 hours
                             if (MessageBox.Show(
                                 $"Confirm Checkout -\n" +
                                 $"Check out item: {this.selectedItem.title}\n" +
                                 $"To user: ({this.selectedUser.userID}) {this.selectedUser.lastName}, {this.selectedUser.firstName}\n" +
                                 $"For {this.selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
-                                , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK) // If user clicks OK to confirm checkout
+                                , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK) // If user clicks OK to confirm checkout...
                             {
                                 CheckoutDatabaseUpdate(dueDate);
+                                // Update database after checking item out to user.
                             }
                         }
                         else
@@ -684,12 +687,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 }
                 else
                 {
-                    MessageBox.Show("This item is not checked out to any user.");// Display error message if the selected item is checked out to no one 
+                    MessageBox.Show("This item is not checked out to any user."); // Display error message if the selected item is checked out to no one 
                 }
             }
             else
             {
-                MessageBox.Show("Please double-click an item to select for returning.");// Display error message an item is not selected.
+                MessageBox.Show("Please double-click an item to select for returning."); // Display error message an item is not selected.
             }
         }
 
@@ -697,11 +700,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         #region Deletion
         /// <summary>
-        /// Delete the selected Item from the Data Base.
+        /// Delete the selected Item from the database and datagrid.
         /// Display error message if an item is not selected.
-        /// Lower the user's number of checked out items by one (if item is checked out to a user)
-        /// (User's number of overdue items and fines will be recalculated when dataGrid is loaded.)
-        /// Set the selected item to an empty item.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -709,53 +709,62 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (this.itemSelected)
             {
-                if (MessageBox.Show("Delete Selected Item?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Delete Selected Item?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user confirms deletion
                 {
                     this.c.Open();
+
+                    // Lower the user's number of checked out items by one (if item is checked out to a user)
+                    // (User's number of overdue items and fines will be recalculated when dataGrid is loaded.)
                     this.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
                         $"WHERE [userID] = '{this.selectedItem.currentlyCheckedOutBy}'";
                     this.command.ExecuteNonQuery();
 
+                    // Delete the selected item from the database file
                     this.command.CommandText = $"DELETE * FROM items WHERE [itemID] = '{this.selectedItem.itemID}'";
                     this.command.ExecuteNonQuery();
                     this.c.Close();
 
                     LoadDataGrid();
 
+                    /// Set the selected item to an empty item.
                     this.itemSelected = false;
                     this.selectedItem = new Item();
                     this.labelSelectedItem.Content = "(Select an Item)";
                     this.labelCheckoutSelectedItemTitle.Content = "(Select an Item)";
                 }
             }
-            else
+            else // else, user has not selected a user - display error message
             {
                 MessageBox.Show("Please double-click an item to select it for deletion.");
             }
         }
 
         /// <summary>
-        /// Delete the selected user from the Database.
+        /// Delete the selected user from the database and datagrid.
         /// Display error message if user is not selected.
-        /// Clear checkedOutBy, dueDate, and set previousCheckedOutBy to the user being deleted.
-        /// Set the currently selected user to an empty user.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ButtonDeleteSelectedUser_Click(object sender, RoutedEventArgs e)
         {
+            /// Clear checkedOutBy, dueDate, and set previousCheckedOutBy to the user being deleted.
+            /// Set the currently selected user to an empty user.
             if (this.userSelected)
             {
-                if (MessageBox.Show("Delete Selected User?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Delete Selected User?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user confirms deletion
                 {
                     this.c.Open();
+
+                    // Clear currentlyCheckedOutBy and set previouslyCheckedOutBy to user deleted
+                    // Set dueDate of items checked out by the user being deleted to be empty
                     this.command.CommandText = "UPDATE items " +
                         "SET [currentlyCheckedOutBy] = '', " +
                         $"[previousCheckedOutBy] = '{this.selectedUser.userID}', " +
                         "[dueDate] = '' " +
-                        $"WHERE [currentlyCheckedOutBy] = '{this.selectedUser.userID}'";
+                        $"WHERE [currentlyCheckedOutBy] = '{this.selectedUser.userID}'"; // All items checked out by the user being deleted
                     this.command.ExecuteNonQuery();
 
+                    // Delete all values from accounts table in database of the user being deleted
                     this.command.CommandText = $"DELETE * FROM accounts WHERE [userID] = '{this.selectedUser.userID}'";
                     this.command.ExecuteNonQuery();
                     this.c.Close();
@@ -768,7 +777,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     this.labelCheckoutSelectedUser.Content = "(Select a User)";
                 }
             }
-            else
+            else // else, user has not selected a user - display error message
             {
                 MessageBox.Show("Please double-click a user to select it for deletion.");
             }
