@@ -169,6 +169,7 @@
                 <MenuItem x:Name="Restore" Header="_Restore From Backup"
                           Click="Restore_Click"/>
             </MenuItem>
+            <MenuItem x:Name="menuItemHelp" Header="_Help" Click="MenuItemHelp_Click"/>
         </Menu>
         <Grid x:Name="gridSelectedUserAndItem" HorizontalAlignment="Left" Height="64" Margin="10,47,0,0" VerticalAlignment="Top" Width="484">
             <Label x:Name="labelDesSelectedUser" Content="Selected User: " 

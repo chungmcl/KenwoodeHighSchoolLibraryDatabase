@@ -939,7 +939,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
         #endregion
+
         #endregion
+
+        private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
+        {
+            HelpWindow w = new HelpWindow();
+            w.Show();
+        }
     }
 
     /// <summary>

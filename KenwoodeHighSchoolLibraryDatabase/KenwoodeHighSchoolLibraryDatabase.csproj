@@ -59,6 +59,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DBConnectionHandler.cs" />
+    <Compile Include="HelpWindow.xaml.cs">
+      <DependentUpon>HelpWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ItemRegistrationWindow.xaml.cs">
       <DependentUpon>ItemRegistrationWindow.xaml</DependentUpon>
     </Compile>
@@ -71,6 +74,10 @@
     <Compile Include="UserRegistrationWindow.xaml.cs">
       <DependentUpon>UserRegistrationWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="HelpWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ItemRegistrationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
