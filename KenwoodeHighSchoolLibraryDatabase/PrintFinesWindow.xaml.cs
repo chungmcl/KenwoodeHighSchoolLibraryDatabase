@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,16 +10,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class PrintFinesWindow : Window
     {
-        private OleDbConnection c;
-        private OleDbCommand command;
-        private OleDbDataReader reader;
         List<AccountWithFine> accountsWithFines;
         private int pageNumber;
         private int pageMax;
         public PrintFinesWindow()
         {
             InitializeComponent();
-            InitializeDatabaseConnection();
             this.accountsWithFines = new List<AccountWithFine>();
             this.pageNumber = 1;
             LoadAccountsWithFines();
@@ -31,43 +26,32 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         /// <summary>
-        /// Connect to Microsoft Access Database.
-        /// Initialize objects for reading data from the database.
-        /// </summary>
-        private void InitializeDatabaseConnection()
-        {
-            this.c = new OleDbConnection();
-            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            this.command = new OleDbCommand();
-            this.command.Connection = this.c;
-            this.reader = null;
-        }
-
-        /// <summary>
         /// Load all the accounts with fines from the database to use in the data grids.
         /// Set the page max so the next page button will not go into infinity.
         /// </summary>
         private void LoadAccountsWithFines()
         {
-            this.c.Open();
-            this.command.CommandText = "SELECT " +
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandText = "SELECT " +
                 "[userID], [firstName], [lastName], [userType], [overdueItems], [fines], [finePerDay] " +
                 "FROM accounts " +
                 "WHERE [fines] > 0";
-            this.reader = this.command.ExecuteReader();
-            while (this.reader.Read())
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+            while (DBConnectionHandler.reader.Read())
             {
-                AccountWithFine awf = new AccountWithFine();
-                awf.userID = this.reader[0].ToString();
-                awf.name = $"{this.reader[1].ToString()}, {this.reader[2].ToString()}";
-                awf.userType = this.reader[3].ToString();
-                awf.overdue = (int)this.reader[4];
-                awf.fines = (double)this.reader[5];
-                awf.finePerDay = (double)this.reader[6];
+                AccountWithFine awf = new AccountWithFine
+                {
+                    UserID = DBConnectionHandler.reader[0].ToString(),
+                    Name = $"{DBConnectionHandler.reader[1].ToString()}, {DBConnectionHandler.reader[2].ToString()}",
+                    UserType = DBConnectionHandler.reader[3].ToString(),
+                    Overdue = (int)DBConnectionHandler.reader[4],
+                    Fines = (double)DBConnectionHandler.reader[5],
+                    FinePerDay = (double)DBConnectionHandler.reader[6]
+                };
                 this.accountsWithFines.Add(awf);
             }
             this.pageMax = (int)Math.Ceiling(((double)this.accountsWithFines.Count) / 37);
+            DBConnectionHandler.c.Close();
 
             if (this.pageMax > 1)
             {
@@ -152,41 +136,41 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #region CheckBox Event Handlers
         private void CheckBoxName_Checked(object sender, RoutedEventArgs e)
         {
-            dataGridFinedUsers.Columns[2].Visibility = System.Windows.Visibility.Visible;
+            this.dataGridFinedUsers.Columns[2].Visibility = System.Windows.Visibility.Visible;
         }
 
         private void CheckBoxName_Unchecked(object sender, RoutedEventArgs e)
         {
-            dataGridFinedUsers.Columns[2].Visibility = System.Windows.Visibility.Hidden;
+            this.dataGridFinedUsers.Columns[2].Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void CheckBoxNumberOfOverdueItems_Checked(object sender, RoutedEventArgs e)
         {
-            dataGridFinedUsers.Columns[3].Visibility = System.Windows.Visibility.Visible;
+            this.dataGridFinedUsers.Columns[3].Visibility = System.Windows.Visibility.Visible;
         }
 
         private void CheckBoxNumberOfOverdueItems_Unchecked(object sender, RoutedEventArgs e)
         {
-            dataGridFinedUsers.Columns[3].Visibility = System.Windows.Visibility.Hidden;
+            this.dataGridFinedUsers.Columns[3].Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void CheckBoxUserFinePerDay_Checked(object sender, RoutedEventArgs e)
         {
-            dataGridFinedUsers.Columns[4].Visibility = System.Windows.Visibility.Visible;
+            this.dataGridFinedUsers.Columns[4].Visibility = System.Windows.Visibility.Visible;
         }
 
         private void CheckBoxUserFinePerDay_Unchecked(object sender, RoutedEventArgs e)
         {
-            dataGridFinedUsers.Columns[4].Visibility = System.Windows.Visibility.Hidden;
+            this.dataGridFinedUsers.Columns[4].Visibility = System.Windows.Visibility.Hidden;
         }
         private void CheckBoxUserType_Checked(object sender, RoutedEventArgs e)
         {
-            dataGridFinedUsers.Columns[5].Visibility = System.Windows.Visibility.Visible;
+            this.dataGridFinedUsers.Columns[5].Visibility = System.Windows.Visibility.Visible;
         }
 
         private void CheckBoxUserType_Unchecked(object sender, RoutedEventArgs e)
         {
-            dataGridFinedUsers.Columns[5].Visibility = System.Windows.Visibility.Hidden;
+            this.dataGridFinedUsers.Columns[5].Visibility = System.Windows.Visibility.Hidden;
         }
         #endregion
 
@@ -195,12 +179,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         public class AccountWithFine
         {
-            public double fines { get; set; }
-            public int overdue { get; set; }
-            public string userID { get; set; }
-            public string name { get; set; }
-            public string userType { get; set; }
-            public double finePerDay { get; set; }
+            public double Fines { get; set; }
+            public int Overdue { get; set; }
+            public string UserID { get; set; }
+            public string Name { get; set; }
+            public string UserType { get; set; }
+            public double FinePerDay { get; set; }
         }
     }
 }

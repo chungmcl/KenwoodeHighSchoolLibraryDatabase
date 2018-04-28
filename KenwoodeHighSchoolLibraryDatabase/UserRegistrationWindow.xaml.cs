@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data.OleDb;
 using System.Linq;
 using System.Windows;
 
@@ -10,9 +9,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class UserRegistrationWindow : Window
     {
-        private OleDbConnection c;
-        private OleDbCommand command;
-        private OleDbDataReader reader;
         private List<string[]> userIDs;
         private string fName;
         private string lName;
@@ -25,7 +21,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public UserRegistrationWindow()
         {
             InitializeComponent();
-            InitializeDatabaseConnection();
             this.comboBoxUserTypeRegister.Items.Add("Student");
             this.comboBoxUserTypeRegister.Items.Add("Teacher");
             LoadUserIDs();
@@ -41,18 +36,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public UserRegistrationWindow(User user) // User as defined in MainWindow (struct)
         {
             InitializeComponent();
-            InitializeDatabaseConnection();
             this.toRegister = false;
             this.labelTitle.Content = "Edit Account";
             this.buttonRegister.Content = "Save Changes";
             this.toEditUser = user;
 
-            this.c.Open();
-            this.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = '{user.userID}'";
-            this.reader = this.command.ExecuteReader();
-            this.reader.Read();
-            this.toEditUserFinePerDay = double.Parse(this.reader[0].ToString());
-            this.c.Close();
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = '{user.UserID}'";
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+            DBConnectionHandler.reader.Read();
+            this.toEditUserFinePerDay = double.Parse(DBConnectionHandler.reader[0].ToString());
+            DBConnectionHandler.c.Close();
 
             this.comboBoxUserTypeRegister.Items.Add("Student");
             this.comboBoxUserTypeRegister.Items.Add("Teacher");
@@ -60,27 +54,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.comboBoxUserTypeRegister.Items.Add("Student");
             this.comboBoxUserTypeRegister.Items.Add("Teacher");
 
-            this.textBoxFirstNameRegister.Text = this.toEditUser.firstName;
-            this.textBoxSurnameRegister.Text = this.toEditUser.lastName;
-            this.textBoxUserIDRegister.Text = this.toEditUser.userID;
-            this.comboBoxUserTypeRegister.SelectedValue = this.toEditUser.userType;
-            this.textBoxItemLimit.Text = this.toEditUser.itemLimit;
-            this.textBoxDateLimit.Text = this.toEditUser.dateLimit;
+            this.textBoxFirstNameRegister.Text = this.toEditUser.FirstName;
+            this.textBoxSurnameRegister.Text = this.toEditUser.LastName;
+            this.textBoxUserIDRegister.Text = this.toEditUser.UserID;
+            this.comboBoxUserTypeRegister.SelectedValue = this.toEditUser.UserType;
+            this.textBoxItemLimit.Text = this.toEditUser.ItemLimit;
+            this.textBoxDateLimit.Text = this.toEditUser.DateLimit;
             this.textBoxFinePerDay.Text = this.toEditUserFinePerDay.ToString();
-        }
-
-        /// <summary>
-        /// Connect to Microsoft Access Database.
-        /// Initialize objects for reading data from the database.
-        /// </summary>
-        private void InitializeDatabaseConnection()
-        {
-            this.c = new OleDbConnection();
-            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            this.command = new OleDbCommand();
-            this.command.Connection = this.c;
-            this.reader = null;
         }
 
         /// <summary>
@@ -91,25 +71,25 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void LoadUserIDs()
         {
             List<string[]> userIDs = new List<string[]>();
-            this.c.Open();
-            this.command.CommandText = "SELECT [userID], [firstName], [lastName] FROM accounts";
-            this.command.CommandType = System.Data.CommandType.Text;
-            this.reader = this.command.ExecuteReader();
-            while (this.reader.Read())
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandText = "SELECT [userID], [firstName], [lastName] FROM accounts";
+            DBConnectionHandler.command.CommandType = System.Data.CommandType.Text;
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+            while (DBConnectionHandler.reader.Read())
             {
                 // Had to set to string and then add to array because
                 // the reader.Read returns a reference type variable
                 string[] userIDAndName = new string[3];
-                string userID = (string)this.reader[0];
-                string firstName = (string)this.reader[1];
-                string lastName = (string)this.reader[2];
+                string userID = (string)DBConnectionHandler.reader[0];
+                string firstName = (string)DBConnectionHandler.reader[1];
+                string lastName = (string)DBConnectionHandler.reader[2];
                 userIDAndName[0] = userID;
                 userIDAndName[1] = firstName;
                 userIDAndName[2] = lastName;
                 userIDs.Add(userIDAndName);
             }
-            this.reader.Close();
-            this.c.Close();
+            DBConnectionHandler.reader.Close();
+            DBConnectionHandler.c.Close();
             this.userIDs =  userIDs;
         }
 
@@ -147,17 +127,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 string errorMessage = CheckRequiredValues();
                 if (errorMessage == "")
                 {
-                    this.c.Open();
+                    DBConnectionHandler.c.Open();
                     this.fName = this.textBoxFirstNameRegister.Text.Trim();
                     this.lName = this.textBoxSurnameRegister.Text.Trim();
                     this.uID = this.textBoxUserIDRegister.Text.Trim();
                     this.uType = this.comboBoxUserTypeRegister.SelectedValue.ToString();
 
-                    this.command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [itemLimit], [dateLimit], [finePerDay]) " +
+                    DBConnectionHandler.command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [itemLimit], [dateLimit], [finePerDay]) " +
                         $"VALUES ('{this.fName}', '{this.lName}', '{this.uID}', '{this.uType}', {this.itemLimit}, {this.dateLimit}, {this.finePerDay})";
-                    this.command.ExecuteNonQuery();
+                    DBConnectionHandler.command.ExecuteNonQuery();
 
-                    this.c.Close(); // close first
+                    DBConnectionHandler.c.Close(); // close first
                     this.DialogResult = true;
                 }
                 else
@@ -172,8 +152,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 {
                     if (MessageBox.Show("Save changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        this.c.Open();
-                        this.command.CommandText = $"UPDATE accounts SET " +
+                        DBConnectionHandler.c.Open();
+                        DBConnectionHandler.command.CommandText = $"UPDATE accounts SET " +
                             $"[firstName] = '{this.textBoxFirstNameRegister.Text}', " +
                             $"[lastName] = '{this.textBoxSurnameRegister.Text}', " +
                             $"[userID] = '{this.textBoxUserIDRegister.Text}', " +
@@ -181,20 +161,20 @@ namespace KenwoodeHighSchoolLibraryDatabase
                             $"[itemLimit] = {this.textBoxItemLimit.Text}, " +
                             $"[dateLimit] = {this.textBoxDateLimit.Text}, " +
                             $"[finePerDay] = {this.finePerDay} " +
-                            $"WHERE [userID] = '{this.toEditUser.userID}'";
-                        this.command.ExecuteNonQuery();
+                            $"WHERE [userID] = '{this.toEditUser.UserID}'";
+                        DBConnectionHandler.command.ExecuteNonQuery();
 
-                        this.command.CommandText = $"UPDATE items SET " +
+                        DBConnectionHandler.command.CommandText = $"UPDATE items SET " +
                             $"[currentlyCheckedOutBy] = '{this.textBoxUserIDRegister.Text}' " +
-                            $"WHERE [currentlyCheckedOutBy] = '{this.toEditUser.userID}'";
-                        this.command.ExecuteNonQuery();
+                            $"WHERE [currentlyCheckedOutBy] = '{this.toEditUser.UserID}'";
+                        DBConnectionHandler.command.ExecuteNonQuery();
 
-                        this.command.CommandText = $"UPDATE items SET " +
+                        DBConnectionHandler.command.CommandText = $"UPDATE items SET " +
                             $"[previousCheckedOutBy] = '{this.textBoxUserIDRegister}' " +
-                            $"WHERE [previousCheckedOutBy] = '{this.toEditUser.userID}'";
-                        this.command.ExecuteNonQuery();
+                            $"WHERE [previousCheckedOutBy] = '{this.toEditUser.UserID}'";
+                        DBConnectionHandler.command.ExecuteNonQuery();
 
-                        this.c.Close();
+                        DBConnectionHandler.c.Close();
                         this.DialogResult = true;
                     }
                 }
@@ -235,7 +215,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 int checkUserID = ContainsUserID(this.textBoxUserIDRegister.Text);
                 if (checkUserID != -1)
                 {
-                    if (this.userIDs[checkUserID][0] != this.toEditUser.userID) // User may be editing
+                    if (this.userIDs[checkUserID][0] != this.toEditUser.UserID) // User may be editing
                     {
                         return $"Another student ({this.userIDs[checkUserID][1]} {this.userIDs[checkUserID][2]}) already " +
                                     $"holds this Student/Teacher ID ({this.userIDs[checkUserID][0]}). Did you enter the wrong ID?";

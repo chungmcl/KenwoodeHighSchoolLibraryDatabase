@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,15 +11,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class ItemRegistrationWindow : Window
     {
-        private OleDbConnection c;
-        private OleDbDataReader reader;
-        private OleDbCommand command;
         private List<string> selectedColumnValues;
         private bool toRegister;
         public ItemRegistrationWindow()
         {
             InitializeComponent();
-            InitializeDatabaseConnection();
             InitializeComboBoxes();
 
             this.textBoxPreviousCheckedOutBy.IsEnabled = false;
@@ -62,24 +57,23 @@ namespace KenwoodeHighSchoolLibraryDatabase
         public ItemRegistrationWindow(Item toEdit) // Item as defined in MainWindow (struct)
         {
             InitializeComponent();
-            InitializeDatabaseConnection();
             InitializeComboBoxes();
             this.selectedColumnValues = new List<String>();
 
             this.toEditItem = toEdit;
-            this.textBoxDeweyDecimal.Text = this.toEditItem.deweyDecimal;
-            this.textBoxTitle.Text = this.toEditItem.title;
-            this.comboBoxGenreHundreds.SelectedValue = this.toEditItem.genre;
-            this.comboBoxFormat.SelectedValue = this.toEditItem.format;
-            this.textBoxCurrentlyCheckedOutBy.Text = this.toEditItem.currentlyCheckedOutBy;
+            this.textBoxDeweyDecimal.Text = this.toEditItem.DeweyDecimal;
+            this.textBoxTitle.Text = this.toEditItem.Title;
+            this.comboBoxGenreHundreds.SelectedValue = this.toEditItem.Genre;
+            this.comboBoxFormat.SelectedValue = this.toEditItem.Format;
+            this.textBoxCurrentlyCheckedOutBy.Text = this.toEditItem.CurrentlyCheckedOutBy;
             this.labelWindowTitle.Content = "View, Modify, or Checkout Item";
-            if (this.toEditItem.currentlyCheckedOutBy != "")
+            if (this.toEditItem.CurrentlyCheckedOutBy != "")
             {
                 this.datePickerDueDate.IsEnabled = true;
             }
             this.buttonRegisterItem.Content = "Save Changes - Edit Item";
             this.LoadRemainingFields();
-            if (this.toEditItem.currentlyCheckedOutBy != "")
+            if (this.toEditItem.CurrentlyCheckedOutBy != "")
             {
                 this.datePickerDueDate.IsEnabled = true;
             }
@@ -89,69 +83,55 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         #region Extra Intialization
         /// <summary>
-        /// Connect to Microsoft Access Database.
-        /// Initialize objects for reading data from the database.
-        /// </summary>
-        private void InitializeDatabaseConnection()
-        {
-            this.c = new OleDbConnection();
-            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            this.command = new OleDbCommand();
-            this.command.Connection = this.c;
-            this.reader = null;
-        }
-
-        /// <summary>
         /// If the user is editing an item, load the rest of the items that cannot be loaded
         /// through the passed Item (struct) from the MainWindow.
         /// </summary>
         private void LoadRemainingFields()
         {
-            this.c.Open();
-            this.command.CommandText = "SELECT [authorLastName], [authorMiddleName], [authorFirstName], [ISBN10], [ISXX], " +
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandText = "SELECT [authorLastName], [authorMiddleName], [authorFirstName], [ISBN10], [ISXX], " +
                 "[genreClassTwo], [genreClassThree], [publisher], [publicationYear], [edition], [description], " +
                 "[currentlyCheckedOUtBy], [previousCheckedOutBy], [dueDate]" +
-                $"FROM items WHERE [itemID] = '{this.toEditItem.itemID}'";
-            this.command.CommandType = System.Data.CommandType.Text;
-            this.reader = this.command.ExecuteReader();
-            this.reader.Read();
+                $"FROM items WHERE [itemID] = '{this.toEditItem.ItemID}'";
+            DBConnectionHandler.command.CommandType = System.Data.CommandType.Text;
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+            DBConnectionHandler.reader.Read();
 
-            this.isbnTen = this.reader["ISBN10"].ToString();
+            this.isbnTen = DBConnectionHandler.reader["ISBN10"].ToString();
             this.textBoxISBNTen.Text = this.isbnTen;
-            this.isxx = this.reader["ISXX"].ToString();
+            this.isxx = DBConnectionHandler.reader["ISXX"].ToString();
             this.textBoxISXX.Text = this.isxx;
-            this.authorLastName = this.reader["authorLastName"].ToString();
+            this.authorLastName = DBConnectionHandler.reader["authorLastName"].ToString();
             this.textBoxAuthorLName.Text = this.authorLastName;
-            this.authorMiddleName = this.reader["authorMiddleName"].ToString();
+            this.authorMiddleName = DBConnectionHandler.reader["authorMiddleName"].ToString();
             this.textBoxAuthorMName.Text = this.authorMiddleName;
-            this.authorFirstName = this.reader["authorFirstName"].ToString();
+            this.authorFirstName = DBConnectionHandler.reader["authorFirstName"].ToString();
             this.textBoxAuthorFName.Text = this.authorFirstName;
-            this.genreClassTwo = this.reader["genreClassTwo"].ToString();
+            this.genreClassTwo = DBConnectionHandler.reader["genreClassTwo"].ToString();
             this.comboBoxGenreTens.SelectedValue = this.genreClassTwo;
-            this.genreClassThree = this.reader["genreClassThree"].ToString();
+            this.genreClassThree = DBConnectionHandler.reader["genreClassThree"].ToString();
             this.comboBoxGenreOnes.SelectedValue = this.genreClassThree;
-            this.publisher = this.reader["publisher"].ToString();
+            this.publisher = DBConnectionHandler.reader["publisher"].ToString();
             this.textBoxPublisher.Text = this.publisher;
-            this.publicationYear = this.reader["publicationYear"].ToString();
+            this.publicationYear = DBConnectionHandler.reader["publicationYear"].ToString();
             this.textBoxPublicationYear.Text = this.publicationYear;
-            this.edition = this.reader["edition"].ToString();
+            this.edition = DBConnectionHandler.reader["edition"].ToString();
             this.textBoxEdition.Text = this.edition;
-            this.description = this.reader["description"].ToString();
+            this.description = DBConnectionHandler.reader["description"].ToString();
             this.textBoxDescription.Text = this.description;
-            this.currentlyCheckedOutBy = this.reader["currentlyCheckedOutBy"].ToString();
+            this.currentlyCheckedOutBy = DBConnectionHandler.reader["currentlyCheckedOutBy"].ToString();
             this.textBoxCurrentlyCheckedOutBy.Text = this.currentlyCheckedOutBy;
-            this.previousCheckedOutBy = this.reader["previousCheckedOutBy"].ToString();
+            this.previousCheckedOutBy = DBConnectionHandler.reader["previousCheckedOutBy"].ToString();
             this.textBoxPreviousCheckedOutBy.Text = this.previousCheckedOutBy;
-            string dueDateString = this.reader["dueDate"].ToString();
+            string dueDateString = DBConnectionHandler.reader["dueDate"].ToString();
             if (dueDateString.Length > 0)
             {
 
-                this.dueDate = Convert.ToDateTime(this.reader["dueDate"].ToString());
+                this.dueDate = Convert.ToDateTime(DBConnectionHandler.reader["dueDate"].ToString());
                 this.datePickerDueDate.SelectedDate = this.dueDate;
             }
-            this.reader.Close();
-            this.c.Close();
+            DBConnectionHandler.reader.Close();
+            DBConnectionHandler.c.Close();
         }
 
         /// <summary>
@@ -276,15 +256,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.comboBoxGenreTens.Items.Clear();
                 this.selectedColumnValues.Clear();
                 int column = this.comboBoxGenreHundreds.SelectedIndex;
-                this.c.Open();
-                this.command.CommandType = System.Data.CommandType.Text;
-                this.command.CommandText = $"SELECT [{column}] FROM deweyDecimal";
-                this.reader = this.command.ExecuteReader();
+                DBConnectionHandler.c.Open();
+                DBConnectionHandler.command.CommandType = System.Data.CommandType.Text;
+                DBConnectionHandler.command.CommandText = $"SELECT [{column}] FROM deweyDecimal";
+                DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
                 int count = 0;
                 this.selectedColumnValues.Add("[General]");
-                while (this.reader.Read())
+                while (DBConnectionHandler.reader.Read())
                 {
-                    string toAdd = this.reader[$"{column}"].ToString();
+                    string toAdd = DBConnectionHandler.reader[$"{column}"].ToString();
                     this.selectedColumnValues.Add(toAdd);
                     if ((count % 10) == 0)
                     {
@@ -292,8 +272,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     }
                     count = count + 1;
                 }
-                this.c.Close();
-                this.reader.Close();
+                DBConnectionHandler.c.Close();
+                DBConnectionHandler.reader.Close();
             }
             else // If user selects fiction
             {
@@ -421,30 +401,30 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private int GenerateCopyID(string isxx)
         {
             isxx = this.textBoxISXX.Text;
-            this.c.Open();
-            this.command.CommandType = System.Data.CommandType.Text;
-            this.command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE [itemID] LIKE '%{isxx}-%' ORDER BY [copyID]";
-            this.reader = this.command.ExecuteReader();
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandType = System.Data.CommandType.Text;
+            DBConnectionHandler.command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE [itemID] LIKE '%{isxx}-%' ORDER BY [copyID]";
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
             int previous;
             int copyID = 1;
             try
             {
-                this.reader.Read();
-                previous = int.Parse(this.reader[1].ToString());
+                DBConnectionHandler.reader.Read();
+                previous = int.Parse(DBConnectionHandler.reader[1].ToString());
                 if (previous >= 1)
                 {
-                    this.c.Close();
+                    DBConnectionHandler.c.Close();
                     return 0;
                 }
             }
             catch (InvalidOperationException) // If no IDs contain specified ISBN13 (isbnThirteen)
             {
-                this.c.Close();
+                DBConnectionHandler.c.Close();
                 return 0;
             }
-            while (this.reader.Read()) // loop through ItemIDs and fill in gaps in suffixes if needed
+            while (DBConnectionHandler.reader.Read()) // loop through ItemIDs and fill in gaps in suffixes if needed
             {
-                int current = int.Parse(this.reader[1].ToString());
+                int current = int.Parse(DBConnectionHandler.reader[1].ToString());
                 if (current == previous + 1)
                 {
                     copyID = current + 1;
@@ -456,7 +436,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     break;
                 }
             }
-            this.c.Close();
+            DBConnectionHandler.c.Close();
             return copyID; // Also suffix of ItemID
         }
 
@@ -520,8 +500,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 int copyID = GenerateCopyID(this.textBoxISXX.Text);
                 string itemID = this.textBoxISXX.Text + $"-{copyID}";
-                this.c.Open();
-                this.command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
+                DBConnectionHandler.c.Open();
+                DBConnectionHandler.command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
                     "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISXX], [publisher], " +
                     "[publicationYear], [edition], [description]) " +
                     $"VALUES ('{itemID}', {copyID}, '{this.textBoxTitle.Text}', '{this.comboBoxGenreHundreds.SelectedValue}', " +
@@ -529,8 +509,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     $"'{this.textBoxAuthorFName.Text}', '{this.textBoxAuthorMName.Text}', '{this.textBoxAuthorLName.Text}', " +
                     $"'{this.textBoxDeweyDecimal.Text}', '{this.textBoxISBNTen.Text}', '{this.textBoxISXX.Text}', " +
                     $"'{this.textBoxPublisher.Text}', '{this.textBoxPublicationYear.Text}', '{this.textBoxEdition.Text}', '{this.textBoxDescription.Text}')";
-                this.command.ExecuteNonQuery();
-                this.c.Close();
+                DBConnectionHandler.command.ExecuteNonQuery();
+                DBConnectionHandler.c.Close();
                 this.DialogResult = true;
             }
             else
@@ -555,7 +535,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 {
                     UpdateItemTable();
                     MessageBox.Show("Item data updated.");
-                    this.c.Close();
+                    DBConnectionHandler.c.Close();
                     this.DialogResult = true;
                 }
                 else
@@ -592,7 +572,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         private void UpdateItemTable()
         {
-            if (this.textBoxTitle.Text != this.toEditItem.title)
+            if (this.textBoxTitle.Text != this.toEditItem.Title)
             {
                 UpdateColumn("title", this.textBoxTitle.Text);
             }
@@ -617,7 +597,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 UpdateColumn("ISBN10", this.textBoxISBNTen.Text);
             }
 
-            if (this.textBoxDeweyDecimal.Text != this.toEditItem.deweyDecimal)
+            if (this.textBoxDeweyDecimal.Text != this.toEditItem.DeweyDecimal)
             {
                 UpdateColumn("deweyDecimal", this.textBoxDeweyDecimal.Text);
             }
@@ -642,7 +622,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 UpdateColumn("description", this.textBoxDescription.Text);
             }
 
-            if (this.comboBoxGenreHundreds.SelectedValue.ToString() != this.toEditItem.genre)
+            if (this.comboBoxGenreHundreds.SelectedValue.ToString() != this.toEditItem.Genre)
             {
                 UpdateColumn("genreClassOne", this.comboBoxGenreHundreds.SelectedValue.ToString());
             }
@@ -652,12 +632,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 UpdateColumn("genreClassTwo", this.comboBoxGenreTens.SelectedValue.ToString());
             }
 
-            if (this.comboBoxGenreOnes.SelectedValue.ToString() != this.toEditItem.genre)
+            if (this.comboBoxGenreOnes.SelectedValue.ToString() != this.toEditItem.Genre)
             {
                 UpdateColumn("genreClassThree", this.comboBoxGenreOnes.SelectedValue.ToString());
             }
 
-            if (this.comboBoxFormat.SelectedValue.ToString() != this.toEditItem.format)
+            if (this.comboBoxFormat.SelectedValue.ToString() != this.toEditItem.Format)
             {
                 UpdateColumn("format", this.comboBoxFormat.SelectedValue.ToString());
             }
@@ -668,11 +648,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 UpdateColumn("previousCheckedOutBy", this.currentlyCheckedOutBy);
                 UpdateColumn("dueDate", "");
                 this.datePickerDueDate.SelectedDate = null;
-                this.c.Open();
-                this.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
+                DBConnectionHandler.c.Open();
+                DBConnectionHandler.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
                     $"WHERE [userID] = '{this.currentlyCheckedOutBy}'";
-                this.command.ExecuteNonQuery();
-                this.c.Close();
+                DBConnectionHandler.command.ExecuteNonQuery();
+                DBConnectionHandler.c.Close();
             }
 
             if (this.datePickerDueDate.SelectedDate != this.dueDate)
@@ -689,10 +669,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 UpdateColumn("ISXX", this.textBoxISXX.Text);
                 int newCopyID = GenerateCopyID(this.textBoxISXX.Text);
-                this.c.Open();
-                this.command.CommandText = $"UPDATE items SET [itemID] = '{this.textBoxISXX.Text}-{newCopyID}', [copyID] = {newCopyID} WHERE [itemID] = '{this.toEditItem.itemID}'";
-                this.command.ExecuteNonQuery();
-                this.c.Close();
+                DBConnectionHandler.c.Open();
+                DBConnectionHandler.command.CommandText = $"UPDATE items SET [itemID] = '{this.textBoxISXX.Text}-{newCopyID}', [copyID] = {newCopyID} WHERE [itemID] = '{this.toEditItem.ItemID}'";
+                DBConnectionHandler.command.ExecuteNonQuery();
+                DBConnectionHandler.c.Close();
             }
         }
 
@@ -704,10 +684,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="newValue">New value to update in the column</param>
         private void UpdateColumn(string column, string newValue)
         {
-            this.c.Open();
-            this.command.CommandText = $"UPDATE items SET [{column}] = '{newValue}' WHERE itemID = '{this.toEditItem.itemID}'";
-            this.command.ExecuteNonQuery();
-            this.c.Close();
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandText = $"UPDATE items SET [{column}] = '{newValue}' WHERE itemID = '{this.toEditItem.ItemID}'";
+            DBConnectionHandler.command.ExecuteNonQuery();
+            DBConnectionHandler.c.Close();
         }
         #endregion
     }

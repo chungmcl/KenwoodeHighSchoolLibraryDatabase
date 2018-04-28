@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DBConnectionHandler.cs" />
     <Compile Include="ItemRegistrationWindow.xaml.cs">
       <DependentUpon>ItemRegistrationWindow.xaml</DependentUpon>
     </Compile>

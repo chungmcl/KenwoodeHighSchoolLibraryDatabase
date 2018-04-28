@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,9 +13,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class MainWindow : Window
     {
-        private OleDbConnection c;
-        private OleDbDataReader reader;
-        private OleDbCommand command;
         private User selectedUser;
         private Item selectedItem;
         private bool userSelected;
@@ -28,7 +23,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             try // Attempt to load database, if anything fails, it's likely fault of missing required files
             {
-                InitializeDatabaseConnection();
+                DBConnectionHandler.InitializeConnection(); // Initialize the database connection for the whole program at startup
                 InitializeComponent();
                 LoadDataGrid();
 
@@ -46,20 +41,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
         }
 
-        /// <summary>
-        /// Connect to Microsoft Access Database.
-        /// Initialize objects for reading data from the database.
-        /// </summary>
-        private void InitializeDatabaseConnection()
-        {
-            this.c = new OleDbConnection();
-            this.c.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|" +
-                "\\LibraryDatabase.mdb;Persist Security Info=True;User ID=admin;Jet OLEDB:Database Password=ExKr52F317K";
-            this.command = new OleDbCommand();
-            this.command.Connection = this.c;
-            this.reader = null;
-        }
-
         #region LoadDataGrids
         /// <summary>
         /// Reload both datagrids with default queries. (Specfic queries can be used by calling each method individually)
@@ -70,7 +51,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             CalculateOverdueAndFines();
             LoadAccountsDataGrid("SELECT * FROM accounts");
             LoadItemsDataGrid("SELECT * FROM items ORDER BY [authorLastName], [ISXX], [copyID]");
-    }
+        }
 
         /// <summary>
         /// Load every called entry from the accounts table within the database.
@@ -78,27 +59,29 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="sqlCommand">The SQL Query to perform to load datagrid.</param>
         private void LoadAccountsDataGrid(string sqlCommand)
         {
-            this.c.Open();
-            this.command.CommandText = sqlCommand;
-            this.command.CommandType = System.Data.CommandType.Text;
-            this.reader = this.command.ExecuteReader();
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandText = sqlCommand;
+            DBConnectionHandler.command.CommandType = System.Data.CommandType.Text;
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
             this.dataGridAccounts.Items.Clear();
-            while (reader.Read())
+            while (DBConnectionHandler.reader.Read())
             {
-                User newUser = new User();
-                newUser.firstName = reader["firstName"].ToString();
-                newUser.lastName = reader["lastName"].ToString();
-                newUser.userID = reader["userID"].ToString();
-                newUser.userType = reader["userType"].ToString();
-                newUser.itemLimit = reader["itemLimit"].ToString();
-                newUser.dateLimit = reader["dateLimit"].ToString();
-                newUser.checkedOut = reader["numberOfCheckedoutItems"].ToString();
-                newUser.overdueItems = reader["overdueItems"].ToString();
-                newUser.fines = reader["fines"].ToString();
+                User newUser = new User
+                {
+                    FirstName = DBConnectionHandler.reader["firstName"].ToString(),
+                    LastName = DBConnectionHandler.reader["lastName"].ToString(),
+                    UserID = DBConnectionHandler.reader["userID"].ToString(),
+                    UserType = DBConnectionHandler.reader["userType"].ToString(),
+                    ItemLimit = DBConnectionHandler.reader["itemLimit"].ToString(),
+                    DateLimit = DBConnectionHandler.reader["dateLimit"].ToString(),
+                    CheckedOut = DBConnectionHandler.reader["numberOfCheckedoutItems"].ToString(),
+                    OverdueItems = DBConnectionHandler.reader["overdueItems"].ToString(),
+                    Fines = DBConnectionHandler.reader["fines"].ToString()
+                };
                 this.dataGridAccounts.Items.Add(newUser);
             }
-            this.reader.Close();
-            this.c.Close();
+            DBConnectionHandler.reader.Close();
+            DBConnectionHandler.c.Close();
         }
 
         /// <summary>
@@ -107,55 +90,57 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="sqlCommand">The SQL Query to perform to load datagrid.</param>
         private void LoadItemsDataGrid(string sqlCommand)
         {
-            this.c.Open();
-            this.command.CommandText = sqlCommand;
-            this.command.CommandType = System.Data.CommandType.Text;
-            this.reader = this.command.ExecuteReader();
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandText = sqlCommand;
+            DBConnectionHandler.command.CommandType = System.Data.CommandType.Text;
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
             this.dataGridItems.Items.Clear();
-            while (reader.Read())
+            while (DBConnectionHandler.reader.Read())
             {
-                Item newItem = new Item();
-                newItem.itemID = reader["itemID"].ToString();
-                newItem.deweyDecimal = reader["deweyDecimal"].ToString();
-                newItem.format = reader["format"].ToString();
-                newItem.genre = reader["genreClassOne"].ToString();
-                newItem.title = reader["title"].ToString();
-                string authorName = $"{reader["authorLastName"].ToString()}, {reader["authorFirstName"].ToString()} " +
-                    $"{reader["authorMiddleName"].ToString()}";
+                Item newItem = new Item
+                {
+                    ItemID = DBConnectionHandler.reader["itemID"].ToString(),
+                    DeweyDecimal = DBConnectionHandler.reader["deweyDecimal"].ToString(),
+                    Format = DBConnectionHandler.reader["format"].ToString(),
+                    Genre = DBConnectionHandler.reader["genreClassOne"].ToString(),
+                    Title = DBConnectionHandler.reader["title"].ToString()
+                };
+                string authorName = $"{DBConnectionHandler.reader["authorLastName"].ToString()}, {DBConnectionHandler.reader["authorFirstName"].ToString()} " +
+                    $"{DBConnectionHandler.reader["authorMiddleName"].ToString()}";
                 if (authorName.Length > 3) // If author name is not empty (3 because of comma and empty space) 
                 {
-                    newItem.authorName = authorName;
+                    newItem.AuthorName = authorName;
                 }
                 else // else, author name is empty
                 {
-                    newItem.authorName = ""; // Remove comma and empty space
+                    newItem.AuthorName = ""; // Remove comma and empty space
                 }
-                newItem.currentlyCheckedOutBy = reader["currentlyCheckedOutBy"].ToString();
+                newItem.CurrentlyCheckedOutBy = DBConnectionHandler.reader["currentlyCheckedOutBy"].ToString();
                 this.itemsToAdd.Add(newItem); // Add to list of items to be loaded to datagrid
             }
 
             for (int i = 0; i < this.itemsToAdd.Count; i++) // For every item to be added to datagrid
             {
-                reader.Close(); // Close reader from previous use
-                string currentlyCheckedOutBy = this.itemsToAdd[i].currentlyCheckedOutBy;
-                this.command.CommandText = $"SELECT [firstName], [lastName] FROM [accounts] WHERE [userID] = '{currentlyCheckedOutBy}'";
-                reader = this.command.ExecuteReader();
-                reader.Read();
+                DBConnectionHandler.reader.Close(); // Close reader from previous use
+                string currentlyCheckedOutBy = this.itemsToAdd[i].CurrentlyCheckedOutBy;
+                DBConnectionHandler.command.CommandText = $"SELECT [firstName], [lastName] FROM [accounts] WHERE [userID] = '{currentlyCheckedOutBy}'";
+                DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+                DBConnectionHandler.reader.Read();
                 try // add first and last name to currently checked out by column of datagrid - throws error if firstName or lastName is empty
                 {
-                    string firstName = reader["firstName"].ToString();
-                    string lastName = reader["lastName"].ToString();
-                    this.itemsToAdd[i].currentlyCheckedOutBy = currentlyCheckedOutBy + $" ({lastName}, {firstName})";
+                    string firstName = DBConnectionHandler.reader["firstName"].ToString();
+                    string lastName = DBConnectionHandler.reader["lastName"].ToString();
+                    this.itemsToAdd[i].CurrentlyCheckedOutBy = currentlyCheckedOutBy + $" ({lastName}, {firstName})";
                 }
                 catch // try requires catch - otherwise set itself to what it was before (just empty)
                 {
-                    this.itemsToAdd[i].currentlyCheckedOutBy = "";
+                    this.itemsToAdd[i].CurrentlyCheckedOutBy = "";
                 }
                 this.dataGridItems.Items.Add(this.itemsToAdd[i]);
             }
             this.itemsToAdd.Clear();
-            this.reader.Close();
-            this.c.Close();
+            DBConnectionHandler.reader.Close();
+            DBConnectionHandler.c.Close();
         }
         #endregion
 
@@ -167,29 +152,29 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void CalculateOverdueAndFines()
         {
             List<string[]> userIDs = new List<string[]>();
-            this.c.Open();
-            this.command.CommandText = "SELECT [userID], [finePerDay] FROM accounts";
-            this.reader = this.command.ExecuteReader();
-            while (this.reader.Read()) // Load all the users and their fine rate (fine per day) into a list
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandText = "SELECT [userID], [finePerDay] FROM accounts";
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+            while (DBConnectionHandler.reader.Read()) // Load all the users and their fine rate (fine per day) into a list
             {
-                string[] toAdd = new string[] { this.reader[0].ToString(), this.reader[1].ToString() };
+                string[] toAdd = new string[] { DBConnectionHandler.reader[0].ToString(), DBConnectionHandler.reader[1].ToString() };
                 userIDs.Add(toAdd);
             }
-            this.reader.Close();
+            DBConnectionHandler.reader.Close();
             for (int i = 0; i < userIDs.Count; i++) // For each user, calculate number of overdue and the amount of fines
             {
                 int overDue = 0;
                 double fines = 0;
                 string currentUserID = userIDs[i][0];
                 string finePerDay = userIDs[i][1];
-                this.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{currentUserID}'";
+                DBConnectionHandler.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{currentUserID}'";
                 // Select all items that are currently checked out by this user
-                this.reader = this.command.ExecuteReader();
-                while (this.reader.Read())
+                DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+                while (DBConnectionHandler.reader.Read())
                 {
                     // Every time an item that is checked out by the user is calculated to be overdue, add one
                     // Also calculate the fines - multiply overdue days by the user's fine rate (fine per day)
-                    DateTime dueDate = Convert.ToDateTime(this.reader[0].ToString());
+                    DateTime dueDate = Convert.ToDateTime(DBConnectionHandler.reader[0].ToString());
                     if (DateTime.Now >= dueDate)
                     {
                         overDue++;
@@ -197,16 +182,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         // Add one second because books are due at 11:59:59 of the due date, so charge fines day after.
                     }
                 }
-                this.reader.Close();
-                this.command.CommandText = $"UPDATE accounts SET " +
+                DBConnectionHandler.reader.Close();
+                DBConnectionHandler.command.CommandText = $"UPDATE accounts SET " +
                     $"[overDueItems] = {overDue}, " +
                     $"[fines] = {fines} " +
                     $"WHERE [userID] = '{currentUserID}'";
                 // Save data to secondary storage - database
-                this.command.ExecuteNonQuery();
+                DBConnectionHandler.command.ExecuteNonQuery();
             }
-            this.c.Close();
-            this.reader.Close();
+            DBConnectionHandler.c.Close();
+            DBConnectionHandler.reader.Close();
         }
         #endregion Calculations
 
@@ -223,8 +208,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             try // attempt to set selected user double clicked to this.selectedUser
             {
                 this.selectedUser = (User)this.dataGridAccounts.SelectedItem;
-                string selectedUserInfo = $"({this.selectedUser.userID}) " +
-                    $"{this.selectedUser.firstName} {this.selectedUser.lastName}";
+                string selectedUserInfo = $"({this.selectedUser.UserID}) " +
+                    $"{this.selectedUser.FirstName} {this.selectedUser.LastName}";
                 this.labelCheckoutSelectedUser.Content = selectedUserInfo;
                 this.labelSelectedUser.Content = selectedUserInfo;
                 this.userSelected = true;
@@ -235,7 +220,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     // show items checked out to user when user is double clicked
                     this.checkBoxShowUser.IsEnabled = false;
                     this.comboBoxItemsSearchByOptions.SelectedIndex = 5;
-                    this.textBoxItemsSearchBy.Text = this.selectedUser.userID;
+                    this.textBoxItemsSearchBy.Text = this.selectedUser.UserID;
                 }
             }
             catch // if thing double-clicked is not a row that represents user, show error message
@@ -257,7 +242,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             try // attempt to set selected user double clicked to this.selectedItem
             {
                 this.selectedItem = (Item)this.dataGridItems.SelectedItem;
-                string selectedItemInfo = $"{this.selectedItem.title} ({this.selectedItem.itemID})";
+                string selectedItemInfo = $"{this.selectedItem.Title} ({this.selectedItem.ItemID})";
                 this.labelCheckoutSelectedItemTitle.Content = selectedItemInfo;
                 this.labelSelectedItem.Content = selectedItemInfo;
                 this.itemSelected = true;
@@ -268,7 +253,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     // show user checked out to when item is double clicked
                     this.checkBoxShowItems.IsEnabled = false;
                     this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
-                    string selectedItemUserID = this.selectedItem.currentlyCheckedOutBy;
+                    string selectedItemUserID = this.selectedItem.CurrentlyCheckedOutBy;
                     if (selectedItemUserID.Length > 0) // if the item is checked out to someone (selectedItemUserID will be empty if not checked out)
                     {
                         selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf(' ')); // remove name from selectedItemUserID
@@ -445,8 +430,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void ButtonToItemRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
-            ItemRegistrationWindow x = new ItemRegistrationWindow();
-            x.Owner = this;
+            ItemRegistrationWindow x = new ItemRegistrationWindow
+            {
+                Owner = this
+            };
             bool? receive = x.ShowDialog(); // bool returned when ItemRegistrationWindow is closed
             if (receive == true)
             {
@@ -462,8 +449,10 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void ButtonToUserRegistrationWindow_Click(object sender, RoutedEventArgs e)
         {
-            UserRegistrationWindow w = new UserRegistrationWindow();
-            w.Owner = this;
+            UserRegistrationWindow w = new UserRegistrationWindow
+            {
+                Owner = this
+            };
             bool? receive = w.ShowDialog(); // bool returned when ItemRegistrationWindow is closed
             if (receive == true)
             {
@@ -508,21 +497,21 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (this.userSelected && this.itemSelected)
             {
                 // ...the selected item is already checked out to the selected user.
-                if (this.selectedItem.currentlyCheckedOutBy != this.selectedUser.userID)
+                if (this.selectedItem.CurrentlyCheckedOutBy != this.selectedUser.UserID)
                 {
                     // ...the selected item is already checked out to another user.
-                    if (this.selectedItem.currentlyCheckedOutBy == "")
+                    if (this.selectedItem.CurrentlyCheckedOutBy == "")
                     {
                         // ...the selected user is at his/her item limit.
-                        if (int.Parse(this.selectedUser.checkedOut) < int.Parse(this.selectedUser.itemLimit))
+                        if (int.Parse(this.selectedUser.CheckedOut) < int.Parse(this.selectedUser.ItemLimit))
                         {
-                            DateTime dueDate = (DateTime.Today.AddDays(double.Parse(this.selectedUser.dateLimit)).AddHours(23.9999));
+                            DateTime dueDate = (DateTime.Today.AddDays(double.Parse(this.selectedUser.DateLimit)).AddHours(23.9999));
                             // Due at end of day so add 23.9999 hours
                             if (MessageBox.Show(
                                 $"Confirm Checkout -\n" +
-                                $"Check out item: {this.selectedItem.title}\n" +
-                                $"To user: ({this.selectedUser.userID}) {this.selectedUser.lastName}, {this.selectedUser.firstName}\n" +
-                                $"For {this.selectedUser.dateLimit} day(s). Due on {dueDate.ToString()}"
+                                $"Check out item: {this.selectedItem.Title}\n" +
+                                $"To user: ({this.selectedUser.UserID}) {this.selectedUser.LastName}, {this.selectedUser.FirstName}\n" +
+                                $"For {this.selectedUser.DateLimit} day(s). Due on {dueDate.ToString()}"
                                 , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK) // If user clicks OK to confirm checkout...
                             {
                                 CheckoutDatabaseUpdate(dueDate);
@@ -536,7 +525,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     }
                     else
                     {
-                        MessageBox.Show($"This item is already checked out to user {this.selectedItem.currentlyCheckedOutBy}!");
+                        MessageBox.Show($"This item is already checked out to user {this.selectedItem.CurrentlyCheckedOutBy}!");
                     }
                 }
                 else
@@ -557,16 +546,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void CheckoutDatabaseUpdate(DateTime dueDate)
         {
             // Take necessary information from selectedItem and selectedUser to put into SQL UPDATE command
-            string userID = this.selectedUser.userID.ToString();
+            string userID = this.selectedUser.UserID.ToString();
             string stringDueDate = dueDate.ToString();
-            string itemID = this.selectedItem.itemID.ToString();
-            this.c.Open();
-            this.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '{userID}', [dueDate] = '{stringDueDate}' WHERE itemID = '{itemID}'";
-            this.command.ExecuteNonQuery();
-            int checkedOut = (int.Parse(this.selectedUser.checkedOut.ToString())) + 1;
-            this.command.CommandText = $"UPDATE accounts SET [numberOfCheckedoutItems] = {checkedOut} WHERE userID = '{userID}'";
-            this.command.ExecuteNonQuery();
-            this.c.Close();
+            string itemID = this.selectedItem.ItemID.ToString();
+            DBConnectionHandler.c.Open();
+            DBConnectionHandler.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '{userID}', [dueDate] = '{stringDueDate}' WHERE itemID = '{itemID}'";
+            DBConnectionHandler.command.ExecuteNonQuery();
+            int checkedOut = (int.Parse(this.selectedUser.CheckedOut.ToString())) + 1;
+            DBConnectionHandler.command.CommandText = $"UPDATE accounts SET [numberOfCheckedoutItems] = {checkedOut} WHERE userID = '{userID}'";
+            DBConnectionHandler.command.ExecuteNonQuery();
+            DBConnectionHandler.c.Close();
 
             LoadDataGrid(); // Reload datagrids after item is checked out
         }
@@ -577,15 +566,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (this.itemSelected) // if an item is selected
             {
-                ItemRegistrationWindow w = new ItemRegistrationWindow(this.selectedItem);
-                w.Owner = this;
+                ItemRegistrationWindow w = new ItemRegistrationWindow(this.selectedItem)
+                {
+                    Owner = this
+                };
                 bool? receive = w.ShowDialog(); // Load datagrids if specified by window when edit/view window is closed
                 if (receive == true) // nullable bool - needs to be compared directly
                 {
                     LoadDataGrid();
                     Item check = (Item)this.dataGridItems.Items[0];
                     this.selectedItem = (Item)this.dataGridItems.Items[0];
-                    this.labelCheckoutSelectedItemTitle.Content = this.selectedItem.title;
+                    this.labelCheckoutSelectedItemTitle.Content = this.selectedItem.Title;
                 }
             }
             else // else, notify user that an item has not been selected
@@ -629,61 +620,61 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (this.itemSelected)
             {
                 // get the ID AND name of the user that selectedItem is currently checked to
-                string userCheckedOutTo = this.selectedItem.currentlyCheckedOutBy;
+                string userCheckedOutTo = this.selectedItem.CurrentlyCheckedOutBy;
                 if (userCheckedOutTo != "")
                 {
                     // get ONLY the ID of the user that selectedItem is currently checked out to
                     // (ID comes before a space and before the name) 
                     string userCheckedOutToID = userCheckedOutTo.Substring(0, userCheckedOutTo.IndexOf(' '));
 
-                    this.c.Open();
+                    DBConnectionHandler.c.Open();
                     // 
-                    this.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{userCheckedOutToID}'";
-                    this.reader = this.command.ExecuteReader();
-                    this.reader.Read();
-                    DateTime dueDate = Convert.ToDateTime(this.reader[0].ToString());
+                    DBConnectionHandler.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{userCheckedOutToID}'";
+                    DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+                    DBConnectionHandler.reader.Read();
+                    DateTime dueDate = Convert.ToDateTime(DBConnectionHandler.reader[0].ToString());
                     double overdueBy = (DateTime.Today - dueDate.AddSeconds(1)).TotalDays;
                     // Add one second because book is due at 11:59:59 - count overdue days starting the next day
                     if (overdueBy < 0)
                     {
                         overdueBy = 0;
                     }
-                    this.reader.Close();
-                    this.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE [userID] = '{userCheckedOutToID}'";
-                    this.reader = this.command.ExecuteReader();
-                    this.reader.Read();
-                    double totalFinesForItem = ((double)this.reader[0]) * overdueBy;
-                    this.reader.Close();
+                    DBConnectionHandler.reader.Close();
+                    DBConnectionHandler.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE [userID] = '{userCheckedOutToID}'";
+                    DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+                    DBConnectionHandler.reader.Read();
+                    double totalFinesForItem = ((double)DBConnectionHandler.reader[0]) * overdueBy;
+                    DBConnectionHandler.reader.Close();
 
-                    if (MessageBox.Show($"Confirm Return of '{this.selectedItem.title}' - \n" +
-                        $"Lent to {this.selectedItem.currentlyCheckedOutBy}\n" +
+                    if (MessageBox.Show($"Confirm Return of '{this.selectedItem.Title}' - \n" +
+                        $"Lent to {this.selectedItem.CurrentlyCheckedOutBy}\n" +
                         $"Overdue by {overdueBy} days.\n" +
                         $"Fines owed for this item = USD ${totalFinesForItem}",
                         "Confirm Return",
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user clicks OK to confirm return of item to library from user
                     {
                         // Set the item's log of user currently checked out by to empty to indicate checked out by no one
-                        this.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{this.selectedItem.itemID}'";
-                        this.command.ExecuteNonQuery();
+                        DBConnectionHandler.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{this.selectedItem.ItemID}'";
+                        DBConnectionHandler.command.ExecuteNonQuery();
 
                         // Delete the item's log of currentlyCheckedOutBy and set previousCheckedOutBy to the user who the item was checked out to.
-                        this.command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{userCheckedOutToID}' WHERE [itemID] = '{this.selectedItem.itemID}'";
-                        this.command.ExecuteNonQuery();
+                        DBConnectionHandler.command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{userCheckedOutToID}' WHERE [itemID] = '{this.selectedItem.ItemID}'";
+                        DBConnectionHandler.command.ExecuteNonQuery();
 
                         // Remove the dueDate from the item.
-                        this.command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{this.selectedItem.itemID}'";
-                        this.command.ExecuteNonQuery();
+                        DBConnectionHandler.command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{this.selectedItem.ItemID}'";
+                        DBConnectionHandler.command.ExecuteNonQuery();
 
                         // Subtract the user's number of checked out items by one.
-                        this.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
+                        DBConnectionHandler.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
                             $"WHERE [userID] = '{userCheckedOutToID}'";
 
-                        this.command.ExecuteNonQuery();
-                        this.c.Close(); // Needs to close before LoadDataGrid on account of reopening in CheckoutDatabaseUpdate
+                        DBConnectionHandler.command.ExecuteNonQuery();
+                        DBConnectionHandler.c.Close(); // Needs to close before LoadDataGrid on account of reopening in CheckoutDatabaseUpdate
 
                         LoadDataGrid(); // (Fines and number of overdue will be recalculated for users when the DataGrid is reloaded).
                     }
-                    this.c.Close(); // Close in case if statement is false 
+                    DBConnectionHandler.c.Close(); // Close in case if statement is false 
                 }
                 else
                 {
@@ -711,18 +702,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 if (MessageBox.Show("Delete Selected Item?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user confirms deletion
                 {
-                    this.c.Open();
+                    DBConnectionHandler.c.Open();
 
                     // Lower the user's number of checked out items by one (if item is checked out to a user)
                     // (User's number of overdue items and fines will be recalculated when dataGrid is loaded.)
-                    this.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
-                        $"WHERE [userID] = '{this.selectedItem.currentlyCheckedOutBy}'";
-                    this.command.ExecuteNonQuery();
+                    DBConnectionHandler.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
+                        $"WHERE [userID] = '{this.selectedItem.CurrentlyCheckedOutBy}'";
+                    DBConnectionHandler.command.ExecuteNonQuery();
 
                     // Delete the selected item from the database file
-                    this.command.CommandText = $"DELETE * FROM items WHERE [itemID] = '{this.selectedItem.itemID}'";
-                    this.command.ExecuteNonQuery();
-                    this.c.Close();
+                    DBConnectionHandler.command.CommandText = $"DELETE * FROM items WHERE [itemID] = '{this.selectedItem.ItemID}'";
+                    DBConnectionHandler.command.ExecuteNonQuery();
+                    DBConnectionHandler.c.Close();
 
                     LoadDataGrid();
 
@@ -753,21 +744,21 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 if (MessageBox.Show("Delete Selected User?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user confirms deletion
                 {
-                    this.c.Open();
+                    DBConnectionHandler.c.Open();
 
                     // Clear currentlyCheckedOutBy and set previouslyCheckedOutBy to user deleted
                     // Set dueDate of items checked out by the user being deleted to be empty
-                    this.command.CommandText = "UPDATE items " +
+                    DBConnectionHandler.command.CommandText = "UPDATE items " +
                         "SET [currentlyCheckedOutBy] = '', " +
-                        $"[previousCheckedOutBy] = '{this.selectedUser.userID}', " +
+                        $"[previousCheckedOutBy] = '{this.selectedUser.UserID}', " +
                         "[dueDate] = '' " +
-                        $"WHERE [currentlyCheckedOutBy] = '{this.selectedUser.userID}'"; // All items checked out by the user being deleted
-                    this.command.ExecuteNonQuery();
+                        $"WHERE [currentlyCheckedOutBy] = '{this.selectedUser.UserID}'"; // All items checked out by the user being deleted
+                    DBConnectionHandler.command.ExecuteNonQuery();
 
                     // Delete all values from accounts table in database of the user being deleted
-                    this.command.CommandText = $"DELETE * FROM accounts WHERE [userID] = '{this.selectedUser.userID}'";
-                    this.command.ExecuteNonQuery();
-                    this.c.Close();
+                    DBConnectionHandler.command.CommandText = $"DELETE * FROM accounts WHERE [userID] = '{this.selectedUser.UserID}'";
+                    DBConnectionHandler.command.ExecuteNonQuery();
+                    DBConnectionHandler.c.Close();
 
                     LoadDataGrid();
 
@@ -791,7 +782,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 this.checkBoxShowUser.IsEnabled = false;
                 this.comboBoxItemsSearchByOptions.SelectedIndex = 5;
-                this.textBoxItemsSearchBy.Text = this.selectedUser.userID;
+                this.textBoxItemsSearchBy.Text = this.selectedUser.UserID;
             }
             else
             {
@@ -816,7 +807,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 this.checkBoxShowItems.IsEnabled = false;
                 this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
-                string selectedItemUserID = this.selectedItem.currentlyCheckedOutBy;
+                string selectedItemUserID = this.selectedItem.CurrentlyCheckedOutBy;
                 if (selectedItemUserID.Length > 0)
                 {
                     selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf(' '));
@@ -864,10 +855,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void Restore_Click(object sender, RoutedEventArgs e)
         {
-            
-            
-            System.Windows.Forms.OpenFileDialog browserDialog = new System.Windows.Forms.OpenFileDialog();
-            browserDialog.Title = "Select Backup File to Restore From";
+
+
+            System.Windows.Forms.OpenFileDialog browserDialog = new System.Windows.Forms.OpenFileDialog
+            {
+                Title = "Select Backup File to Restore From"
+            };
             if (Directory.Exists(this.currentFolderPath + "\\Backups")) // Start select file window in backups folder if it exists
             {
                 browserDialog.InitialDirectory = this.currentFolderPath + "\\Backups";
@@ -902,9 +895,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         }
                         catch (Exception exception)
                         {
-                            if (this.c.State == System.Data.ConnectionState.Open) // In case exception is thrown outside of SQL query
+                            if (DBConnectionHandler.c.State == System.Data.ConnectionState.Open) // In case exception is thrown outside of SQL query
                             {
-                                this.c.Close();
+                                DBConnectionHandler.c.Close();
                             }
                             MessageBox.Show("Database could not be restored with the selected file." +
                                 "\nPlease select a new file and try again." +
@@ -955,15 +948,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public struct User
     {
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string userID { get; set; }
-        public string userType { get; set; }
-        public string itemLimit { get; set; }
-        public string dateLimit { get; set; }
-        public string checkedOut { get; set; }
-        public string overdueItems { get; set; }
-        public string fines { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string UserID { get; set; }
+        public string UserType { get; set; }
+        public string ItemLimit { get; set; }
+        public string DateLimit { get; set; }
+        public string CheckedOut { get; set; }
+        public string OverdueItems { get; set; }
+        public string Fines { get; set; }
     }
 
     /// <summary>
@@ -972,12 +965,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public class Item
     {
-        public string itemID { get; set; }
-        public string deweyDecimal { get; set; }
-        public string title { get; set; }
-        public string authorName { get; set; }
-        public string genre  { get; set; }
-        public string format { get; set; }
-        public string currentlyCheckedOutBy { get; set; }
+        public string ItemID { get; set; }
+        public string DeweyDecimal { get; set; }
+        public string Title { get; set; }
+        public string AuthorName { get; set; }
+        public string Genre  { get; set; }
+        public string Format { get; set; }
+        public string CurrentlyCheckedOutBy { get; set; }
     }
 }
