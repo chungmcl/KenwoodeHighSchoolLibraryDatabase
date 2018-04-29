@@ -15,9 +15,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
     {
         private User selectedUser;
         private Item selectedItem;
-        private bool userSelected;
-        private bool itemSelected;
+        private bool? userSelected;
+        private bool? itemSelected;
         private string currentFolderPath;
+        List<User> selectedUsers;
+        List<Item> selectedItems;
         private List<Item> itemsToAdd = new List<Item>();
         public MainWindow()
         {
@@ -29,6 +31,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 this.currentFolderPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
                 Directory.CreateDirectory(this.currentFolderPath + "\\Backups");
+
+                // this.userSelected and this.itemSelected use a null state to represent multiple selected items.
+                // Set to false to accurately represent data.
+                this.userSelected = false;
+                this.itemSelected = false;
+
+                this.selectedUsers = new List<User>();
+                this.selectedItems = new List<Item>();
             }
             catch // Display error message and close program
             {
@@ -197,78 +207,128 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         #region Select Item or User
         /// <summary>
-        /// Set the selected user to the row that the user double-clicked.
-        /// Display error message if user double-clicks something other than a user
+        /// Set the selected user to the row that the user clicked.
+        /// Display error message if user clicks something other than a user
         /// in the accounts DataGrid.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DataGridAccounts_DoubleClick(object sender, MouseButtonEventArgs e)
+        private void DataGridAccounts_SelectionChanged(object sender, EventArgs e)
         {
-            try // attempt to set selected user double clicked to this.selectedUser
+            this.selectedUsers = new List<User>();
+            for (int i = 0; i < this.dataGridAccounts.SelectedItems.Count; i++)
             {
-                this.selectedUser = (User)this.dataGridAccounts.SelectedItem;
-                string selectedUserInfo = $"({this.selectedUser.UserID}) " +
-                    $"{this.selectedUser.FirstName} {this.selectedUser.LastName}";
-                this.labelCheckoutSelectedUser.Content = selectedUserInfo;
-                this.labelSelectedUser.Content = selectedUserInfo;
-                this.userSelected = true;
+                this.selectedUsers.Add((User)this.dataGridAccounts.SelectedItems[i]);
+            }
 
-                if (this.checkBoxShowItems.IsChecked == true) // had to compare to true; .IsChecked is type bool? (nullable)
+            if (this.selectedUsers.Count == 1)
+            {
+                try // attempt to set selected user clicked to this.selectedUser
                 {
-                    // If check box to show items for selected user is checked,
-                    // show items checked out to user when user is double clicked
-                    this.checkBoxShowUser.IsEnabled = false;
-                    this.comboBoxItemsSearchByOptions.SelectedIndex = 5;
-                    this.textBoxItemsSearchBy.Text = this.selectedUser.UserID;
+                    this.selectedUser = this.selectedUsers[0];
+                    string selectedUserInfo = $"({this.selectedUser.UserID}) " +
+                        $"{this.selectedUser.FirstName} {this.selectedUser.LastName}";
+                    this.labelCheckoutSelectedUser.Content = selectedUserInfo;
+                    this.labelSelectedUser.Content = selectedUserInfo;
+                    this.userSelected = true;
+
+                    if (this.checkBoxShowItems.IsChecked == true) // had to compare to true; .IsChecked is type bool? (nullable)
+                    {
+                        // If check box to show items for selected user is checked,
+                        // show items checked out to user when user is clicked
+                        this.checkBoxShowUser.IsEnabled = false;
+                        this.comboBoxItemsSearchByOptions.SelectedIndex = 5;
+                        this.textBoxItemsSearchBy.Text = this.selectedUser.UserID;
+                    }
+                }
+                catch // if thing clicked is not a row that represents user, show error message
+                {
+                    MessageBox.Show("Please click a single row to select a user.");
+                    this.checkBoxShowItems.IsChecked = false;
                 }
             }
-            catch // if thing double-clicked is not a row that represents user, show error message
+            else if (this.selectedUsers.Count > 1)
             {
-                MessageBox.Show("Please double-click a row to select a user.");
-                this.checkBoxShowItems.IsChecked = false;
+                string displayMessage = "[Multiple Users Selected]";
+                this.labelCheckoutSelectedUser.Content = displayMessage;
+                this.labelSelectedUser.Content = displayMessage;
+                this.userSelected = null;
+                this.selectedUser = new User();
+            }
+            else
+            {
+                string displayMessage = "(Select a User)";
+                this.labelCheckoutSelectedUser.Content = displayMessage;
+                this.labelSelectedUser.Content = displayMessage;
+                this.userSelected = false;
+                this.selectedUser = new User();
             }
         }
 
         /// <summary>
-        /// Set the selected item to the row that the item double-clicked.
-        /// Display error message if user double-clicks something other than an item
+        /// Set the selected item to the row that the item clicked.
+        /// Display error message if user clicks something other than an item
         /// in the items DataGrid.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DataGridItems_DoubleClick(object sender, MouseButtonEventArgs e)
+        private void DataGridItems_SelectionChanged(object sender, EventArgs e)
         {
-            try // attempt to set selected user double clicked to this.selectedItem
+            this.selectedItems = new List<Item>();
+            for (int i = 0; i < this.dataGridItems.SelectedItems.Count; i++)
             {
-                this.selectedItem = (Item)this.dataGridItems.SelectedItem;
-                string selectedItemInfo = $"{this.selectedItem.Title} ({this.selectedItem.ItemID})";
-                this.labelCheckoutSelectedItemTitle.Content = selectedItemInfo;
-                this.labelSelectedItem.Content = selectedItemInfo;
-                this.itemSelected = true;
+                this.selectedItems.Add((Item)this.dataGridItems.SelectedItems[i]);
+            }
 
-                if (this.checkBoxShowUser.IsChecked == true)
+            if (this.selectedItems.Count == 1)
+            {
+                try // attempt to set selected user double clicked to this.selectedItem
                 {
-                    // If check box to show user currently checked out by for selected item is checked,
-                    // show user checked out to when item is double clicked
-                    this.checkBoxShowItems.IsEnabled = false;
-                    this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
-                    string selectedItemUserID = this.selectedItem.CurrentlyCheckedOutBy;
-                    if (selectedItemUserID.Length > 0) // if the item is checked out to someone (selectedItemUserID will be empty if not checked out)
+                    this.selectedItem = this.selectedItems[0];
+                    string selectedItemInfo = $"{this.selectedItem.Title} ({this.selectedItem.ItemID})";
+                    this.labelCheckoutSelectedItemTitle.Content = selectedItemInfo;
+                    this.labelSelectedItem.Content = selectedItemInfo;
+                    this.itemSelected = true;
+
+                    if (this.checkBoxShowUser.IsChecked == true)
                     {
-                        selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf(' ')); // remove name from selectedItemUserID
-                        this.textBoxAccountsSearchBy.Text = selectedItemUserID;
-                    }
-                    else // If this.selectedItem.currentlyCheckedOutBy is empty, the toolbar will not be changed - need to set to empty space
-                    {
-                        this.textBoxAccountsSearchBy.Text = " ";
+                        // If check box to show user currently checked out by for selected item is checked,
+                        // show user checked out to when item is double clicked
+                        this.checkBoxShowItems.IsEnabled = false;
+                        this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
+                        string selectedItemUserID = this.selectedItem.CurrentlyCheckedOutBy;
+                        if (selectedItemUserID.Length > 0) // if the item is checked out to someone (selectedItemUserID will be empty if not checked out)
+                        {
+                            selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf(' ')); // remove name from selectedItemUserID
+                            this.textBoxAccountsSearchBy.Text = selectedItemUserID;
+                        }
+                        else // If this.selectedItem.currentlyCheckedOutBy is empty, the toolbar will not be changed - need to set to empty space
+                        {
+                            this.textBoxAccountsSearchBy.Text = " ";
+                        }
                     }
                 }
+                catch // if thing clicked is not a row that represents user, show error message
+                {
+                    MessageBox.Show("Please click a single row to select an item.");
+                    this.checkBoxShowUser.IsChecked = false;
+                }
             }
-            catch // if thing double-clicked is not a row that represents user, show error message
+            else if (this.selectedItems.Count > 1)
             {
-                MessageBox.Show("Please double-click a row to select an item.");
-                this.checkBoxShowUser.IsChecked = false;
+                string displayMessage = "[Multiple Items Selected]";
+                this.labelCheckoutSelectedItemTitle.Content = displayMessage;
+                this.labelSelectedItem.Content = displayMessage;
+                this.itemSelected = null;
+                this.selectedItem = new Item();
+            }
+            else
+            {
+                string displayMessage = "(Select an Item)";
+                this.labelCheckoutSelectedItemTitle.Content = displayMessage;
+                this.labelSelectedItem.Content = displayMessage;
+                this.itemSelected = false;
+                this.selectedItem = new Item();
             }
         }
 
@@ -494,48 +554,22 @@ namespace KenwoodeHighSchoolLibraryDatabase
             // Display an error message with MessageBox if...
 
             // ...either an item or a user is not selected.
-            if (this.userSelected && this.itemSelected)
+            if (this.userSelected == true && this.itemSelected == true) // had to use == true because this.userSelected and this.itemSelected are bool?
             {
-                // ...the selected item is already checked out to the selected user.
-                if (this.selectedItem.CurrentlyCheckedOutBy != this.selectedUser.UserID)
+                CheckoutDatabaseUpdate(this.selectedUser, this.selectedItem);
+                LoadDataGrid(); // Reload datagrids after item is checked out
+            }
+            else if (this.userSelected == true && this.itemSelected == null)
+            {
+                for (int i = 0; i < this.selectedItems.Count; i++)
                 {
-                    // ...the selected item is already checked out to another user.
-                    if (this.selectedItem.CurrentlyCheckedOutBy == "")
-                    {
-                        // ...the selected user is at his/her item limit.
-                        if (int.Parse(this.selectedUser.CheckedOut) < int.Parse(this.selectedUser.ItemLimit))
-                        {
-                            DateTime dueDate = (DateTime.Today.AddDays(double.Parse(this.selectedUser.DateLimit)).AddHours(23.9999));
-                            // Due at end of day so add 23.9999 hours
-                            if (MessageBox.Show(
-                                $"Confirm Checkout -\n" +
-                                $"Check out item: {this.selectedItem.Title}\n" +
-                                $"To user: ({this.selectedUser.UserID}) {this.selectedUser.LastName}, {this.selectedUser.FirstName}\n" +
-                                $"For {this.selectedUser.DateLimit} day(s). Due on {dueDate.ToString()}"
-                                , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK) // If user clicks OK to confirm checkout...
-                            {
-                                CheckoutDatabaseUpdate(dueDate);
-                                // Update database after checking item out to user.
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("This user has reached his/her item limit!");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show($"This item is already checked out to user {this.selectedItem.CurrentlyCheckedOutBy}!");
-                    }
+                    CheckoutDatabaseUpdate(this.selectedUser, this.selectedItems[i]);
                 }
-                else
-                {
-                    MessageBox.Show("This book is already checked out to this user!");
-                }
+                LoadDataGrid(); // Reload datagrids after item is checked out
             }
             else
             {
-                MessageBox.Show("Please double-click a user and an item to select them for checkout.");
+                MessageBox.Show("Please click a single user and (an) item(s) to select them for checkout.");
             }
         }
 
@@ -543,28 +577,67 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// Update database after checking out item to user.
         /// </summary>
         /// <param name="dueDate">Due date of the item for the user</param>
-        private void CheckoutDatabaseUpdate(DateTime dueDate)
+        private void CheckoutDatabaseUpdate(User user, Item item)
         {
-            // Take necessary information from selectedItem and selectedUser to put into SQL UPDATE command
-            string userID = this.selectedUser.UserID.ToString();
-            string stringDueDate = dueDate.ToString();
-            string itemID = this.selectedItem.ItemID.ToString();
-            DBConnectionHandler.c.Open();
-            DBConnectionHandler.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '{userID}', [dueDate] = '{stringDueDate}' WHERE itemID = '{itemID}'";
-            DBConnectionHandler.command.ExecuteNonQuery();
-            int checkedOut = (int.Parse(this.selectedUser.CheckedOut.ToString())) + 1;
-            DBConnectionHandler.command.CommandText = $"UPDATE accounts SET [numberOfCheckedoutItems] = {checkedOut} WHERE userID = '{userID}'";
-            DBConnectionHandler.command.ExecuteNonQuery();
-            DBConnectionHandler.c.Close();
+            // ...the selected item is already checked out to the selected user.
+            if (item.CurrentlyCheckedOutBy != user.UserID)
+            {
+                // ...the selected item is already checked out to another user.
+                if (item.CurrentlyCheckedOutBy == "")
+                {
+                    // ...the selected user is at his/her item limit.
+                    if (int.Parse(user.CheckedOut) < int.Parse(user.ItemLimit))
+                    {
+                        DateTime dueDate = (DateTime.Today.AddDays(double.Parse(user.DateLimit)).AddHours(23.9999));
+                        // Due at end of day so add 23.9999 hours
+                        if (MessageBox.Show(
+                            $"Confirm Checkout -\n" +
+                            $"Check out item: {this.selectedItem.Title}\n" +
+                            $"To user: ({user.UserID}) {user.LastName}, {user.FirstName}\n" +
+                            $"For {user.DateLimit} day(s). Due on {dueDate.ToString()}"
+                            , "Confirm Checkout", MessageBoxButton.OKCancel) == MessageBoxResult.OK) // If user clicks OK to confirm checkout...
+                        {
+                            // Update database after checking item out to user.
+                            // Take necessary information from selectedItem and selectedUser to put into SQL UPDATE command
+                            string userID = user.UserID;
+                            string stringDueDate = dueDate.ToString();
+                            string itemID = item.ItemID;
+                            DBConnectionHandler.c.Open();
+                            DBConnectionHandler.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '{userID}', [dueDate] = '{stringDueDate}' WHERE itemID = '{itemID}'";
+                            DBConnectionHandler.command.ExecuteNonQuery();
 
-            LoadDataGrid(); // Reload datagrids after item is checked out
+                            DBConnectionHandler.command.CommandText = $"SELECT [numberOfCheckedoutItems] FROM accounts WHERE [userID] = '{userID}'";
+                            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+                            DBConnectionHandler.reader.Read();
+                            int checkedOut = ((int)(DBConnectionHandler.reader[0])) + 1;
+                            DBConnectionHandler.reader.Close();
+
+                            DBConnectionHandler.command.CommandText = $"UPDATE accounts SET [numberOfCheckedoutItems] = {checkedOut} WHERE userID = '{userID}'";
+                            DBConnectionHandler.command.ExecuteNonQuery();
+                            DBConnectionHandler.c.Close();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("This user has reached his/her item limit!");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"This item is already checked out to user {item.CurrentlyCheckedOutBy}!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("This book is already checked out to this user!");
+            }
         }
         #endregion
 
         #region Editing Objects (Users and Items)
         private void ButtonEditItem_Click(object sender, RoutedEventArgs e)
         {
-            if (this.itemSelected) // if an item is selected
+            if (this.itemSelected == true) // if an item is selected (this.itemSelected is of type 'bool?')
             {
                 ItemRegistrationWindow w = new ItemRegistrationWindow(this.selectedItem)
                 {
@@ -581,7 +654,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             else // else, notify user that an item has not been selected
             {
-                MessageBox.Show("Please double-click an item to select it for editing.");
+                MessageBox.Show("Please click an item to select it for editing.");
             }
         }
 
@@ -593,7 +666,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void BtnToUserEditWindow_Click(object sender, RoutedEventArgs e)
         {
-            if (this.userSelected) // if the a user is selected
+            if (this.userSelected == true) // if the a user is selected (this.userSelected is of type 'bool?')
             {
                 // Registration window has an overload constructor - if passed an item,
                 // it becomes an edit/view page
@@ -606,7 +679,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             else // else, notify user that an item has not been selected
             {
-                MessageBox.Show("Please double-click a user to select it for editing.");
+                MessageBox.Show("Please click a user to select it for editing.");
             }
         }
 
@@ -617,74 +690,97 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void ButtonReturnSelectedItem_Click(object sender, RoutedEventArgs e)
         {
-            if (this.itemSelected)
+            if (this.itemSelected == true) // (this.itemSelected is 'bool?')
             {
                 // get the ID AND name of the user that selectedItem is currently checked to
                 string userCheckedOutTo = this.selectedItem.CurrentlyCheckedOutBy;
                 if (userCheckedOutTo != "")
                 {
-                    // get ONLY the ID of the user that selectedItem is currently checked out to
-                    // (ID comes before a space and before the name) 
-                    string userCheckedOutToID = userCheckedOutTo.Substring(0, userCheckedOutTo.IndexOf(' '));
-
-                    DBConnectionHandler.c.Open();
-                    // 
-                    DBConnectionHandler.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{userCheckedOutToID}'";
-                    DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
-                    DBConnectionHandler.reader.Read();
-                    DateTime dueDate = Convert.ToDateTime(DBConnectionHandler.reader[0].ToString());
-                    double overdueBy = (DateTime.Today - dueDate.AddSeconds(1)).TotalDays;
-                    // Add one second because book is due at 11:59:59 - count overdue days starting the next day
-                    if (overdueBy < 0)
-                    {
-                        overdueBy = 0;
-                    }
-                    DBConnectionHandler.reader.Close();
-                    DBConnectionHandler.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE [userID] = '{userCheckedOutToID}'";
-                    DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
-                    DBConnectionHandler.reader.Read();
-                    double totalFinesForItem = ((double)DBConnectionHandler.reader[0]) * overdueBy;
-                    DBConnectionHandler.reader.Close();
-
-                    if (MessageBox.Show($"Confirm Return of '{this.selectedItem.Title}' - \n" +
-                        $"Lent to {this.selectedItem.CurrentlyCheckedOutBy}\n" +
-                        $"Overdue by {overdueBy} days.\n" +
-                        $"Fines owed for this item = USD ${totalFinesForItem}",
-                        "Confirm Return",
-                        MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user clicks OK to confirm return of item to library from user
-                    {
-                        // Set the item's log of user currently checked out by to empty to indicate checked out by no one
-                        DBConnectionHandler.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{this.selectedItem.ItemID}'";
-                        DBConnectionHandler.command.ExecuteNonQuery();
-
-                        // Delete the item's log of currentlyCheckedOutBy and set previousCheckedOutBy to the user who the item was checked out to.
-                        DBConnectionHandler.command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{userCheckedOutToID}' WHERE [itemID] = '{this.selectedItem.ItemID}'";
-                        DBConnectionHandler.command.ExecuteNonQuery();
-
-                        // Remove the dueDate from the item.
-                        DBConnectionHandler.command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{this.selectedItem.ItemID}'";
-                        DBConnectionHandler.command.ExecuteNonQuery();
-
-                        // Subtract the user's number of checked out items by one.
-                        DBConnectionHandler.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
-                            $"WHERE [userID] = '{userCheckedOutToID}'";
-
-                        DBConnectionHandler.command.ExecuteNonQuery();
-                        DBConnectionHandler.c.Close(); // Needs to close before LoadDataGrid on account of reopening in CheckoutDatabaseUpdate
-
-                        LoadDataGrid(); // (Fines and number of overdue will be recalculated for users when the DataGrid is reloaded).
-                    }
-                    DBConnectionHandler.c.Close(); // Close in case if statement is false 
+                    UpdateDatabaseForReturningItem(userCheckedOutTo, this.selectedItem);
+                    LoadDataGrid();
                 }
                 else
                 {
                     MessageBox.Show("This item is not checked out to any user."); // Display error message if the selected item is checked out to no one 
                 }
+
+            }
+            else if (this.itemSelected == null)
+            {
+                for (int i = 0; i < this.selectedItems.Count; i++)
+                {
+                    // get the ID AND name of the user that selectedItem is currently checked to
+                    string userCheckedOutTo = this.selectedItems[i].CurrentlyCheckedOutBy;
+                    if (userCheckedOutTo != "")
+                    {
+                        UpdateDatabaseForReturningItem(userCheckedOutTo, this.selectedItems[i]);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"This book [{this.selectedItems[i].Title} - ({this.selectedItems[i].ItemID})]" +
+                            $"is not checked out to any user.");
+                    }
+                }
+                LoadDataGrid();
             }
             else
             {
-                MessageBox.Show("Please double-click an item to select for returning."); // Display error message an item is not selected.
+                MessageBox.Show("Please click an item to select for returning."); // Display error message an item is not selected.
             }
+        }
+
+        private void UpdateDatabaseForReturningItem(string userCheckedOutTo, Item selectedItem)
+        {
+            // get ONLY the ID of the user that selectedItem is currently checked out to
+            // (ID comes before a space and before the name) 
+            string userCheckedOutToID = userCheckedOutTo.Substring(0, userCheckedOutTo.IndexOf(' '));
+
+            DBConnectionHandler.c.Open();
+
+            DBConnectionHandler.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{userCheckedOutToID}'";
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+            DBConnectionHandler.reader.Read();
+            DateTime dueDate = Convert.ToDateTime(DBConnectionHandler.reader[0].ToString());
+            double overdueBy = (DateTime.Today - dueDate.AddSeconds(1)).TotalDays;
+            // Add one second because book is due at 11:59:59 - count overdue days starting the next day
+            if (overdueBy < 0)
+            {
+                overdueBy = 0;
+            }
+            DBConnectionHandler.reader.Close();
+            DBConnectionHandler.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE [userID] = '{userCheckedOutToID}'";
+            DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
+            DBConnectionHandler.reader.Read();
+            double totalFinesForItem = ((double)DBConnectionHandler.reader[0]) * overdueBy;
+            DBConnectionHandler.reader.Close();
+
+            if (MessageBox.Show($"Confirm Return of '{selectedItem.Title}' - \n" +
+                $"Lent to {userCheckedOutTo}\n" +
+                $"Overdue by {overdueBy} days.\n" +
+                $"Fines owed for this item = USD ${totalFinesForItem}",
+                "Confirm Return",
+                MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user clicks OK to confirm return of item to library from user
+            {
+                // Set the item's log of user currently checked out by to empty to indicate checked out by no one
+                DBConnectionHandler.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '' WHERE [itemID] = '{selectedItem.ItemID}'";
+                DBConnectionHandler.command.ExecuteNonQuery();
+
+                // Delete the item's log of currentlyCheckedOutBy and set previousCheckedOutBy to the user who the item was checked out to.
+                DBConnectionHandler.command.CommandText = $"UPDATE items SET [previousCheckedOutBy] = '{userCheckedOutToID}' WHERE [itemID] = '{selectedItem.ItemID}'";
+                DBConnectionHandler.command.ExecuteNonQuery();
+
+                // Remove the dueDate from the item.
+                DBConnectionHandler.command.CommandText = $"UPDATE items SET [dueDate] = '' WHERE [itemID] = '{selectedItem.ItemID}'";
+                DBConnectionHandler.command.ExecuteNonQuery();
+
+                // Subtract the user's number of checked out items by one.
+                DBConnectionHandler.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
+                    $"WHERE [userID] = '{userCheckedOutToID}'";
+
+                DBConnectionHandler.command.ExecuteNonQuery();
+                DBConnectionHandler.c.Close(); // Needs to close before LoadDataGrid on account of reopening in CheckoutDatabaseUpdate
+            }
+            DBConnectionHandler.c.Close(); // Close in case if statement is false
         }
 
         #endregion
@@ -698,36 +794,49 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void ButtonDeleteSelectedItem_Click(object sender, RoutedEventArgs e)
         {
-            if (this.itemSelected)
+            if (this.itemSelected == true) // (this.itemSelected is of type 'bool?')
             {
                 if (MessageBox.Show("Delete Selected Item?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user confirms deletion
                 {
-                    DBConnectionHandler.c.Open();
-
-                    // Lower the user's number of checked out items by one (if item is checked out to a user)
-                    // (User's number of overdue items and fines will be recalculated when dataGrid is loaded.)
-                    DBConnectionHandler.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
-                        $"WHERE [userID] = '{this.selectedItem.CurrentlyCheckedOutBy}'";
-                    DBConnectionHandler.command.ExecuteNonQuery();
-
-                    // Delete the selected item from the database file
-                    DBConnectionHandler.command.CommandText = $"DELETE * FROM items WHERE [itemID] = '{this.selectedItem.ItemID}'";
-                    DBConnectionHandler.command.ExecuteNonQuery();
-                    DBConnectionHandler.c.Close();
+                    UpdateDatabaseForItemDeletion(this.selectedItem.ItemID, this.selectedItem.CurrentlyCheckedOutBy);
 
                     LoadDataGrid();
-
-                    /// Set the selected item to an empty item.
-                    this.itemSelected = false;
-                    this.selectedItem = new Item();
-                    this.labelSelectedItem.Content = "(Select an Item)";
-                    this.labelCheckoutSelectedItemTitle.Content = "(Select an Item)";
                 }
             }
-            else // else, user has not selected a user - display error message
+            else if (this.itemSelected == null)
             {
-                MessageBox.Show("Please double-click an item to select it for deletion.");
+                if (MessageBox.Show("Delete Selected Items?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user confirms deletions
+                {
+                    int selectedItemsCountBeforeDeletion = this.selectedItems.Count;
+                    for (int i = 0; i < selectedItemsCountBeforeDeletion; i++)
+                    {
+                        UpdateDatabaseForItemDeletion(this.selectedItems[0].ItemID, this.selectedItems[0].CurrentlyCheckedOutBy);
+                        this.selectedItems.RemoveAt(0); // Slide the next selectedItem into the 0 index
+                    }
+                    LoadDataGrid();
+                }
             }
+            else // else, user has not selected any items - display error message
+            {
+                MessageBox.Show("Please click to select a single item to select it for deletion, " +
+                    "or CTRL + Click to select multiple items for deletion.");
+            }
+        }
+
+        private void UpdateDatabaseForItemDeletion(string itemID, string currentlyCheckedOutBy)
+        {
+            DBConnectionHandler.c.Open();
+
+            // Lower the user's number of checked out items by one (if item is checked out to a user)
+            // (User's number of overdue items and fines will be recalculated when dataGrid is loaded.)
+            DBConnectionHandler.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
+                $"WHERE [userID] = '{currentlyCheckedOutBy}'";
+            DBConnectionHandler.command.ExecuteNonQuery();
+
+            // Delete the selected item from the database file
+            DBConnectionHandler.command.CommandText = $"DELETE * FROM items WHERE [itemID] = '{itemID}'";
+            DBConnectionHandler.command.ExecuteNonQuery();
+            DBConnectionHandler.c.Close();
         }
 
         /// <summary>
@@ -740,45 +849,58 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             /// Clear checkedOutBy, dueDate, and set previousCheckedOutBy to the user being deleted.
             /// Set the currently selected user to an empty user.
-            if (this.userSelected)
+            if (this.userSelected == true) // (this.userSelected is of type 'bool?')
             {
                 if (MessageBox.Show("Delete Selected User?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user confirms deletion
                 {
-                    DBConnectionHandler.c.Open();
-
-                    // Clear currentlyCheckedOutBy and set previouslyCheckedOutBy to user deleted
-                    // Set dueDate of items checked out by the user being deleted to be empty
-                    DBConnectionHandler.command.CommandText = "UPDATE items " +
-                        "SET [currentlyCheckedOutBy] = '', " +
-                        $"[previousCheckedOutBy] = '{this.selectedUser.UserID}', " +
-                        "[dueDate] = '' " +
-                        $"WHERE [currentlyCheckedOutBy] = '{this.selectedUser.UserID}'"; // All items checked out by the user being deleted
-                    DBConnectionHandler.command.ExecuteNonQuery();
-
-                    // Delete all values from accounts table in database of the user being deleted
-                    DBConnectionHandler.command.CommandText = $"DELETE * FROM accounts WHERE [userID] = '{this.selectedUser.UserID}'";
-                    DBConnectionHandler.command.ExecuteNonQuery();
-                    DBConnectionHandler.c.Close();
-
+                    UpdateDatabaseForUserDeletion(this.selectedUser.UserID);
                     LoadDataGrid();
-
-                    this.userSelected = false;
-                    this.selectedUser = new User();
-                    this.labelSelectedUser.Content = "(Select a User)";
-                    this.labelCheckoutSelectedUser.Content = "(Select a User)";
+                }
+            }
+            else if (this.userSelected == null)
+            {
+                if (MessageBox.Show("Delete Selected Users?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes) // If user confirms deletions
+                {
+                    int selectedUsersCountBeforeDeletion = this.selectedUsers.Count;
+                    for (int i = 0; i < selectedUsersCountBeforeDeletion; i++)
+                    {
+                        UpdateDatabaseForUserDeletion(this.selectedUsers[0].UserID);
+                        this.selectedUsers.RemoveAt(0); // Slide the next selectedUser into the 0 index
+                    }
+                    LoadDataGrid();
                 }
             }
             else // else, user has not selected a user - display error message
             {
-                MessageBox.Show("Please double-click a user to select it for deletion.");
+                MessageBox.Show("Please click to select a user to select it for deletion, " +
+                    "or CTRL + Click to select multiple users for deletion.");
             }
+        }
+
+        private void UpdateDatabaseForUserDeletion(string userID)
+        {
+            DBConnectionHandler.c.Open();
+
+            // Clear currentlyCheckedOutBy and set previouslyCheckedOutBy to user deleted
+            // Set dueDate of items checked out by the user being deleted to be empty
+            DBConnectionHandler.command.CommandText = "UPDATE items " +
+                "SET [currentlyCheckedOutBy] = '', " +
+                $"[previousCheckedOutBy] = '{userID}', " +
+                "[dueDate] = '' " +
+                $"WHERE [currentlyCheckedOutBy] = '{userID}'"; // All items checked out by the user being deleted
+            DBConnectionHandler.command.ExecuteNonQuery();
+
+            // Delete all values from accounts table in database of the user being deleted
+            DBConnectionHandler.command.CommandText = $"DELETE * FROM accounts WHERE [userID] = '{userID}'";
+            DBConnectionHandler.command.ExecuteNonQuery();
+            DBConnectionHandler.c.Close();
         }
         #endregion
 
         #region CheckBoxes
         private void CheckBoxShowItems_Checked(object sender, RoutedEventArgs e)
         {
-            if (this.userSelected)
+            if (this.userSelected == true) // (this.userSelected is of type 'bool?')
             {
                 this.checkBoxShowUser.IsEnabled = false;
                 this.comboBoxItemsSearchByOptions.SelectedIndex = 5;
@@ -786,14 +908,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             else
             {
-                MessageBox.Show("Please double-click to select a user.");
+                MessageBox.Show("Please click a single row to select a user.");
                 this.checkBoxShowItems.IsChecked = false;
             }
         }
 
         private void CheckBoxShowItems_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (this.userSelected)
+            if (this.userSelected == true) // (this.userSelected is of type 'bool?')
             {
                 this.checkBoxShowUser.IsEnabled = true;
                 this.comboBoxItemsSearchByOptions.SelectedIndex = -1;
@@ -803,7 +925,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         private void CheckBoxShowUser_Checked(object sender, RoutedEventArgs e)
         {
-            if (this.itemSelected)
+            if (this.itemSelected == true) // (this.itemSelected is of type 'bool?')
             {
                 this.checkBoxShowItems.IsEnabled = false;
                 this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
@@ -820,14 +942,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
             else
             {
-                MessageBox.Show("Please double-click to select an item.");
+                MessageBox.Show("Please click a single row to select an item.");
                 this.checkBoxShowUser.IsChecked = false;
             }
         }
 
         private void CheckBoxShowUser_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (this.itemSelected)
+            if (this.itemSelected == true) // (this.itemSelected is of type 'bool?')
             {
                 this.checkBoxShowItems.IsEnabled = true;
                 this.comboBoxAccountsSearchByOptions.SelectedIndex = -1;

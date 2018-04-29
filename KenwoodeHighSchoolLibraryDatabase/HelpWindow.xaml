@@ -56,6 +56,13 @@
                     <TextBlock Background="White"><Run/><LineBreak/><Run Text="Yes, columns can be moved around and resized within the datagrids."/><LineBreak/><Run/><LineBreak/><Run Text="Simply drag the column left and right to move, and drag the column walls to resize the column's width."/><LineBreak/><Run/><LineBreak/><Run Text="(This applies to all columns in all datagrids within the program.)"/><LineBreak/><Run/></TextBlock>
                 </Expander>
 
+                <Expander x:Name="expanderCanISelectMultipleUsersAndOrItems" Header="Can I select multiple users and/or items on the main window?" Background="LightGray"
+                          Height="Auto"
+                          IsExpanded="False"
+                          FontFamily="Sylfaen">
+                    <TextBlock Background="White"><LineBreak/><Run Text="Yes - multiple users and items can be selected by using SHIFT + LEFT CLICK or CTRL + LEFT CLICK."/><LineBreak/><Run/><LineBreak/><Run Text="This means multiple users/items can be deleted all at once, multiple items can be checked out to a single users all at once, and multiple items can be returned"/><LineBreak/><Run Text="to the library at once as well."/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
+                </Expander>
+
                 <Expander x:Name="expanderWhatIsISXX" Header="What is ISXX? / What is the difference between ISBN13 and ISXX?" Background="LightGray"
                           Height="Auto"
                           IsExpanded="False"
