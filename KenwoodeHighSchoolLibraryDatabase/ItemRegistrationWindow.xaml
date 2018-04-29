@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="Item Registration/ViewEdit" Height="823.133" Width="738.195" ResizeMode="CanMinimize">
+        Closing="Registration_Edit_Closing"
+        Title="Item Registration/ViewEdit" Height="844.133" Width="762.995" ResizeMode="CanMinimize">
     <Grid Margin="0,0,0.2,0.2">
         <Label x:Name="labelWindowTitle" 
                Margin="262,9,269.8,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Center"
                FontWeight="Bold"/>
         <Grid x:Name="gridBookRegistrationInput" 
-              HorizontalAlignment="Left" Height="739" Margin="45,44,0,0" VerticalAlignment="Top" Width="677">
+              HorizontalAlignment="Left" Height="780" Margin="45,44,0,0" VerticalAlignment="Top" Width="677">
             <StackPanel x:Name="stackPanelLabels" 
                         HorizontalAlignment="Left" Height="700" Margin="10,0,0,0" VerticalAlignment="Top" Width="101">
                 <Label x:Name="labelTitle" Content="Title" 
@@ -53,6 +54,9 @@
                 <Label x:Name="labelDescription" Content="Description" 
                        HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="150" 
                        FontFamily="Sylfaen"/>
+                <Label x:Name="labelNumberOfCopies" Content="# of Copies&#xD;&#xA;To Register" 
+                       HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Sylfaen" Margin="0,0,-0.2,0" Width="101" Height="35" 
+                       FontSize="10"/>
                 <Label x:Name="labelCurrentlyCheckedOutBy" Content="Checked Out By" 
                        HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Margin="0,0,-0.2,0" Height="35" 
                        FontFamily="Sylfaen"/>
@@ -63,6 +67,7 @@
                        Height="35" Margin="0,0,-0.2,0" 
                        FontFamily="Sylfaen"/>
             </StackPanel>
+            
             <StackPanel x:Name="stackPanelItemRegistrationInput" 
                         HorizontalAlignment="Left" Height="700" Margin="126,0,0,0" VerticalAlignment="Top" Width="546">
                 <TextBox x:Name="textBoxTitle" TextWrapping="Wrap"
@@ -140,6 +145,19 @@
                          HorizontalAlignment="Left" Height="150" TextWrapping="Wrap" VerticalAlignment="Top" Width="380" 
                          SpellCheck.IsEnabled="True" 
                          FontFamily="Sylfaen"/>
+                <StackPanel x:Name="stackPanelNumberOfCopies" Orientation="Horizontal" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="546">
+                    <TextBox x:Name="textBoxNumberOfCopies" 
+                             HorizontalAlignment="Left" Height="35" TextWrapping="Wrap" VerticalAlignment="Top" Width="381"
+                             PreviewTextInput="CheckIfTextBoxContainsNumbers"/>
+                    
+                    <Button x:Name="buttonAddOneNumberOfCopies" Content="Add One" 
+                            Width="82.5" Height="35" VerticalAlignment="Top" 
+                            Click="ButtonAddOneNumberOfCopies_Click"/>
+                    
+                    <Button x:Name="buttonSubtractOneNumberOfCopies" Content="Subtract One" 
+                            Width="82.5" Height="35" VerticalAlignment="Top" 
+                            Click="ButtonSubtractOneNumberOfCopies_Click"/>
+                </StackPanel>
                 <StackPanel x:Name="stackPanelCheckout" 
                             HorizontalAlignment="Left" Width="546" Height="35" Margin="0,0,-0.4,0" VerticalAlignment="Top" Orientation="Horizontal">
                     <TextBox x:Name="textBoxCurrentlyCheckedOutBy" 
@@ -159,7 +177,7 @@
                             FontFamily="Sylfaen"/>
             </StackPanel>
             <Button x:Name="buttonRegisterItem" Content="Register Item" 
-                    HorizontalAlignment="Left" Margin="215,700,0,0" VerticalAlignment="Top" Width="189"
+                    HorizontalAlignment="Left" Margin="220,720,0,0" VerticalAlignment="Top" Width="189"
                     FontFamily="Sylfaen"
                     Click="ButtonRegisterItem_Click"/>
             <Label x:Name="labelItemID" 

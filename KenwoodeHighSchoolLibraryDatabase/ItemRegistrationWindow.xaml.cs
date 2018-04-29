@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Text.RegularExpressions;
+using System.Windows.Input;
 
 namespace KenwoodeHighSchoolLibraryDatabase
 {
@@ -13,6 +15,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
     {
         private List<string> selectedColumnValues;
         private bool toRegister;
+        private string numberOfCopiesToRegister;
         public ItemRegistrationWindow()
         {
             InitializeComponent();
@@ -25,6 +28,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.buttonCheckout.IsEnabled = false;
             this.labelDueDate.IsEnabled = false;
             this.datePickerDueDate.IsEnabled = false;
+
+            this.textBoxNumberOfCopies.Text = "1";
 
             this.selectedColumnValues = new List<String>();
 
@@ -67,17 +72,21 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.comboBoxFormat.SelectedValue = this.toEditItem.Format;
             this.textBoxCurrentlyCheckedOutBy.Text = this.toEditItem.CurrentlyCheckedOutBy;
             this.labelWindowTitle.Content = "View, Modify, or Checkout Item";
+            this.textBoxNumberOfCopies.Text = "1";
             if (this.toEditItem.CurrentlyCheckedOutBy != "")
             {
                 this.datePickerDueDate.IsEnabled = true;
             }
             this.buttonRegisterItem.Content = "Save Changes - Edit Item";
-            this.LoadRemainingFields();
+            LoadRemainingFields();
             if (this.toEditItem.CurrentlyCheckedOutBy != "")
             {
                 this.datePickerDueDate.IsEnabled = true;
             }
-
+            this.buttonAddOneNumberOfCopies.IsEnabled = false;
+            this.buttonSubtractOneNumberOfCopies.IsEnabled = false;
+            this.textBoxNumberOfCopies.IsEnabled = false;
+            
             this.toRegister = false;
         }
 
@@ -386,7 +395,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 return "A Dewey Decimal number is required. Please enter a value for a Dewey Decimal number " +
                     "or generate one from the genre or author.";
             }
-            return "";
+            if (String.IsNullOrWhiteSpace(this.textBoxNumberOfCopies.Text))
+            {
+                return "A number of copies to register (at least one) must be entered. Please enter a value" +
+                    "for number of copies to register.";
+            }
+                return "";
         }
 
         /// <summary>
@@ -406,22 +420,23 @@ namespace KenwoodeHighSchoolLibraryDatabase
             DBConnectionHandler.command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE [itemID] LIKE '%{isxx}-%' ORDER BY [copyID]";
             DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
             int previous;
-            int copyID = 1;
+            int copyID = 2;
             try
             {
                 DBConnectionHandler.reader.Read();
                 previous = int.Parse(DBConnectionHandler.reader[1].ToString());
-                if (previous >= 1)
+                if (previous >= 2)
                 {
                     DBConnectionHandler.c.Close();
-                    return 0;
+                    return 1;
                 }
             }
             catch (InvalidOperationException) // If no IDs contain specified ISBN13 (isbnThirteen)
             {
                 DBConnectionHandler.c.Close();
-                return 0;
+                return 1;
             }
+
             while (DBConnectionHandler.reader.Read()) // loop through ItemIDs and fill in gaps in suffixes if needed
             {
                 int current = int.Parse(DBConnectionHandler.reader[1].ToString());
@@ -498,19 +513,22 @@ namespace KenwoodeHighSchoolLibraryDatabase
             string isxx = this.textBoxISXX.Text;
             if (message == "")
             {
-                int copyID = GenerateCopyID(this.textBoxISXX.Text);
-                string itemID = this.textBoxISXX.Text + $"-{copyID}";
-                DBConnectionHandler.c.Open();
-                DBConnectionHandler.command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
-                    "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISXX], [publisher], " +
-                    "[publicationYear], [edition], [description]) " +
-                    $"VALUES ('{itemID}', {copyID}, '{this.textBoxTitle.Text}', '{this.comboBoxGenreHundreds.SelectedValue}', " +
-                    $"'{this.comboBoxGenreTens.SelectedValue}', '{this.comboBoxGenreOnes.SelectedValue}', '{this.comboBoxFormat.SelectedValue}', " +
-                    $"'{this.textBoxAuthorFName.Text}', '{this.textBoxAuthorMName.Text}', '{this.textBoxAuthorLName.Text}', " +
-                    $"'{this.textBoxDeweyDecimal.Text}', '{this.textBoxISBNTen.Text}', '{this.textBoxISXX.Text}', " +
-                    $"'{this.textBoxPublisher.Text}', '{this.textBoxPublicationYear.Text}', '{this.textBoxEdition.Text}', '{this.textBoxDescription.Text}')";
-                DBConnectionHandler.command.ExecuteNonQuery();
-                DBConnectionHandler.c.Close();
+                for (int i = 0; i < int.Parse(this.textBoxNumberOfCopies.Text); i++)
+                {
+                    int copyID = GenerateCopyID(this.textBoxISXX.Text);
+                    string itemID = this.textBoxISXX.Text + $"-{copyID}";
+                    DBConnectionHandler.c.Open();
+                    DBConnectionHandler.command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
+                        "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISXX], [publisher], " +
+                        "[publicationYear], [edition], [description]) " +
+                        $"VALUES ('{itemID}', {copyID}, '{this.textBoxTitle.Text}', '{this.comboBoxGenreHundreds.SelectedValue}', " +
+                        $"'{this.comboBoxGenreTens.SelectedValue}', '{this.comboBoxGenreOnes.SelectedValue}', '{this.comboBoxFormat.SelectedValue}', " +
+                        $"'{this.textBoxAuthorFName.Text}', '{this.textBoxAuthorMName.Text}', '{this.textBoxAuthorLName.Text}', " +
+                        $"'{this.textBoxDeweyDecimal.Text}', '{this.textBoxISBNTen.Text}', '{this.textBoxISXX.Text}', " +
+                        $"'{this.textBoxPublisher.Text}', '{this.textBoxPublicationYear.Text}', '{this.textBoxEdition.Text}', '{this.textBoxDescription.Text}')";
+                    DBConnectionHandler.command.ExecuteNonQuery();
+                    DBConnectionHandler.c.Close();
+                }
                 this.DialogResult = true;
             }
             else
@@ -688,6 +706,67 @@ namespace KenwoodeHighSchoolLibraryDatabase
             DBConnectionHandler.command.CommandText = $"UPDATE items SET [{column}] = '{newValue}' WHERE itemID = '{this.toEditItem.ItemID}'";
             DBConnectionHandler.command.ExecuteNonQuery();
             DBConnectionHandler.c.Close();
+        }
+        #endregion
+
+        #region Register Multiple Copies
+        private void ButtonAddOneNumberOfCopies_Click(object sender, RoutedEventArgs e)
+        {
+            string textBoxNumberOfCopies = this.textBoxNumberOfCopies.Text;
+            if (!String.IsNullOrWhiteSpace(textBoxNumberOfCopies))
+            {
+                this.numberOfCopiesToRegister = (int.Parse(textBoxNumberOfCopies) + 1).ToString();
+                this.textBoxNumberOfCopies.Text = this.numberOfCopiesToRegister;
+            }
+            else
+            {
+                this.textBoxNumberOfCopies.Text = "1";
+            }
+        }
+
+        private void ButtonSubtractOneNumberOfCopies_Click(object sender, RoutedEventArgs e)
+        {
+            string textBoxNumberOfCopies = this.textBoxNumberOfCopies.Text;
+            if (textBoxNumberOfCopies != "1" && !String.IsNullOrWhiteSpace(textBoxNumberOfCopies))
+            {
+                this.numberOfCopiesToRegister = (int.Parse(this.textBoxNumberOfCopies.Text) - 1).ToString();
+                this.textBoxNumberOfCopies.Text = this.numberOfCopiesToRegister;
+            }
+            else
+            {
+                this.textBoxNumberOfCopies.Text = "1";
+            }
+        }
+
+        /// <summary>
+        /// Precheck what the user inputs before entering into textBoxNumberOfCopies and ensure that the textbox only contains a integer greater than or equal to 1.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e">The text within textBoxNumberOfCopies</param>
+        private void CheckIfTextBoxContainsNumbers(object sender, TextCompositionEventArgs e)
+        {
+            // Will not allow any characters besides space and digits 1 through 9 to be entered for the first character.
+            // Ensures textbox always contains an integer bewteen 1 and infinity
+            if (String.IsNullOrWhiteSpace(this.textBoxNumberOfCopies.Text)) // If the textbox is empty
+            {
+                Regex regex = new Regex("^[1-9]$"); // Only allow entering of digits between one and 9
+                e.Handled = !regex.IsMatch(e.Text);
+            }
+            else // else, textbox already contains at least one integer - allow any digit between 1 and 9
+            {
+                Regex regex = new Regex("^[0-9]$");
+                e.Handled = !regex.IsMatch(e.Text);
+            }
+        }
+        #endregion
+
+        #region Closing Edit Window
+        private void Registration_Edit_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (this.toEditItem != null)
+            {
+                EditAndUpdate();
+            }
         }
         #endregion
     }

@@ -53,15 +53,15 @@
                   MouseDoubleClick="DataGridAccounts_DoubleClick"
                   FontFamily="Sylfaen" Grid.RowSpan="2">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding firstName, Mode=OneWay}" Width="*"/>
-                        <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding lastName, Mode=OneWay}" Width="190"/>
-                        <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="70"/>
-                        <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="70"/>
-                        <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding itemLimit, Mode=OneWay}" Width="70"/>
-                        <DataGridTextColumn Header="Date Limit" IsReadOnly="True" Binding="{Binding dateLimit, Mode=OneWay}" Width="70"/>
-                        <DataGridTextColumn Header="Checked Out" IsReadOnly="True" Binding="{Binding checkedOut, Mode=OneWay}" Width="75"/>
-                        <DataGridTextColumn Header="Overdue" IsReadOnly="True" Binding="{Binding overdueItems, Mode=OneWay}" Width="75"/>
-                        <DataGridTextColumn Header="Fines (USD)" IsReadOnly="True" Binding="{Binding fines, Mode=OneWay}" Width="75"/>
+                        <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding FirstName, Mode=OneWay}" Width="*"/>
+                        <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding LastName, Mode=OneWay}" Width="190"/>
+                        <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding UserID, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding UserType, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Book Limit" IsReadOnly="True" Binding="{Binding ItemLimit, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Date Limit" IsReadOnly="True" Binding="{Binding DateLimit, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Checked Out" IsReadOnly="True" Binding="{Binding CheckedOut, Mode=OneWay}" Width="75"/>
+                        <DataGridTextColumn Header="Overdue" IsReadOnly="True" Binding="{Binding OverdueItems, Mode=OneWay}" Width="75"/>
+                        <DataGridTextColumn Header="Fines (USD)" IsReadOnly="True" Binding="{Binding Fines, Mode=OneWay}" Width="75"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <ComboBox x:Name="comboBoxAccountsSearchByOptions" 
@@ -84,8 +84,8 @@
                         Background="#FFD33E3E" FontFamily="Sylfaen"
                         Click="BtnToUserEditWindow_Click"/>
                 <CheckBox x:Name="checkBoxShowItems" 
-                          Content="Show Checked Out Items" 
-                          HorizontalAlignment="Left" Margin="742,10,0,0" VerticalAlignment="Top"
+                          Content="Show Checked Out Items of Selected User" 
+                          HorizontalAlignment="Left" Margin="658,10,0,0" VerticalAlignment="Top"
                           Checked="CheckBoxShowItems_Checked" Unchecked="CheckBoxShowItems_Unchecked"/>
             </Grid>
         </GroupBox>
@@ -98,13 +98,13 @@
                    MouseDoubleClick="DataGridItems_DoubleClick"
                   FontFamily="Sylfaen">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding itemID, Mode=OneWay}" Width="*"/>
-                        <DataGridTextColumn Header="D. Decimal" IsReadOnly="True" Binding="{Binding deweyDecimal, Mode=OneWay}" Width="70"/>
-                        <DataGridTextColumn Header="Format" IsReadOnly="True" Binding="{Binding format, Mode=OneWay}" Width="70"/>
-                        <DataGridTextColumn Header="Genre" IsReadOnly="True" Binding="{Binding genre, Mode=OneWay}" Width="150"/>
-                        <DataGridTextColumn Header="Title" IsReadOnly="True" Binding="{Binding title, Mode=OneWay}" Width="200"/>
-                        <DataGridTextColumn Header="Author" IsReadOnly="True" Binding="{Binding authorName, Mode=OneWay}" Width="120"/>
-                        <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding currentlyCheckedOutBy, Mode=OneWay}" Width="150"/>
+                        <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding ItemID, Mode=OneWay}" Width="*"/>
+                        <DataGridTextColumn Header="D. Decimal" IsReadOnly="True" Binding="{Binding DeweyDecimal, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Format" IsReadOnly="True" Binding="{Binding Format, Mode=OneWay}" Width="70"/>
+                        <DataGridTextColumn Header="Genre" IsReadOnly="True" Binding="{Binding Genre, Mode=OneWay}" Width="150"/>
+                        <DataGridTextColumn Header="Title" IsReadOnly="True" Binding="{Binding Title, Mode=OneWay}" Width="200"/>
+                        <DataGridTextColumn Header="Author" IsReadOnly="True" Binding="{Binding AuthorName, Mode=OneWay}" Width="120"/>
+                        <DataGridTextColumn Header="Lent To" IsReadOnly="True" Binding="{Binding CurrentlyCheckedOutBy, Mode=OneWay}" Width="150"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <Button x:Name="buttonToItemRegistrationWindow" Content="Register New Item" 
@@ -138,8 +138,8 @@
                         Background="#FFD33E3E" FontFamily="Sylfaen" 
                         Click="ButtonDeleteSelectedItem_Click" />
                 <CheckBox x:Name="checkBoxShowUser" 
-                          Content="Show User Lent To" 
-                          HorizontalAlignment="Left" Margin="742,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,0.506"
+                          Content="Show User Lent To of Selected Item" 
+                          HorizontalAlignment="Left" Margin="690,13,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,0.506"
                           Checked="CheckBoxShowUser_Checked" Unchecked="CheckBoxShowUser_Unchecked"/>
             </Grid>
         </GroupBox>
@@ -185,5 +185,6 @@
                HorizontalAlignment="Left" Margin="101,32,0,0" VerticalAlignment="Top" 
                FontFamily="Sylfaen" FontStyle="Italic" Width="373"/>
         </Grid>
+        <Label x:Name="labelDeveloperName" Content="Micheal Chung © - 2018" HorizontalAlignment="Left" Margin="1127,739,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
     </Grid>
 </Window>

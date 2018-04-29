@@ -1,22 +1,22 @@
-﻿<Window x:Class="KenwoodeHighSchoolLibraryDatabase.PrintFinesWindow"
+﻿<Window x:Name="windowPrintFines" x:Class="KenwoodeHighSchoolLibraryDatabase.PrintFinesWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KenwoodeHighSchoolLibraryDatabase"
         mc:Ignorable="d"
-        Title="PrintFinesWindow" Height="805.296" Width="994.794" ResizeMode="CanMinimize">
+        Title="Generate/Print Fines" Height="805.296" Width="994.794" ResizeMode="CanMinimize">
     <Grid x:Name="gridMain">
         <DataGrid x:Name="dataGridFinedUsers" 
                   HorizontalAlignment="Left" Height="759" Margin="10,1,0,0" VerticalAlignment="Top" Width="717"
                   FontFamily="Sylfaen">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Fines (USD)" IsReadOnly="True" Binding="{Binding fines, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding userID, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name, Mode=OneWay}" Width="*" Visibility="Hidden"/>
-                <DataGridTextColumn Header="# of Overdue Items" IsReadOnly="True" Binding="{Binding overdue, Mode=OneWay}" Width="*" Visibility="Hidden"/>
-                <DataGridTextColumn Header="User Fine Per Overdue Day" IsReadOnly="True" Binding="{Binding finePerDay, Mode=OneWay}" Width="*" Visibility="Hidden"/>
-                <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding userType, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="Fines (USD)" IsReadOnly="True" Binding="{Binding Fines, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="User ID" IsReadOnly="True" Binding="{Binding UserID, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="# of Overdue Items" IsReadOnly="True" Binding="{Binding Overdue, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="User Fine Per Overdue Day" IsReadOnly="True" Binding="{Binding FinePerDay, Mode=OneWay}" Width="*" Visibility="Hidden"/>
+                <DataGridTextColumn Header="User Type" IsReadOnly="True" Binding="{Binding UserType, Mode=OneWay}" Width="*" Visibility="Hidden"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="buttonPreviousPage" Content="Previous Page" 
