@@ -207,15 +207,14 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         #region Select Item or User
         /// <summary>
-        /// Set the selected user to the row that the user clicked.
-        /// Display error message if user clicks something other than a user
-        /// in the accounts DataGrid.
+        /// Set 'selected user' to the row(s) that the user clicks.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void DataGridAccounts_SelectionChanged(object sender, EventArgs e)
         {
             this.selectedUsers = new List<User>();
+            // Load all the users that the user selects
             for (int i = 0; i < this.dataGridAccounts.SelectedItems.Count; i++)
             {
                 this.selectedUsers.Add((User)this.dataGridAccounts.SelectedItems[i]);
@@ -275,6 +274,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void DataGridItems_SelectionChanged(object sender, EventArgs e)
         {
             this.selectedItems = new List<Item>();
+            // Load all the items that the user selects
             for (int i = 0; i < this.dataGridItems.SelectedItems.Count; i++)
             {
                 this.selectedItems.Add((Item)this.dataGridItems.SelectedItems[i]);
@@ -481,6 +481,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
+        // Other window opening methods exist in #region Menu and #region Editing Objects (Users and Items)
         #region Window Openers
         /// <summary>
         /// Open ItemRegistrationWindow.
@@ -898,12 +899,18 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region CheckBoxes
+        /// <summary>
+        /// If the checkBoxShowItems (of selected user) is checked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CheckBoxShowItems_Checked(object sender, RoutedEventArgs e)
         {
             if (this.userSelected == true) // (this.userSelected is of type 'bool?')
             {
+                // Disable checkBoxShowUser - can't use both at the same time
                 this.checkBoxShowUser.IsEnabled = false;
-                this.comboBoxItemsSearchByOptions.SelectedIndex = 5;
+                this.comboBoxItemsSearchByOptions.SelectedIndex = 5; // 5 is index of search by userID
                 this.textBoxItemsSearchBy.Text = this.selectedUser.UserID;
             }
             else
@@ -918,7 +925,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (this.userSelected == true) // (this.userSelected is of type 'bool?')
             {
                 this.checkBoxShowUser.IsEnabled = true;
-                this.comboBoxItemsSearchByOptions.SelectedIndex = -1;
+                this.comboBoxItemsSearchByOptions.SelectedIndex = -1; //-1 is index for null
                 this.textBoxItemsSearchBy.Text = "";
             }
         }
@@ -927,10 +934,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             if (this.itemSelected == true) // (this.itemSelected is of type 'bool?')
             {
+                // Disable checkBoxShowItems - can't use both at the same time
                 this.checkBoxShowItems.IsEnabled = false;
-                this.comboBoxAccountsSearchByOptions.SelectedIndex = 2;
+                this.comboBoxAccountsSearchByOptions.SelectedIndex = 2; // 2 is index of search by userID (currentlyCheckedOutBy)
                 string selectedItemUserID = this.selectedItem.CurrentlyCheckedOutBy;
-                if (selectedItemUserID.Length > 0)
+                if (selectedItemUserID.Length > 0) // If the item is checked out to someone
                 {
                     selectedItemUserID = selectedItemUserID.Substring(0, selectedItemUserID.IndexOf(' '));
                     this.textBoxAccountsSearchBy.Text = selectedItemUserID;
@@ -952,20 +960,26 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (this.itemSelected == true) // (this.itemSelected is of type 'bool?')
             {
                 this.checkBoxShowItems.IsEnabled = true;
-                this.comboBoxAccountsSearchByOptions.SelectedIndex = -1;
+                this.comboBoxAccountsSearchByOptions.SelectedIndex = -1; // -1 is index of null
                 this.textBoxAccountsSearchBy.Text = "";
             }
         }
         #endregion
 
         #region Menu
+
         #region Backup
+        /// <summary>
+        /// Backup the current database file into the "Backup" folder (if it already exists; if not, create folder)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Backup_Click(object sender, RoutedEventArgs e)
         {
             string dateTime = DateTime.Now.ToString();
             dateTime = dateTime.Replace("/", "_"); // Set markers in DateTime to be underscores, '/' and ':' are not permitted in file names
             dateTime = dateTime.Replace(":", "_");
-            string backupFileName = "Backup-" + dateTime;
+            string backupFileName = "Backup-" + dateTime; // Name the backup file after the current date and time
 
             File.Copy("LibraryDatabase.mdb", backupFileName + ".mdb", true);
             
@@ -975,10 +989,15 @@ namespace KenwoodeHighSchoolLibraryDatabase
             MessageBox.Show($"Backup database file created in:\n\n{this.currentFolderPath}\\Backups.\n\nBackup database file named '{backupFileName}.mdb'");
         }
 
+        /// <summary>
+        /// Open file explorer to select file to restore the database from.
+        /// Restore from the selected file and put old database into the 'Corrupt' folder.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Restore_Click(object sender, RoutedEventArgs e)
         {
-
-
+            // Open file explorer to select file to restore from
             System.Windows.Forms.OpenFileDialog browserDialog = new System.Windows.Forms.OpenFileDialog
             {
                 Title = "Select Backup File to Restore From"
@@ -988,7 +1007,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 browserDialog.InitialDirectory = this.currentFolderPath + "\\Backups";
             }
             bool selectedDBFunctions = false;
-            while (!selectedDBFunctions) // While the user has not selected a functional database (user can break out of loop and return to pre-restore database if needed)
+            while (!selectedDBFunctions) // While the user has not selected a functional database (user can exit loop and return to pre-restore database if needed)
             {
                 string corruptDatabasePath = ""; // The path of the current database the user wishes to switch out of
                 if (browserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -1006,7 +1025,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                             string corruptFileName = "CorruptDB-" + dateTime; // Rename database to 'CorruptDB-{Current date and time}'
 
                             corruptDatabasePath = this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb";
-                            File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb"); // Renamte and move current database to 'corrupt' folder'
+                            // Rename and move current database to 'corrupt' folder'
+                            File.Move(this.currentFolderPath + "\\LibraryDatabase.mdb", this.currentFolderPath + "\\Corrupt\\" + corruptFileName + ".mdb"); 
                             File.Copy(selectedFilePath, this.currentFolderPath + "\\LibraryDatabase.mdb");
 
                             LoadDataGrid();
@@ -1062,13 +1082,21 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
         #endregion
 
-        #endregion
-
+        #region Help Window
+        /// <summary>
+        /// Opens the Help Window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
         {
             HelpWindow w = new HelpWindow();
             w.Show();
         }
+
+        #endregion
+
+        #endregion
     }
 
     /// <summary>
