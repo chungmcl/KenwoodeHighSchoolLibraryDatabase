@@ -133,10 +133,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.previousCheckedOutBy = DBConnectionHandler.reader["previousCheckedOutBy"].ToString();
             this.textBoxPreviousCheckedOutBy.Text = this.previousCheckedOutBy;
             string dueDateString = DBConnectionHandler.reader["dueDate"].ToString();
-            if (dueDateString.Length > 0)
+            if (dueDateString.Length > 0) // If the item has a due date
             {
 
                 this.dueDate = Convert.ToDateTime(DBConnectionHandler.reader["dueDate"].ToString());
+                // Set the date picker equal to the item's due date
                 this.datePickerDueDate.SelectedDate = this.dueDate;
             }
             DBConnectionHandler.reader.Close();
@@ -234,11 +235,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void ButtonConvertToISBN13_Click(object sender, RoutedEventArgs e)
         {
+            // Remove trailing and leading empty spaces
             string isbnTen = this.textBoxISBNTen.Text.Trim();
+            // Remove all characters except for digits (get rid of dashes as ISBN10 is often formatted with dashes)
             isbnTen = AgressiveTrim(isbnTen);
             if (isbnTen != "" && isbnTen.ToArray().Count() == 10)
             {
-
                 this.textBoxISXX.Text = ConvertToISBNThirteen(isbnTen);
             }
             else
@@ -250,15 +252,22 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <summary>
         /// Load the genre tens comboBox to the current hundreds class selected
         /// in the comboBoxGenreHundreds comboBox. Data loaded from deweyDecimal table in the database.
-        /// Classes defined by https://www.oclc.org/en/dewey/features/summaries.html
-        /// (OCLC Online Computer Library Center, governing body of Dewey Decimal)
         /// Selected indexes can be used to generate Dewey Decimal.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ComboBoxGenreHundreds_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.comboBoxGenreHundreds.SelectedIndex < 10)
+            // Dewey Decimal classes defined by https://www.oclc.org/en/dewey/features/summaries.html
+            // (OCLC Online Computer Library Center, governing body of Dewey Decimal)
+            if (this.comboBoxGenreHundreds.SelectedIndex == 10) // If user selects fiction (Dewey Decimal for non-fiction)
+            {
+                this.comboBoxGenreTens.IsEnabled = false;
+                this.comboBoxGenreTens.SelectedValue = "[General]";
+                this.comboBoxGenreOnes.IsEnabled = false;
+                this.comboBoxGenreOnes.SelectedValue = "[General]";
+            }
+            else
             {
                 this.comboBoxGenreTens.IsEnabled = true;
                 this.comboBoxGenreOnes.IsEnabled = false;
@@ -267,6 +276,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 int column = this.comboBoxGenreHundreds.SelectedIndex;
                 DBConnectionHandler.c.Open();
                 DBConnectionHandler.command.CommandType = System.Data.CommandType.Text;
+
+                // Select all values from the selected genre
+                // Each column represents a genre
                 DBConnectionHandler.command.CommandText = $"SELECT [{column}] FROM deweyDecimal";
                 DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
                 int count = 0;
@@ -274,9 +286,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 while (DBConnectionHandler.reader.Read())
                 {
                     string toAdd = DBConnectionHandler.reader[$"{column}"].ToString();
+
+                    // Add all subgenres and sub-subgenres to a list for use later
+                    // in columnBoxGenreOnes and etc.
                     this.selectedColumnValues.Add(toAdd);
-                    if ((count % 10) == 0)
+                    if ((count % 10) == 0) // Every tenth row of the column (genre) is a subgenre
                     {
+                        // Add name of subgenre to comboBoxTens
                         this.comboBoxGenreTens.Items.Add(this.selectedColumnValues[count]);
                     }
                     count = count + 1;
@@ -284,33 +300,29 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 DBConnectionHandler.c.Close();
                 DBConnectionHandler.reader.Close();
             }
-            else // If user selects fiction
-            {
-                this.comboBoxGenreTens.IsEnabled = false;
-                this.comboBoxGenreTens.SelectedValue = "[General]";
-                this.comboBoxGenreOnes.IsEnabled = false;
-                this.comboBoxGenreOnes.SelectedValue = "[General]";
-            }
         }
 
         /// <summary>
         /// Load the genre ones comboBox to the current tens class selected
         /// in the comboBoxGenreTens comboBox. Data loaded from the deweyDecimal table in the database.
-        /// Classes defined by https://www.oclc.org/en/dewey/features/summaries.html
-        /// (OCLC Online Computer Library Center, governing body of Dewey Decimal)
         /// Selected indexes can be used to generate Dewey Decimal.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ComboBoxGenreTens_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            /// Dewey Decimal classes defined by https://www.oclc.org/en/dewey/features/summaries.html
+            /// (OCLC Online Computer Library Center, governing body of Dewey Decimal)
             this.comboBoxGenreOnes.IsEnabled = true;
             this.comboBoxGenreOnes.Items.Clear();
             if (this.comboBoxGenreTens.SelectedItem != null) 
             {
                 this.comboBoxGenreOnes.Items.Clear();
-                this.comboBoxGenreOnes.Items.Add("[General]");
+                this.comboBoxGenreOnes.Items.Add("[General]"); // Add [General] to represent no sub-subgenre
                 int sectionStart = (this.comboBoxGenreTens.SelectedIndex * 10) + 1;
+
+                // values between this subgenre and the next genre (every ten rows)
+                // are sub-subgenres - add to comboBoxGenreOnes
                 for (int i = sectionStart; i < sectionStart + 9; i++)
                 {
                     string toAdd = this.selectedColumnValues[i];
@@ -327,25 +339,28 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void ButtonGenerateDeweyDecimal_Click(object sender, RoutedEventArgs e)
         {
-            if (this.comboBoxGenreHundreds.SelectedIndex == 10)
+            // Fiction follows different rule for Dewey Decimal
+            if (this.comboBoxGenreHundreds.SelectedIndex == 10) // If user selected genre to be fiction
             {
                 if (this.textBoxAuthorFName.Text == "" || this.textBoxAuthorLName.Text == "")
                 {
                     MessageBox.Show("Author first and last name boxes must be filled out to generate a Dewey Decimal");
                 }
-                else if (this.textBoxAuthorLName.Text.Length < 4)
+                else if (this.textBoxAuthorLName.Text.Length < 4) // In case an author has an odd name that cannot be calculated
                 {
                     MessageBox.Show("Fiction Dewey Decimal cannot be generated. Please enter manually.");
                 }
                 else
                 {
-                    this.textBoxDeweyDecimal.Text = $"{this.textBoxAuthorFName.Text.Substring(0, 1)} {this.textBoxAuthorLName.Text.Substring(0, 4)}";
+                    // Set Dewey Decimal based on author name
+                    this.textBoxDeweyDecimal.Text = $"{this.textBoxAuthorFName.Text.Substring(0, 1)} " + 
+                    $"{this.textBoxAuthorLName.Text.Substring(0, 4)}";
                 }
             }
-            else
+            else // If user selected a non-fiction genre (calculate Dewey Decimal)
             {
                 if ((this.comboBoxGenreHundreds.SelectedIndex != -1) && (this.comboBoxGenreTens.SelectedIndex != -1)
-                && (this.comboBoxGenreOnes.SelectedIndex != -1))
+                && (this.comboBoxGenreOnes.SelectedIndex != -1)) // If all three genre comboBoxes are filled out
                 {
                     int hundreds = this.comboBoxGenreHundreds.SelectedIndex * 100;
                     int tens = this.comboBoxGenreTens.SelectedIndex * 10;
@@ -367,10 +382,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// not filled out in correct formatting. If all required fields are correct
         /// and in correct formatting, return empty string.
         /// </summary>
-        /// <returns>Error message, empty string if all filled out correctly</returns>
+        /// <returns>Returns error message, returns empty string if all filled out correctly</returns>
         private string CheckRequiredItemsFilledOut()
         {
-
             if (this.comboBoxGenreHundreds.SelectedIndex != 1)
             {
                 if (this.comboBoxGenreHundreds.SelectedIndex <= 9 && (this.comboBoxGenreTens.SelectedIndex == -1
@@ -420,24 +434,25 @@ namespace KenwoodeHighSchoolLibraryDatabase
             DBConnectionHandler.command.CommandText = $"SELECT [itemID], [copyID] FROM items WHERE [itemID] LIKE '%{isxx}-%' ORDER BY [copyID]";
             DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
             int previous;
-            int copyID = 2;
-            try
+            int copyID = 2; // Initialize to be two, check if other item with same ISXX has the copyID of one already
+            try // Try to find item with same ISXX - error thrown if no IDs have the same ISXXX
             {
                 DBConnectionHandler.reader.Read();
+                 // Get the copyID of the item with the lowest copyID of all the users
                 previous = int.Parse(DBConnectionHandler.reader[1].ToString());
-                if (previous >= 2)
+                if (previous >= 2) // If one exists but copyID greater than 1, fill in copyID of one and give item copyID of one
                 {
                     DBConnectionHandler.c.Close();
                     return 1;
                 }
             }
-            catch (InvalidOperationException) // If no IDs contain specified ISBN13 (isbnThirteen)
+            catch (InvalidOperationException) // If no IDs have the same ISXX - this must be first entry
             {
                 DBConnectionHandler.c.Close();
                 return 1;
             }
 
-            while (DBConnectionHandler.reader.Read()) // loop through ItemIDs and fill in gaps in suffixes if needed
+            while (DBConnectionHandler.reader.Read()) // loop through ItemIDs and fill in gaps in copyID/suffixes if needed
             {
                 int current = int.Parse(DBConnectionHandler.reader[1].ToString());
                 if (current == previous + 1)
@@ -452,7 +467,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 }
             }
             DBConnectionHandler.c.Close();
-            return copyID; // Also suffix of ItemID
+            return copyID; // copyID = itemID suffix
         }
 
         /// <summary>
@@ -464,19 +479,27 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void ComboBoxFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.comboBoxFormat.SelectedIndex == 1)
+            if (this.comboBoxFormat.SelectedIndex == 1) // If user selects 'Other' for format
             {
+                // Turn label of "ISBN13" to "ISXX"
                 this.labelISXX.Content = "ISXX";
+                // Disable ISBN10 and clear the textbox
                 this.labelISBNTen.IsEnabled = false;
                 this.textBoxISBNTen.IsEnabled = false;
                 this.textBoxISBNTen.Clear();
+
+                // Disable button to convert ISBN10 value to ISBN13
                 this.buttonConvertToISBN13.IsEnabled = false;
             }
-            else
+            else // If user selects 'Book' for format
             {
+                // Turn label of "ISXX" to "ISBN13"
                 this.labelISXX.Content = "ISBN 13";
+                // Enable ISBN 10
                 this.labelISBNTen.IsEnabled = true;
                 this.textBoxISBNTen.IsEnabled = true;
+
+                // Enable button to convert ISBN10 value to ISBN13
                 this.buttonConvertToISBN13.IsEnabled = true;
             }
         }
