@@ -311,7 +311,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.comboBoxGenreOnes.Items.Clear();
                 this.comboBoxGenreOnes.Items.Add("[General]");
                 int sectionStart = (this.comboBoxGenreTens.SelectedIndex * 10) + 1;
-                for (int i = sectionStart; i <= sectionStart + 8; i++)
+                for (int i = sectionStart; i < sectionStart + 9; i++)
                 {
                     string toAdd = this.selectedColumnValues[i];
                     this.comboBoxGenreOnes.Items.Add(toAdd);
