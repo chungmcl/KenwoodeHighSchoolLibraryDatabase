@@ -25,7 +25,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.textBoxCurrentlyCheckedOutBy.IsEnabled = false;
             this.labelPreviousCheckedOutBy.IsEnabled = false;
             this.labelCurrentlyCheckedOutBy.IsEnabled = false;
-            this.buttonCheckout.IsEnabled = false;
+            this.buttonReturn.IsEnabled = false;
             this.labelDueDate.IsEnabled = false;
             this.datePickerDueDate.IsEnabled = false;
 
@@ -532,14 +532,17 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         private void Register()
         {
+            // Double check all required values are filled out and in the correct format
+            // CheckRequiredItemsFilledOut() returns empty string if everything is correct
+            // returns error message if something is in the wrong format or empty
             string message = CheckRequiredItemsFilledOut();
             string isxx = this.textBoxISXX.Text;
-            if (message == "")
+            if (message == "") // If no errors
             {
                 for (int i = 0; i < int.Parse(this.textBoxNumberOfCopies.Text); i++)
                 {
-                    int copyID = GenerateCopyID(this.textBoxISXX.Text);
-                    string itemID = this.textBoxISXX.Text + $"-{copyID}";
+                    int copyID = GenerateCopyID(this.textBoxISXX.Text); // calculate copyID/itemID suffix for this item
+                    string itemID = this.textBoxISXX.Text + $"-{copyID}"; // Append ISXX, '-', and copyID to generate itemID
                     DBConnectionHandler.c.Open();
                     DBConnectionHandler.command.CommandText = "INSERT INTO items ([itemID], [copyID], [title], [genreClassOne], [genreClassTwo], [genreClassThree], " +
                         "[format], [authorFirstName], [authorMiddleName], [authorLastName], [deweyDecimal], [ISBN10], [ISXX], [publisher], " +
@@ -552,9 +555,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     DBConnectionHandler.command.ExecuteNonQuery();
                     DBConnectionHandler.c.Close();
                 }
-                this.DialogResult = true;
+                this.DialogResult = true; // close Registration/Edit/View window
             }
-            else
+            else // If something is wrong, show error message
             {
                 MessageBox.Show(message);
             }
@@ -572,12 +575,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (MessageBox.Show("Save Changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 string errorMessage = CheckRequiredItemsFilledOut();
-                if (errorMessage.Length == 0)
+                if (errorMessage.Length == 0) // CheckRequiredItemsFilledOut returns empty string if everything is correct
                 {
                     UpdateItemTable();
                     MessageBox.Show("Item data updated.");
                     DBConnectionHandler.c.Close();
-                    this.DialogResult = true;
+                    this.DialogResult = true; // Close registration/edit/view window
                 }
                 else
                 {
@@ -587,13 +590,13 @@ namespace KenwoodeHighSchoolLibraryDatabase
         }
 
         /// <summary>
-        /// Remove the checked out user to the current item.
+        /// Remove the checked out user to the current item. (Return item to the library)
         /// Place the checked out user into previousCheckedOutBy in the window and in
         /// the database.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ButtonCheckout_Click(object sender, RoutedEventArgs e)
+        private void ButtonReturn_Click(object sender, RoutedEventArgs e)
         {
             if (this.textBoxCurrentlyCheckedOutBy.Text != "")
             {
@@ -608,8 +611,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         /// <summary>
         /// If a field is changed, update it in the database.
-        /// Performs other calculations as necessary.
-        /// (For example, a changed ISXX).
+        /// Performs other calculations as necessary - For example, a changed ISXX.
         /// </summary>
         private void UpdateItemTable()
         {
@@ -690,6 +692,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 UpdateColumn("dueDate", "");
                 this.datePickerDueDate.SelectedDate = null;
                 DBConnectionHandler.c.Open();
+                // Recalculate the user's number of checked out items after it is returned
+                // Fines and # of overdue will be automatically recalculated when datagrids in MainWindow are reloaded
                 DBConnectionHandler.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
                     $"WHERE [userID] = '{this.currentlyCheckedOutBy}'";
                 DBConnectionHandler.command.ExecuteNonQuery();
@@ -700,8 +704,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 if (this.datePickerDueDate.SelectedDate != null)
                 {
-
                     DateTime newDueDate = ((DateTime)this.datePickerDueDate.SelectedDate).AddHours(23.9999);
+                    // Add 23.9999 hours as the item is due at 11:59:59 PM of the due date
                     UpdateColumn("dueDate", newDueDate.ToString());
                 }
             }
@@ -709,6 +713,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             if (this.textBoxISXX.Text != this.isxx)
             {
                 UpdateColumn("ISXX", this.textBoxISXX.Text);
+                // If new ISXX is set, recalculate new copyID as copyID is based on the item's ISXX number
                 int newCopyID = GenerateCopyID(this.textBoxISXX.Text);
                 DBConnectionHandler.c.Open();
                 DBConnectionHandler.command.CommandText = $"UPDATE items SET [itemID] = '{this.textBoxISXX.Text}-{newCopyID}', [copyID] = {newCopyID} WHERE [itemID] = '{this.toEditItem.ItemID}'";
@@ -733,6 +738,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region Register Multiple Copies
+        /// <summary>
+        /// Add one to the integer in textBoxNumberOfCopies.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonAddOneNumberOfCopies_Click(object sender, RoutedEventArgs e)
         {
             string textBoxNumberOfCopies = this.textBoxNumberOfCopies.Text;
@@ -741,7 +751,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.numberOfCopiesToRegister = (int.Parse(textBoxNumberOfCopies) + 1).ToString();
                 this.textBoxNumberOfCopies.Text = this.numberOfCopiesToRegister;
             }
-            else
+            else // Set value to be one if the textbox is empty
             {
                 this.textBoxNumberOfCopies.Text = "1";
             }
@@ -755,7 +765,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 this.numberOfCopiesToRegister = (int.Parse(this.textBoxNumberOfCopies.Text) - 1).ToString();
                 this.textBoxNumberOfCopies.Text = this.numberOfCopiesToRegister;
             }
-            else
+            else // Set value to be one if the textbox is empty
             {
                 this.textBoxNumberOfCopies.Text = "1";
             }
@@ -784,6 +794,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #endregion
 
         #region Closing Edit Window
+        /// <summary>
+        /// Double check that user wants to dispose of changes before closing window.
+        /// If user confirms, update database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Registration_Edit_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (this.toEditItem != null)

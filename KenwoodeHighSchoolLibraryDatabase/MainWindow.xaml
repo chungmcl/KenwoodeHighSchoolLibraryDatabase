@@ -15,20 +15,19 @@
         <GroupBox x:Name="groupBoxCheckout" Header="Checkout" 
                   HorizontalAlignment="Left" Height="153" Margin="935,418,0,0" VerticalAlignment="Top" Width="323" 
                   FontFamily="Sylfaen">
-            <Grid x:Name="gridCheckout" HorizontalAlignment="Left" Height="124" Margin="4,0,-3.4,0" VerticalAlignment="Top" Width="309">
+            <Grid x:Name="gridCheckout" 
+                  HorizontalAlignment="Left" Height="124" Margin="4,0,-3.4,0" VerticalAlignment="Top" Width="309">
                 <Button x:Name="BtnToCheckout" Content="Checkout Selected Item" 
                         HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top" Width="150" Height="20"
                         Click="BtnToCheckout_Click"
-                        Background="#FFD33E3E" FontFamily="Sylfaen"/>
+                        Background="#FFD33E3E" />
                 <Label x:Name="labelCheckoutSelectedItemTitle" Content="(Select an Item)" 
-                       HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" 
-                       FontFamily="Sylfaen"/>
+                       HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top"/>
                 <Label x:Name="labelCheckoutSelectedUser" Content="(Select a User)" 
-                       HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" 
-                       FontFamily="Sylfaen"/>
+                       HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top"/>
                 <Label x:Name="labelToSelectedUser" Content="To Selected User..." 
                        HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" 
-                       FontWeight="Bold" FontFamily="Sylfaen"/>
+                       FontWeight="Bold" />
             </Grid>
         </GroupBox>
 
@@ -44,14 +43,14 @@
                 <Button x:Name="buttonToUserRegistrationWindow" Content="Register New User" 
                         HorizontalAlignment="Left" Width="106" Margin="11,214,0,0" Grid.Row="1" Height="20" VerticalAlignment="Top"
                         Click="ButtonToUserRegistrationWindow_Click" 
-                        Background="#FFD33E3E" FontFamily="Sylfaen"/>
+                        Background="#FFD33E3E" />
                 <Button x:Name="ButtonDeleteSelectedUser" Content="Delete Selected User" 
                         HorizontalAlignment="Left" Margin="271,214,0,0" Width="110"  Height="20" VerticalAlignment="Top"
-                        Click="ButtonDeleteSelectedUser_Click" Background="#FFD33E3E" FontFamily="Sylfaen" Grid.Row="1"/>
+                        Click="ButtonDeleteSelectedUser_Click" Background="#FFD33E3E"  Grid.Row="1"/>
                 <DataGrid x:Name="dataGridAccounts" 
                   HorizontalAlignment="Left" Height="220" Margin="10,36,-144,0" VerticalAlignment="Top" Width="880"
                   SelectionChanged="DataGridAccounts_SelectionChanged"
-                  FontFamily="Sylfaen" Grid.RowSpan="2">
+                   Grid.RowSpan="2">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="First Name" IsReadOnly="True" Binding="{Binding FirstName, Mode=OneWay}" Width="*"/>
                         <DataGridTextColumn Header="Surname" IsReadOnly="True" Binding="{Binding LastName, Mode=OneWay}" Width="190"/>
@@ -66,7 +65,7 @@
                 </DataGrid>
                 <ComboBox x:Name="comboBoxAccountsSearchByOptions" 
                           HorizontalAlignment="Left" Margin="121,9,0,0" VerticalAlignment="Top" Width="120" 
-                          FontFamily="Sylfaen" 
+                           
                           SelectionChanged="ComboBoxAccountsSearchByOptions_SelectionChanged">
                     <ListBoxItem Content="First Name"/>
                     <ListBoxItem Content="Surname"/>
@@ -74,14 +73,13 @@
                 </ComboBox>
                 <Label x:Name="labelSearchUser" Content="Search for user by: " 
                        HorizontalAlignment="Left" Margin="11,7,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" 
-                       FontFamily="Sylfaen"/>
+                       />
                 <TextBox x:Name="textBoxAccountsSearchBy" TextWrapping="Wrap"
                          HorizontalAlignment="Left" Height="23" Margin="246,9,0,0" VerticalAlignment="Top" Width="213" 
-                         FontFamily="Sylfaen" 
                          TextChanged="TextBoxAccountsSearchBy_TextChanged" GotFocus="TextBoxAccountsSearchBy_GotFocus"/>
                 <Button x:Name="BtnToUserEditWindow" Content="Edit/View Selected User" 
                         HorizontalAlignment="Left" Width="145" Margin="121,214,0,0" Grid.Row="1" Height="20" VerticalAlignment="Top"
-                        Background="#FFD33E3E" FontFamily="Sylfaen"
+                        Background="#FFD33E3E" 
                         Click="BtnToUserEditWindow_Click"/>
                 <CheckBox x:Name="checkBoxShowItems" 
                           Content="Show Checked Out Items of Selected User" 
@@ -89,14 +87,14 @@
                           Checked="CheckBoxShowItems_Checked" Unchecked="CheckBoxShowItems_Unchecked"/>
             </Grid>
         </GroupBox>
+        
         <GroupBox x:Name="groupBoxItems" Header="Items" 
                   HorizontalAlignment="Left" Height="321" Margin="10,418,0,0" VerticalAlignment="Top" Width="920" 
                   FontFamily="Sylfaen">
             <Grid HorizontalAlignment="Left" Height="293" Margin="0,10,-2,-4.6" VerticalAlignment="Top" Width="910">
                 <DataGrid x:Name="dataGridItems" 
                   HorizontalAlignment="Left" Height="220" Margin="10,41,0,0" VerticalAlignment="Top" Width="880" 
-                  SelectionChanged="DataGridItems_SelectionChanged"
-                  FontFamily="Sylfaen">
+                  SelectionChanged="DataGridItems_SelectionChanged">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Book/Item ID" IsReadOnly="True" Binding="{Binding ItemID, Mode=OneWay}" Width="*"/>
                         <DataGridTextColumn Header="D. Decimal" IsReadOnly="True" Binding="{Binding DeweyDecimal, Mode=OneWay}" Width="70"/>
@@ -110,17 +108,14 @@
                 <Button x:Name="buttonToItemRegistrationWindow" Content="Register New Item" 
                         HorizontalAlignment="Left" Margin="10,266,0,0" VerticalAlignment="Top" Width="106" Height="20"
                         Click="ButtonToItemRegistrationWindow_Click" 
-                        Background="#FFD33E3E" FontFamily="Sylfaen"/>
+                        Background="#FFD33E3E" />
                 <TextBox x:Name="textBoxItemsSearchBy" TextWrapping="Wrap"
-                         HorizontalAlignment="Left" Height="23" Margin="244,13,0,0" VerticalAlignment="Top" Width="222" 
-                         FontFamily="Sylfaen" 
+                         HorizontalAlignment="Left" Height="23" Margin="244,13,0,0" VerticalAlignment="Top" Width="222"
                          GotFocus="TextBoxItemsSearchBy_GotFocus" TextChanged="TextBoxItemsSearchBy_TextChanged"/>
                 <Label x:Name="labelSearchItems" Content="Search for item by: " 
-                       HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" 
-                       FontFamily="Sylfaen"/>
+                       HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177"/>
                 <ComboBox x:Name="comboBoxItemsSearchByOptions" 
-                          HorizontalAlignment="Left" Margin="119,13,0,0" VerticalAlignment="Top" Width="120" 
-                          FontFamily="Sylfaen" 
+                          HorizontalAlignment="Left" Margin="119,13,0,0" VerticalAlignment="Top" Width="120"
                           SelectionChanged="ComboBoxItemsSearchByOptions_SelectionChanged">
                     <ListBoxItem Content="Dewey Decimal"/>
                     <ListBoxItem Content="Book/Item ID"/>
@@ -131,38 +126,42 @@
                 </ComboBox>
                 <Button x:Name="buttonEditItem" Content="Edit/View Selected Item" 
                         HorizontalAlignment="Left" Margin="121,266,0,0" VerticalAlignment="Top" Width="132" Height="20" 
-                        Background="#FFD33E3E" FontFamily="Sylfaen" 
-                        Click="ButtonEditItem_Click" />
+                        Background="#FFD33E3E"  
+                        Click="ButtonEditItem_Click"/>
                 <Button x:Name="buttonDeleteSelectedItem" Content="Delete Selected Item" 
                         HorizontalAlignment="Left" Margin="258,266,0,0" VerticalAlignment="Top" Width="121" Height="20" 
-                        Background="#FFD33E3E" FontFamily="Sylfaen" 
-                        Click="ButtonDeleteSelectedItem_Click" />
+                        Background="#FFD33E3E"  
+                        Click="ButtonDeleteSelectedItem_Click"/>
                 <CheckBox x:Name="checkBoxShowUser" 
                           Content="Show User Lent To of Selected Item" 
                           HorizontalAlignment="Left" Margin="690,13,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,0.506"
                           Checked="CheckBoxShowUser_Checked" Unchecked="CheckBoxShowUser_Unchecked"/>
             </Grid>
         </GroupBox>
+        
         <Button x:Name="buttonReturnSelectedItem" Content="Return Selected Item" 
                 HorizontalAlignment="Left" Margin="935,576,0,0" VerticalAlignment="Top" Width="150" Height="20"  
-                Background="#FFD33E3E" FontFamily="Sylfaen" RenderTransformOrigin="0.442,-1.83"
+                Background="#FFD33E3E"
+                FontFamily="Sylfaen"
                 Click="ButtonReturnSelectedItem_Click"/>
+        
         <GroupBox x:Name="groupBoxPrint" Header="Print" 
-                  HorizontalAlignment="Left" Height="115" Margin="932,111,0,0" VerticalAlignment="Top" Width="268" 
+                  HorizontalAlignment="Left" Height="115" Margin="932,111,0,0" VerticalAlignment="Top" Width="268"
                   FontFamily="Sylfaen">
             <Grid x:Name="gridPrint" 
                   HorizontalAlignment="Left" Height="89" Margin="10,0,0,0" VerticalAlignment="Top" Width="235">
                 <Button x:Name="buttonPrintUpcomingItems" Content="Print Upcoming Due Items This Week" 
                         HorizontalAlignment="Left" Margin="18,16,0,0" VerticalAlignment="Top" Width="202" 
                         Click="ButtonPrintUpcomingItems_Click"
-                        FontFamily="Sylfaen" Background="#FFD33E3E"/>
+                         Background="#FFD33E3E"/>
                 <Button x:Name="buttonPrintFinedUsers" Content="Print Fines" 
                         HorizontalAlignment="Left" Margin="18,53,0,0" VerticalAlignment="Top" Width="202" 
                         Click="ButtonPrintFinedUsers_Click" 
-                        FontFamily="Sylfaen" Background="#FFD33E3E"/>
+                         Background="#FFD33E3E"/>
             </Grid>
         </GroupBox>
-        <Menu Margin="0,0,0.4,747.4">
+
+        <Menu Margin="0,0,0.4,747.4" FontFamily="Sylfaen">
             <MenuItem x:Name="menuItemFile" Header="_File">
                 <MenuItem x:Name="Backup" Header="_Backup"
                           Click="Backup_Click"/>
@@ -171,20 +170,24 @@
             </MenuItem>
             <MenuItem x:Name="menuItemHelp" Header="_Help" Click="MenuItemHelp_Click"/>
         </Menu>
+        
         <Grid x:Name="gridSelectedUserAndItem" HorizontalAlignment="Left" Height="64" Margin="10,47,0,0" VerticalAlignment="Top" Width="484">
             <Label x:Name="labelDesSelectedUser" Content="Selected User: " 
                HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontWeight="Bold"/>
+                FontWeight="Bold" FontFamily="Sylfaen"/>
             <Label x:Name="labelSelectedUser" Content="(Select a User)" 
-               HorizontalAlignment="Left" Margin="101,10,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontStyle="Italic" Width="373"/>
+                   HorizontalAlignment="Left" Margin="101,10,0,0" VerticalAlignment="Top" 
+                   FontFamily="Sylfaen" FontStyle="Italic" Width="373"/>
             <Label x:Name="labelDesSelectedItem" Content="Selected Item:" 
-               HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontWeight="Bold"/>
+                   HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" 
+                   FontFamily="Sylfaen" FontWeight="Bold"/>
             <Label x:Name="labelSelectedItem" Content="(Select an Item)" 
-               HorizontalAlignment="Left" Margin="101,32,0,0" VerticalAlignment="Top" 
-               FontFamily="Sylfaen" FontStyle="Italic" Width="373"/>
+                   HorizontalAlignment="Left" Margin="101,32,0,0" VerticalAlignment="Top" 
+                   FontFamily="Sylfaen" FontStyle="Italic" Width="373"/>
         </Grid>
-        <Label x:Name="labelDeveloperName" Content="Micheal Chung © - 2018" HorizontalAlignment="Left" Margin="1127,739,0,0" VerticalAlignment="Top" FontFamily="Sylfaen"/>
+        
+        <Label x:Name="labelDeveloperName" Content="Micheal Chung © - 2018" 
+               HorizontalAlignment="Left" Margin="1127,739,0,0" VerticalAlignment="Top"
+               FontFamily="Sylfaen"/>
     </Grid>
 </Window>

@@ -36,17 +36,7 @@
                       Height="Auto"
                       IsExpanded="False"
                       FontFamily="Sylfaen">
-                    <TextBlock Background="White">
-                    <Run/><LineBreak/>
-                    <Run Text="A copy ID is the number at the end of Item IDs that represents which copy of the same book is in the database."/><LineBreak/>
-                    <Run/><LineBreak/><Run Text="For example, if the &quot;The Great Gatsby&quot; with the same ISBN13 were entered into the database four times,"/><LineBreak/>
-                    <Run Text="the database would have four unique Item IDs with a copy ID corresponding to each one like so:"/><LineBreak/><Run/><LineBreak/><Run Text="1234123412341-1"/><LineBreak/><Run Text="1234123412341-2"/><LineBreak/><Run Text="1234123412341-3"/><LineBreak/>
-                    <Run Text="1234123412341-4"/><LineBreak/><Run/><LineBreak/><Run Text="...with 1234123412341 being the ISBN13, and 1, 2, 3, and 4 being the copy ID."/><LineBreak/><Run Text="IDs begin at one and continue to infinity."/><LineBreak/>
-                    <Run/><LineBreak/>
-                    <Run/><LineBreak/>
-                    <Run Text="If one of the books with the same ISBN13 were to be deleted, the next registration of an item with the same"/><LineBreak/>
-                    <Run Text="ISBN13 will fill up the empty copy ID slot."/><LineBreak/>
-                    <Run/></TextBlock>
+                    <TextBlock Background="White"><Run/><LineBreak/><Run Text="A copy ID is the number at the end of Item IDs that represents which copy of the same book is in the database."/><LineBreak/><Run/><LineBreak/><Run Text="For example, if the &quot;The Great Gatsby&quot; with the same ISBN13 were entered into the database four times,"/><LineBreak/><Run Text="the database would have four unique Item IDs with a copy ID corresponding to each one like so:"/><LineBreak/><Run/><LineBreak/><Run Text="1234123412341-1"/><LineBreak/><Run Text="1234123412341-2"/><LineBreak/><Run Text="1234123412341-3"/><LineBreak/><Run Text="1234123412341-4"/><LineBreak/><Run/><LineBreak/><Run Text="...with 1234123412341 being the ISBN13, and 1, 2, 3, and 4 being the copy ID."/><LineBreak/><Run Text="IDs begin at one and continue to infinity."/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run Text="If one of the books with the same ISBN13 were to be deleted, the next registration of an item with the same"/><LineBreak/><Run Text="ISBN13 will fill up the empty copy ID slot."/><LineBreak/><Run/><LineBreak/><Run Text="If a user changes an item's ISXX/ISBN13, a new copy ID will be generated for the Item."/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
                 </Expander>
 
                 <Expander x:Name="expanderCanIResizeMainWindowColumns" Header="Can I resize Main Window Datagrid columns?" Background="LightGray"

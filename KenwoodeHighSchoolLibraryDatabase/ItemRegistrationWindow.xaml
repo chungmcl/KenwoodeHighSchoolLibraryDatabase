@@ -145,17 +145,20 @@
                          HorizontalAlignment="Left" Height="150" TextWrapping="Wrap" VerticalAlignment="Top" Width="380" 
                          SpellCheck.IsEnabled="True" 
                          FontFamily="Sylfaen"/>
-                <StackPanel x:Name="stackPanelNumberOfCopies" Orientation="Horizontal" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="546">
+                <StackPanel x:Name="stackPanelNumberOfCopies" 
+                            Orientation="Horizontal" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="546">
                     <TextBox x:Name="textBoxNumberOfCopies" 
                              HorizontalAlignment="Left" Height="35" TextWrapping="Wrap" VerticalAlignment="Top" Width="381"
                              PreviewTextInput="CheckIfTextBoxContainsNumbers"/>
                     
                     <Button x:Name="buttonAddOneNumberOfCopies" Content="Add One" 
-                            Width="82.5" Height="35" VerticalAlignment="Top" 
+                            Width="82.5" Height="35" VerticalAlignment="Top"
+                            FontFamily="Sylfaen"
                             Click="ButtonAddOneNumberOfCopies_Click"/>
                     
                     <Button x:Name="buttonSubtractOneNumberOfCopies" Content="Subtract One" 
-                            Width="82.5" Height="35" VerticalAlignment="Top" 
+                            Width="82.5" Height="35" VerticalAlignment="Top"
+                            FontFamily="Sylfaen"
                             Click="ButtonSubtractOneNumberOfCopies_Click"/>
                 </StackPanel>
                 <StackPanel x:Name="stackPanelCheckout" 
@@ -163,10 +166,10 @@
                     <TextBox x:Name="textBoxCurrentlyCheckedOutBy" 
                              Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" Height="35" VerticalAlignment="Top" 
                              IsEnabled="False"/>
-                    <Button x:Name="buttonCheckout" 
+                    <Button x:Name="buttonReturn" 
                             HorizontalAlignment="Center" Content="Return Item to Library&#xD;&#xA;(Uncheckout Item)" Width="165" Height="35" VerticalAlignment="Center" Margin="0,0,393.4,0" 
                             FontFamily="Sylfaen"
-                            Click="ButtonCheckout_Click"/>
+                            Click="ButtonReturn_Click"/>
                 </StackPanel>
                 <TextBox x:Name="textBoxPreviousCheckedOutBy" 
                          Height="35" Width="380" HorizontalAlignment="Left" TextWrapping="Wrap" 
