@@ -16,6 +16,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private List<string> selectedColumnValues;
         private bool toRegister;
         private string numberOfCopiesToRegister;
+        private const double twentyThreeHoursFiftyNineMins = 23.99999;
         public ItemRegistrationWindow()
         {
             InitializeComponent();
@@ -228,8 +229,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <summary>
         /// Call the ConvertToISBNThirteen method to convert
         /// the ISBN10 code entered to ISBN13.
-        /// Check that the ISBN10 code is in correct format first.
-        /// Trim the ISBN10 code of dashes.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -241,7 +240,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
             isbnTen = AgressiveTrim(isbnTen);
             if (isbnTen != "" && isbnTen.ToArray().Count() == 10)
             {
-                this.textBoxISXX.Text = ConvertToISBNThirteen(isbnTen);
+                string isbnThirteen = ConvertToISBNThirteen(isbnTen);
+                // If ConvertToISBNThirteen returns an invalid ISBN13, then ISBN10 was invalid
+                if (isbnThirteen.Count() != 13) 
+                {
+                    MessageBox.Show("Invalid ISBN10 entered.");
+                }
+                else
+                {
+                    this.textBoxISXX.Text = isbnThirteen;
+                }
             }
             else
             {
@@ -704,8 +712,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 if (this.datePickerDueDate.SelectedDate != null)
                 {
-                    DateTime newDueDate = ((DateTime)this.datePickerDueDate.SelectedDate).AddHours(23.9999);
                     // Add 23.9999 hours as the item is due at 11:59:59 PM of the due date
+                    DateTime newDueDate = ((DateTime)this.datePickerDueDate.SelectedDate).AddHours(twentyThreeHoursFiftyNineMins);
                     UpdateColumn("dueDate", newDueDate.ToString());
                 }
             }

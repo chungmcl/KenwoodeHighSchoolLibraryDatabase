@@ -64,7 +64,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <ComboBox x:Name="comboBoxAccountsSearchByOptions" 
-                          HorizontalAlignment="Left" Margin="121,9,0,0" VerticalAlignment="Top" Width="120" 
+                          HorizontalAlignment="Left" Margin="121,9,0,0" VerticalAlignment="Top" Width="145" 
                            
                           SelectionChanged="ComboBoxAccountsSearchByOptions_SelectionChanged">
                     <ListBoxItem Content="First Name"/>
@@ -75,7 +75,7 @@
                        HorizontalAlignment="Left" Margin="11,7,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177" 
                        />
                 <TextBox x:Name="textBoxAccountsSearchBy" TextWrapping="Wrap"
-                         HorizontalAlignment="Left" Height="23" Margin="246,9,0,0" VerticalAlignment="Top" Width="213" 
+                         HorizontalAlignment="Left" Height="23" Margin="271,9,0,0" VerticalAlignment="Top" Width="213" 
                          TextChanged="TextBoxAccountsSearchBy_TextChanged" GotFocus="TextBoxAccountsSearchBy_GotFocus"/>
                 <Button x:Name="BtnToUserEditWindow" Content="Edit/View Selected User" 
                         HorizontalAlignment="Left" Width="145" Margin="121,214,0,0" Grid.Row="1" Height="20" VerticalAlignment="Top"
@@ -110,15 +110,15 @@
                         Click="ButtonToItemRegistrationWindow_Click" 
                         Background="#FFD33E3E" />
                 <TextBox x:Name="textBoxItemsSearchBy" TextWrapping="Wrap"
-                         HorizontalAlignment="Left" Height="23" Margin="244,13,0,0" VerticalAlignment="Top" Width="222"
+                         HorizontalAlignment="Left" Height="23" Margin="258,13,0,0" VerticalAlignment="Top" Width="232"
                          GotFocus="TextBoxItemsSearchBy_GotFocus" TextChanged="TextBoxItemsSearchBy_TextChanged"/>
                 <Label x:Name="labelSearchItems" Content="Search for item by: " 
                        HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.442,-1.177"/>
                 <ComboBox x:Name="comboBoxItemsSearchByOptions" 
-                          HorizontalAlignment="Left" Margin="119,13,0,0" VerticalAlignment="Top" Width="120"
+                          HorizontalAlignment="Left" Margin="119,13,0,0" VerticalAlignment="Top" Width="134"
                           SelectionChanged="ComboBoxItemsSearchByOptions_SelectionChanged">
                     <ListBoxItem Content="Dewey Decimal"/>
-                    <ListBoxItem Content="Book/Item ID"/>
+                    <ListBoxItem Content="Item ID/ISXX/ISBN"/>
                     <ListBoxItem Content="Title"/>
                     <ListBoxItem Content="Author Name"/>
                     <ListBoxItem Content="Genre"/>

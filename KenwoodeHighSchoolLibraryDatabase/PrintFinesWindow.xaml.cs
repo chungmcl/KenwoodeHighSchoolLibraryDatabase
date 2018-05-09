@@ -13,6 +13,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         List<AccountWithFine> accountsWithFines;
         private int pageNumber;
         private int pageMax;
+        private const int itemsPerPage = 37;
         public PrintFinesWindow()
         {
             InitializeComponent();
@@ -50,7 +51,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 };
                 this.accountsWithFines.Add(awf);
             }
-            this.pageMax = (int)Math.Ceiling(((double)this.accountsWithFines.Count) / 37);
+            this.pageMax = (int)Math.Ceiling(((double)this.accountsWithFines.Count) / itemsPerPage);
             DBConnectionHandler.c.Close();
 
             if (this.pageMax > 1)
@@ -72,9 +73,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 int startIndex = 0;
                 if (pageNumber != 1)
                 {
-                    startIndex = ((pageNumber * 37) - 37);
+                    startIndex = ((pageNumber * itemsPerPage) - itemsPerPage);
                 }
-                for (int i = startIndex; i < this.accountsWithFines.Count && i < (pageNumber * 37); i++)
+                for (int i = startIndex; i < this.accountsWithFines.Count && i < (pageNumber * itemsPerPage); i++)
                 {
                     this.dataGridFinedUsers.Items.Add(this.accountsWithFines[i]);
                 }

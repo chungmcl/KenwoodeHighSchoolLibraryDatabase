@@ -18,6 +18,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private bool? userSelected;
         private bool? itemSelected;
         private string currentFolderPath;
+        private const double twentyThreeHoursFiftyNineMins = 23.99999;
         List<User> selectedUsers;
         List<Item> selectedItems;
         private List<Item> itemsToAdd = new List<Item>();
@@ -589,7 +590,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     // ...the selected user is at his/her item limit.
                     if (int.Parse(user.CheckedOut) < int.Parse(user.ItemLimit))
                     {
-                        DateTime dueDate = (DateTime.Today.AddDays(double.Parse(user.DateLimit)).AddHours(23.9999));
+                        DateTime dueDate = (DateTime.Today.AddDays(double.Parse(user.DateLimit)).AddHours(twentyThreeHoursFiftyNineMins));
                         // Due at end of day so add 23.9999 hours
                         if (MessageBox.Show(
                             $"Confirm Checkout -\n" +

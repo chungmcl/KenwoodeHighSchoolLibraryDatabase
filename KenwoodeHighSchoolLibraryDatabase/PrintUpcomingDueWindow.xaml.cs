@@ -10,9 +10,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
     /// </summary>
     public partial class PrintUpcomingDueWindow : Window
     {
-        List<ItemDueThisWeek> itemsDueThisWeek;
-        int pageNumber;
-        int pageMax;
+        private List<ItemDueThisWeek> itemsDueThisWeek;
+        private int pageNumber;
+        private int pageMax;
+        private const int itemsPerPage = 37;
+        private const double twentyThreeHoursFiftyNineMins = 23.99999;
         public PrintUpcomingDueWindow()
         {
             InitializeComponent();
@@ -33,45 +35,49 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private void LoadItemsToDisplay()
         {
             DBConnectionHandler.c.Open();
-            DateTime aWeekFromToday = DateTime.Today.AddDays(7).AddHours(23.99999);
+            // Add 23.99999 hours as items are due at 11:59 PM of the due date
+            DateTime aWeekFromToday = DateTime.Today.AddDays(7).AddHours(twentyThreeHoursFiftyNineMins);
             DBConnectionHandler.command.CommandText = $"SELECT * FROM items";
             DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
-            while (DBConnectionHandler.reader.Read())
+            while (DBConnectionHandler.reader.Read()) // Loop through all items in the database
             {
                 string stringDueDate = DBConnectionHandler.reader["dueDate"].ToString();
-                DateTime dueDate;
-                try
+                try 
                 {
+                    // Try to get duedate of item
+                    // error thrown if current item being read has no due date (not checked out)
+                    DateTime dueDate = Convert.ToDateTime(stringDueDate);
 
-                    dueDate = Convert.ToDateTime(stringDueDate);
+                    // If item has a due date, check if it is due this upcoming week
+                    // If it is, add it to the list of items due this upcoming week 
+                    if (dueDate <= aWeekFromToday
+                    && dueDate >= DateTime.Now)
+                    {
+                        ItemDueThisWeek item = new ItemDueThisWeek
+                        {
+                            ItemID = DBConnectionHandler.reader["itemID"].ToString(),
+                            LentTo = DBConnectionHandler.reader["currentlyCheckedOutBy"].ToString(),
+                            Title = DBConnectionHandler.reader["title"].ToString(),
+                            DueDate = stringDueDate.Substring(0, stringDueDate.IndexOf(' ')),
+                            DaysUntilDueDate = ((dueDate.Date - DateTime.Today)).TotalDays,
+                            DeweyDecimal = DBConnectionHandler.reader["deweyDecimal"].ToString(),
+                            ISBNTen = DBConnectionHandler.reader["ISBN10"].ToString(),
+                            ISXX = DBConnectionHandler.reader["ISXX"].ToString(),
+                            Genre = $"{DBConnectionHandler.reader["genreClassOne"].ToString()}, " +
+                            $"{DBConnectionHandler.reader["genreClassTwo"].ToString()}, " +
+                            $"{DBConnectionHandler.reader["genreClassThree"].ToString()}",
+                            Edition = DBConnectionHandler.reader["edition"].ToString(),
+                            Author = $"{DBConnectionHandler.reader["authorLastName"]}, " +
+                            $"{DBConnectionHandler.reader["authorMiddleName"]} " +
+                            $"{DBConnectionHandler.reader["authorFirstName"]}",
+                            Format = DBConnectionHandler.reader["format"].ToString()
+                        };
+                        this.itemsDueThisWeek.Add(item);
+                    }
                 }
                 catch
                 {
-                    dueDate = DateTime.Now.AddDays(8);
-                }
-                if (dueDate <= aWeekFromToday
-                    && dueDate >= DateTime.Now)
-                {
-                    ItemDueThisWeek item = new ItemDueThisWeek
-                    {
-                        ItemID = DBConnectionHandler.reader["itemID"].ToString(),
-                        LentTo = DBConnectionHandler.reader["currentlyCheckedOutBy"].ToString(),
-                        Title = DBConnectionHandler.reader["title"].ToString(),
-                        DueDate = stringDueDate.Substring(0, stringDueDate.IndexOf(' ')),
-                        DaysUntilDueDate = ((dueDate.Date - DateTime.Today)).TotalDays,
-                        DeweyDecimal = DBConnectionHandler.reader["deweyDecimal"].ToString(),
-                        ISBNTen = DBConnectionHandler.reader["ISBN10"].ToString(),
-                        ISXX = DBConnectionHandler.reader["ISXX"].ToString(),
-                        Genre = $"{DBConnectionHandler.reader["genreClassOne"].ToString()}, " +
-                        $"{DBConnectionHandler.reader["genreClassTwo"].ToString()}, " +
-                        $"{DBConnectionHandler.reader["genreClassThree"].ToString()}",
-                        Edition = DBConnectionHandler.reader["edition"].ToString(),
-                        Author = $"{DBConnectionHandler.reader["authorLastName"]}, " +
-                        $"{DBConnectionHandler.reader["authorMiddleName"]} " +
-                        $"{DBConnectionHandler.reader["authorFirstName"]}",
-                        Format = DBConnectionHandler.reader["format"].ToString()
-                    };
-                    this.itemsDueThisWeek.Add(item);
+                    // Don't do anything if the item isn't due this upcoming week
                 }
             }
 
@@ -84,12 +90,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
                 DBConnectionHandler.reader.Read();
                 string name;
-                try
+                try // Try to get name of user that overdue book is checked out to
                 {
-
                     name = $" ({DBConnectionHandler.reader[1].ToString()}, {DBConnectionHandler.reader[0].ToString()})";
                 }
-                catch
+                catch // If user has no name logged in database, enter empty string
                 {
                     name = "";
                 }
@@ -98,7 +103,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             DBConnectionHandler.reader.Close();
             DBConnectionHandler.c.Close();
 
-            this.pageMax = (int)Math.Ceiling(((double)this.itemsDueThisWeek.Count) / 37);
+            this.pageMax = (int)Math.Ceiling(((double)this.itemsDueThisWeek.Count) / itemsPerPage);
 
             if (this.pageMax > 1)
             {
@@ -119,9 +124,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 int startIndex = 0;
                 if (pageNumber != 1)
                 {
-                    startIndex = ((pageNumber * 37) - 37);
+                    startIndex = ((pageNumber * itemsPerPage) - itemsPerPage);
                 }
-                for (int i = startIndex; i < this.itemsDueThisWeek.Count && i < (pageNumber * 37); i++)
+                for (int i = startIndex; i < this.itemsDueThisWeek.Count && i < (pageNumber * itemsPerPage); i++)
                 {
                     this.dataGridIssuedBooks.Items.Add(this.itemsDueThisWeek[i]);
                 }

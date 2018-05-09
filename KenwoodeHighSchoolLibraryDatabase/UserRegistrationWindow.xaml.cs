@@ -189,7 +189,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
         /// <summary>
         /// Check that all required fields are filled out
-        /// correctly in the correct format. 
+        /// correctly in the correct format.
+        /// Return error message if a field is incorrect, return empty string if all are correct
         /// </summary>
         /// <returns>The error message if a field is incorrect, empty string if all are correct</returns>
         public string CheckRequiredValues()
