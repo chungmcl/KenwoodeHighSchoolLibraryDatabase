@@ -516,8 +516,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         #region Save Changes (Register AND Edit/Update)
         /// <summary>
         /// Leads to the correct save method depending on if the user is registering
-        /// an item or if the user is editing an item. Boolean "toRegister" intialized in the
-        /// constructor.
+        /// an item or if the user is editing an item.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -527,9 +526,11 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 Register();
             }
-            else
+            else // User is editing if not this.toRegister
             {
-                EditAndUpdate();
+                // Close the window (Will prompt user to decide to save changes or not)
+                // (See 'Closing Edit Window' region)
+                this.DialogResult = true;
             }
         }
 
