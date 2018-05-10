@@ -67,6 +67,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.selectedColumnValues = new List<String>();
 
             this.toEditItem = toEdit;
+            this.toEditItem.ItemID = this.toEditItem.ItemID.Replace("'", "''");
             this.textBoxDeweyDecimal.Text = this.toEditItem.DeweyDecimal;
             this.textBoxTitle.Text = this.toEditItem.Title;
             this.comboBoxGenreHundreds.SelectedValue = this.toEditItem.Genre;
@@ -422,7 +423,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 return "A number of copies to register (at least one) must be entered. Please enter a value" +
                     "for number of copies to register.";
             }
-                return "";
+            return "";
         }
 
         /// <summary>
@@ -544,6 +545,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             // Double check all required values are filled out and in the correct format
             // CheckRequiredItemsFilledOut() returns empty string if everything is correct
             // returns error message if something is in the wrong format or empty
+            AddEscapeSequences();
             string message = CheckRequiredItemsFilledOut();
             string isxx = this.textBoxISXX.Text;
             if (message == "") // If no errors
@@ -581,6 +583,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// </summary>
         private void EditAndUpdate()
         {
+            AddEscapeSequences();
             if (MessageBox.Show("Save Changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 string errorMessage = CheckRequiredItemsFilledOut();
@@ -815,6 +818,28 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 EditAndUpdate();
             }
+        }
+        #endregion
+
+        #region Handle SQL Escape Sequnces
+        /// <summary>
+        /// Include escape sequence where needed in text boxes.
+        /// (Single quotes require escape sequences in SQL)
+        /// </summary>
+        private void AddEscapeSequences()
+        {
+            this.textBoxAuthorFName.Text = this.textBoxAuthorFName.Text.Replace("'", "''");
+            this.textBoxAuthorMName.Text = this.textBoxAuthorMName.Text.Replace("'", "''");
+            this.textBoxAuthorLName.Text = this.textBoxAuthorLName.Text.Replace("'", "''");
+            this.textBoxCurrentlyCheckedOutBy.Text = this.textBoxCurrentlyCheckedOutBy.Text.Replace("'", "''");
+            this.textBoxDescription.Text = this.textBoxDescription.Text.Replace("'", "''");
+            this.textBoxEdition.Text = this.textBoxEdition.Text.Replace("'", "''");
+            this.textBoxISBNTen.Text = this.textBoxISBNTen.Text.Replace("'", "''");
+            this.textBoxISXX.Text = this.textBoxISXX.Text.Replace("'", "''");
+            this.textBoxDeweyDecimal.Text = this.textBoxDeweyDecimal.Text.Replace("'", "''");
+            this.textBoxPublicationYear.Text = this.textBoxPublicationYear.Text.Replace("'", "''");
+            this.textBoxPublisher.Text = this.textBoxPublisher.Text.Replace("'", "''");
+            this.textBoxTitle.Text = this.textBoxTitle.Text.Replace("'", "''");
         }
         #endregion
     }

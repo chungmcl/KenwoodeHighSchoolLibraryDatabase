@@ -133,7 +133,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 DBConnectionHandler.reader.Close(); // Close reader from previous use
                 string currentlyCheckedOutBy = this.itemsToAdd[i].CurrentlyCheckedOutBy;
-                DBConnectionHandler.command.CommandText = $"SELECT [firstName], [lastName] FROM [accounts] WHERE [userID] = '{currentlyCheckedOutBy}'";
+                // Add escape sequence for SQL Query
+                DBConnectionHandler.command.CommandText = $"SELECT [firstName], [lastName] FROM [accounts] WHERE [userID] = '{currentlyCheckedOutBy.Replace("'", "''")}'";
                 DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
                 DBConnectionHandler.reader.Read();
                 try // add first and last name to currently checked out by column of datagrid - throws error if firstName or lastName is empty
@@ -175,7 +176,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             {
                 int overDue = 0;
                 double fines = 0;
-                string currentUserID = userIDs[i][0];
+                string currentUserID = (userIDs[i][0]).Replace("'", "''"); // Escape sequence for SQL query
                 string finePerDay = userIDs[i][1];
                 DBConnectionHandler.command.CommandText = $"SELECT [dueDate] FROM items WHERE [currentlyCheckedOutBy] = '{currentUserID}'";
                 // Select all items that are currently checked out by this user
@@ -598,9 +599,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                         {
                             // Update database after checking item out to user.
                             // Take necessary information from selectedItem and selectedUser to put into SQL UPDATE command
-                            string userID = user.UserID;
+                            string userID = user.UserID.Replace("'", "''"); // Add escape sequence for SQL Query
                             string stringDueDate = dueDate.ToString();
-                            string itemID = item.ItemID;
+                            string itemID = item.ItemID.Replace("'", "''"); // Add escape sequence for SQL Query
                             DBConnectionHandler.c.Open();
                             DBConnectionHandler.command.CommandText = $"UPDATE items SET [currentlyCheckedOutBy] = '{userID}', [dueDate] = '{stringDueDate}' WHERE itemID = '{itemID}'";
                             DBConnectionHandler.command.ExecuteNonQuery();
@@ -732,7 +733,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             // get ONLY the ID of the user that selectedItem is currently checked out to
             // (ID comes before a space and before the name) 
-            string userCheckedOutToID = userCheckedOutTo.Substring(0, userCheckedOutTo.IndexOf(' '));
+            // Add escape sequence for SQL Query
+            string userCheckedOutToID = (userCheckedOutTo.Substring(0, userCheckedOutTo.IndexOf(' '))).Replace("'", "''");
+            selectedItem.ItemID = selectedItem.ItemID.Replace("'", "''"); // Add escape sequence for SQL Query
 
             DBConnectionHandler.c.Open();
 
@@ -826,6 +829,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             DBConnectionHandler.c.Open();
 
+            itemID = itemID.Replace("'", "''"); // Add escape sequence for SQL Query
+            currentlyCheckedOutBy = currentlyCheckedOutBy.Replace("'", "''"); // Add escape sequence for SQL Query
             // Lower the user's number of checked out items by one (if item is checked out to a user)
             // (User's number of overdue items and fines will be recalculated when dataGrid is loaded.)
             DBConnectionHandler.command.CommandText = "UPDATE accounts SET [numberOfCheckedoutItems] = [numberOfCheckedOutItems] - 1 " +
@@ -880,6 +885,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         {
             DBConnectionHandler.c.Open();
 
+            userID = userID.Replace("'", "''"); // Add escape sequence for SQL query
             // Clear currentlyCheckedOutBy and set previouslyCheckedOutBy to user deleted
             // Set dueDate of items checked out by the user being deleted to be empty
             DBConnectionHandler.command.CommandText = "UPDATE items " +

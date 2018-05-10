@@ -10,10 +10,6 @@ namespace KenwoodeHighSchoolLibraryDatabase
     public partial class UserRegistrationWindow : Window
     {
         private List<string[]> userIDs;
-        private string fName;
-        private string lName;
-        private string uID;
-        private string uType;
         private int itemLimit;
         private int dateLimit;
         private double finePerDay;
@@ -42,7 +38,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
             this.toEditUser = user;
 
             DBConnectionHandler.c.Open();
-            DBConnectionHandler.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = '{user.UserID}'";
+            DBConnectionHandler.command.CommandText = $"SELECT [finePerDay] FROM accounts WHERE userID = " +
+                $"'{this.toEditUser.UserID.Replace("'", "''")}'"; // Add escape sequence for SQL Query
             DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
             DBConnectionHandler.reader.Read();
             this.toEditUserFinePerDay = double.Parse(DBConnectionHandler.reader[0].ToString());
@@ -128,13 +125,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 if (errorMessage == "")
                 {
                     DBConnectionHandler.c.Open();
-                    this.fName = this.textBoxFirstNameRegister.Text.Trim();
-                    this.lName = this.textBoxSurnameRegister.Text.Trim();
-                    this.uID = this.textBoxUserIDRegister.Text.Trim();
-                    this.uType = this.comboBoxUserTypeRegister.SelectedValue.ToString();
 
+                    AddEscapeSequences(); // Complete after error message so extra quotes don't show up for user
                     DBConnectionHandler.command.CommandText = "INSERT INTO accounts ([firstName], [lastName], [userID], [userType], [itemLimit], [dateLimit], [finePerDay]) " +
-                        $"VALUES ('{this.fName}', '{this.lName}', '{this.uID}', '{this.uType}', {this.itemLimit}, {this.dateLimit}, {this.finePerDay})";
+                        $"VALUES ('{this.textBoxFirstNameRegister.Text}', '{this.textBoxSurnameRegister.Text}', " +
+                        $"'{this.textBoxUserIDRegister.Text}', '{this.comboBoxUserTypeRegister.SelectedValue.ToString()}', {this.textBoxItemLimit.Text}, " +
+                        $"{this.textBoxDateLimit.Text}, {this.textBoxFinePerDay.Text})";
                     DBConnectionHandler.command.ExecuteNonQuery();
 
                     DBConnectionHandler.c.Close(); // close first
@@ -152,6 +148,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 {
                     if (MessageBox.Show("Save changes?", "Update Database", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
+                        AddEscapeSequences(); // Complete after dialog so extra quotes don't show up for user
                         DBConnectionHandler.c.Open();
                         DBConnectionHandler.command.CommandText = $"UPDATE accounts SET " +
                             $"[firstName] = '{this.textBoxFirstNameRegister.Text}', " +
@@ -268,6 +265,20 @@ namespace KenwoodeHighSchoolLibraryDatabase
             }
 
             return "";
+        }
+
+        /// <summary>
+        /// Include escape sequence where needed in text boxes, and also trim text.
+        /// (Single quotes require escape sequences in SQL)
+        /// </summary>
+        private void AddEscapeSequences()
+        {
+            this.textBoxDateLimit.Text = this.textBoxDateLimit.Text.Replace("'", "''").Trim();
+            this.textBoxFinePerDay.Text = this.textBoxFinePerDay.Text.Replace("'", "''");
+            this.textBoxFirstNameRegister.Text = this.textBoxFirstNameRegister.Text.Replace("'", "''").Trim();
+            this.textBoxSurnameRegister.Text = this.textBoxSurnameRegister.Text.Replace("'", "''").Trim();
+            this.textBoxItemLimit.Text = this.textBoxItemLimit.Text.Replace("'", "''").Trim();
+            this.textBoxUserIDRegister.Text = this.textBoxUserIDRegister.Text.Replace("'", "''").Trim();
         }
     }
 }
