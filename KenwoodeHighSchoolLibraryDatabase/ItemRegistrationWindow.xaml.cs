@@ -202,7 +202,16 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 }
             }
             // checkSum = (10 - (a1 + 3 * a2 + a3 + 3 * a4 + ... + a11 + 3 * a12) mod 10)
-            int checkSum = 10 - (totalSum % 10);
+            int checkSum;
+            int totalSumModTen = (totalSum % 10);
+            if (totalSumModTen == 0) // checkSum is zero if totalSum % 10 = 0
+            {
+                checkSum = 0;
+            }
+            else
+            {
+                checkSum = 10 - totalSumModTen;
+            }
             isbnThirteen = isbnThirteen.Substring(0, 12) + checkSum;
             return isbnThirteen;
         }
@@ -240,16 +249,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             isbnTen = AgressiveTrim(isbnTen);
             if (isbnTen != "" && isbnTen.ToArray().Count() == 10)
             {
-                string isbnThirteen = ConvertToISBNThirteen(isbnTen);
-                // If ConvertToISBNThirteen returns an invalid ISBN13, then ISBN10 was invalid
-                if (isbnThirteen.Count() != 13) 
-                {
-                    MessageBox.Show("Invalid ISBN10 entered.");
-                }
-                else
-                {
-                    this.textBoxISXX.Text = isbnThirteen;
-                }
+                this.textBoxISXX.Text = ConvertToISBNThirteen(isbnTen);
             }
             else
             {
