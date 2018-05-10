@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.IO;
 using System.Reflection;
 
@@ -48,7 +47,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     "\nLibraryDatabase.mdb" +
                     "\n\nKenwoodeHighSchoolLibraryDatabase.pdb" +
                     "\nKenwoodeHighSchoolLibraryDatabase.exe.config");
-                System.Windows.Application.Current.Shutdown();
+                Application.Current.Shutdown();
             }
         }
 
@@ -553,9 +552,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
         /// <param name="e"></param>
         private void BtnToCheckout_Click(object sender, RoutedEventArgs e)
         {
-            // Display an error message with MessageBox if...
-
-            // ...either an item or a user is not selected.
+            // Display an error message with MessageBox if either an item or a user is not selected.
             if (this.userSelected == true && this.itemSelected == true) // had to use == true because this.userSelected and this.itemSelected are bool?
             {
                 CheckoutDatabaseUpdate(this.selectedUser, this.selectedItem);
@@ -651,7 +648,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     LoadDataGrid();
                     Item check = (Item)this.dataGridItems.Items[0];
                     this.selectedItem = (Item)this.dataGridItems.Items[0];
-                    this.labelCheckoutSelectedItemTitle.Content = this.selectedItem.Title;
+                    this.labelCheckoutSelectedItemTitle.Content = "(Select an Item)";
                 }
             }
             else // else, notify user that an item has not been selected
