@@ -18,6 +18,8 @@ namespace KenwoodeHighSchoolLibraryDatabase
         private bool? itemSelected;
         private string currentFolderPath;
         private const double twentyThreeHoursFiftyNineMins = 23.99999;
+        List<User> users;
+        List<Item> items;
         List<User> selectedUsers;
         List<Item> selectedItems;
         private List<Item> itemsToAdd = new List<Item>();
@@ -39,6 +41,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
 
                 this.selectedUsers = new List<User>();
                 this.selectedItems = new List<Item>();
+
+                this.users = new List<User>();
+                this.items = new List<Item>();
             }
             catch // Display error message and close program
             {
@@ -74,6 +79,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             DBConnectionHandler.command.CommandType = System.Data.CommandType.Text;
             DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
             this.dataGridAccounts.Items.Clear();
+            this.users.Clear();
             while (DBConnectionHandler.reader.Read())
             {
                 User newUser = new User
@@ -89,6 +95,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
                     Fines = DBConnectionHandler.reader["fines"].ToString()
                 };
                 this.dataGridAccounts.Items.Add(newUser);
+                this.users.Add(newUser);
             }
             DBConnectionHandler.reader.Close();
             DBConnectionHandler.c.Close();
@@ -105,6 +112,7 @@ namespace KenwoodeHighSchoolLibraryDatabase
             DBConnectionHandler.command.CommandType = System.Data.CommandType.Text;
             DBConnectionHandler.reader = DBConnectionHandler.command.ExecuteReader();
             this.dataGridItems.Items.Clear();
+            this.items.Clear();
             while (DBConnectionHandler.reader.Read())
             {
                 Item newItem = new Item
@@ -147,7 +155,9 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 {
                     this.itemsToAdd[i].CurrentlyCheckedOutBy = "";
                 }
-                this.dataGridItems.Items.Add(this.itemsToAdd[i]);
+                Item toAdd = this.itemsToAdd[i];
+                this.dataGridItems.Items.Add(toAdd);
+                this.items.Add(toAdd);
             }
             this.itemsToAdd.Clear();
             DBConnectionHandler.reader.Close();
@@ -409,6 +419,12 @@ namespace KenwoodeHighSchoolLibraryDatabase
                 if (queryColumn != "") // If a comboBox value is selected (filter)
                 {
                     LoadAccountsDataGrid($"SELECT * FROM accounts WHERE [{queryColumn}] LIKE '%{currentText}%'");
+
+                    foreach (Item x in this.items)
+                    {
+                        // if x.{queryColumn}
+                    }
+
                     // Load account datagrid with values that are similar or are same to the values the user specifies
                 }
             }
