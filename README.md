@@ -6,22 +6,18 @@ Developed with C#.NET, XAML, and SQL, within the Microsoft Visual Studio 2017 ID
 Originally maintained in VSTS and imported to GitHub.
 
 Kenwoode High School is a fictional high school created for the use of this competition.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 **Original Note for FBLA Judges:**
 
 _Hello! Thank you for testing my application._
