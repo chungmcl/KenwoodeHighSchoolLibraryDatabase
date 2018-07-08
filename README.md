@@ -1,12 +1,13 @@
 # Kenwoode High School Library Database
 
+**___________________________________________________________________________________________________________________________________**
 Library database software application for the 2017-2018 FBLA Coding & Programming competition. Placed 4th place at FBLA Washington State competition, advanced to FBLA National Competition and placed in Top 12.
 
 Developed with C#.NET, XAML, and SQL, within the Microsoft Visual Studio 2017 IDE and Microsoft Access.
 Originally maintained in VSTS and imported to GitHub.
 
 Kenwoode High School is a fictional high school created for the use of this competition.
- 
+**___________________________________________________________________________________________________________________________________**
  
  
  
